@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+.env
+.env.local
+.env.*.local
+*.log
+playwright-report
+test-results
+uploads/
+public/uploads/
+docs/qa/screens/
+.DS_Store
+Thumbs.db
+tsconfig.tsbuildinfo
