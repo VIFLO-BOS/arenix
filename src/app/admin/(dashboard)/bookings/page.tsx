@@ -24,11 +24,11 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         title="Bookings"
         description={`${total} consultation record${total === 1 ? "" : "s"}. Provider ${integrations.scheduler.configured ? "Cal.com with webhook sync" : "request only, no live calendar"}.`}
         actions={
-          <div className="flex rounded-lg border border-[rgba(245,245,243,0.15)] p-1 text-xs" role="group" aria-label="View">
-            <Link href={qs({ view: "all" })} className={cn("rounded-md px-2.5 py-1", !upcoming ? "bg-on-dark text-ink" : "text-muted")}>
+          <div className="flex rounded-lg border border-slate-200 p-1 text-xs" role="group" aria-label="View">
+            <Link href={qs({ view: "all" })} className={cn("rounded-md px-2.5 py-1", !upcoming ? "bg-slate-900 text-white" : "text-slate-500")}>
               All
             </Link>
-            <Link href={qs({ view: "upcoming" })} className={cn("rounded-md px-2.5 py-1", upcoming ? "bg-on-dark text-ink" : "text-muted")}>
+            <Link href={qs({ view: "upcoming" })} className={cn("rounded-md px-2.5 py-1", upcoming ? "bg-slate-900 text-white" : "text-slate-500")}>
               Upcoming
             </Link>
           </div>
@@ -57,7 +57,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
         {items.length ? (
           <Table head={["Reference", "Person", "Type", "Status", "When", "Provider", "Requested"]} caption="Bookings">
             {items.map((b) => (
-              <tr key={b._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+              <tr key={b._id.toString()} className="hover:bg-slate-50">
                 <Td>
                   <Link href={`/admin/bookings/${b._id.toString()}`} className="font-mono text-xs text-accent hover:underline">
                     {b.reference}
@@ -65,7 +65,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                 </Td>
                 <Td>
                   <p className="font-medium">{b.name}</p>
-                  <p className="text-xs text-muted">{b.email}</p>
+                  <p className="text-xs text-slate-500">{b.email}</p>
                 </Td>
                 <Td muted>{typeLabel(b.consultationType)}</Td>
                 <Td>

@@ -29,9 +29,9 @@ export default async function SettingsPage() {
     <>
       <PageHeader title="Settings" description="Brand, contact channels, WhatsApp, booking provider, notification recipients, SEO, homepage and legal text. Values are published only when filled." />
       <div className="mb-4 grid gap-2 sm:grid-cols-3">
-        <Notice tone={integrations.email.configured ? "success" : "warning"}>Email: {integrations.email.configured ? "Resend configured" : "demo log mode"}</Notice>
-        <Notice tone={integrations.scheduler.configured ? "success" : "info"}>Scheduler: {integrations.scheduler.configured ? "Cal.com configured" : "request-only"}</Notice>
-        <Notice tone="info">Media storage{integrations.media.driver}</Notice>
+        <Notice tone={integrations.email.configured ? "success" : "warning"}>Email {integrations.email.configured ? "Resend configured" : "demo log mode"}</Notice>
+        <Notice tone={integrations.scheduler.configured ? "success" : "info"}>Scheduler {integrations.scheduler.configured ? "Cal.com configured" : "request-only"}</Notice>
+        <Notice tone="info">Media storage {integrations.media.driver}</Notice>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -64,7 +64,7 @@ export default async function SettingsPage() {
               <FieldLabel htmlFor="b-accent" hint="(hex, from official palette)">
                 Accent colour
               </FieldLabel>
-              <input id="b-accent" name="accentColor" defaultValue={str(s.brand?.accentColor)} className={inputClass} placeholder="#F2B544 (provisional)" />
+              <input id="b-accent" name="accentColor" defaultValue={str(s.brand?.accentColor)} className={inputClass} placeholder="#FC8F2D" />
             </FormRow>
             <div>
               <Submit>Save brand</Submit>
@@ -72,7 +72,7 @@ export default async function SettingsPage() {
           </ActionForm>
         </Card>
 
-        <Card title="Contact & WhatsApp" description="Leave a field empty to hide that channel on the site.">
+        <Card title="Contact and WhatsApp" description="Leave a field empty to hide that channel on the site.">
           <ActionForm action={settingsAction}>
             <input type="hidden" name="section" value="contact" />
             <FormRow>
@@ -226,7 +226,7 @@ export default async function SettingsPage() {
                 Showcase projects
               </FieldLabel>
               <textarea id="h-show" name="showcaseProjectSlugs" rows={3} defaultValue={lines(s.home?.showcaseProjectSlugs)} className={`${inputClass} font-mono text-xs`} />
-              <p className="text-xs text-muted">Available: {slugs.map((x) => x.slug).join(", ") || ",  (seed the database)"}</p>
+              <p className="text-xs text-slate-500">Available: {slugs.map((x) => x.slug).join(", ") || ",  (seed the database)"}</p>
             </FormRow>
             <div>
               <Submit>Save homepage</Submit>

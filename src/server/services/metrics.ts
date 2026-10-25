@@ -91,9 +91,9 @@ export async function getRecentActivity(limit = 12) {
     Lead.find().sort({ updatedAt: -1 }).limit(limit).select("title status updatedAt").lean(),
   ]);
   const items = [
-    ...inquiries.map((i) => ({ kind: "inquiry" as const, id: i._id.toString(), label: `${i.type === "PROJECT" ? "Project request" : "Inquiry"} ${i.reference} · ${i.name}`, status: i.status, at: i.createdAt as Date, href: `/admin/inquiries/${i._id.toString()}` })),
-    ...bookings.map((b) => ({ kind: "booking" as const, id: b._id.toString(), label: `Booking ${b.reference} · ${b.name}`, status: b.status, at: b.createdAt as Date, href: `/admin/bookings/${b._id.toString()}` })),
-    ...leads.map((l) => ({ kind: "lead" as const, id: l._id.toString(), label: `Lead · ${l.title}`, status: l.status, at: l.updatedAt as Date, href: `/admin/leads/${l._id.toString()}` })),
+    ...inquiries.map((i) => ({ kind: "inquiry" as const, id: i._id.toString(), label: `${i.type === "PROJECT" ? "Project request" : "Inquiry"} ${i.reference}, ${i.name}`, status: i.status, at: i.createdAt as Date, href: `/admin/inquiries/${i._id.toString()}` })),
+    ...bookings.map((b) => ({ kind: "booking" as const, id: b._id.toString(), label: `Booking ${b.reference}, ${b.name}`, status: b.status, at: b.createdAt as Date, href: `/admin/bookings/${b._id.toString()}` })),
+    ...leads.map((l) => ({ kind: "lead" as const, id: l._id.toString(), label: `Lead, ${l.title}`, status: l.status, at: l.updatedAt as Date, href: `/admin/leads/${l._id.toString()}` })),
   ];
   return items.sort((a, b) => b.at.getTime() - a.at.getTime()).slice(0, limit);
 }

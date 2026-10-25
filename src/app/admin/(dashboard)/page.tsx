@@ -24,9 +24,9 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
         description={canCrm ? "Real counts from the database for the selected period." : "Your role has access to content and media tools."}
         actions={
           canCrm ? (
-            <div className="flex gap-1 rounded-lg border border-[rgba(245,245,243,0.15)] p-1" role="group" aria-label="Time range">
+            <div className="flex gap-1 rounded-lg border border-slate-200 p-1" role="group" aria-label="Time range">
               {RANGES.map((r) => (
-                <Link key={r} href={`/admin?range=${r}`} aria-current={r === range ? "page" : undefined} className={cn("rounded-md px-2.5 py-1 text-xs", r === range ? "bg-on-dark text-ink" : "text-muted hover:text-on-dark")}>
+                <Link key={r} href={`/admin?range=${r}`} aria-current={r === range ? "page" : undefined} className={cn("rounded-md px-2.5 py-1 text-xs", r === range ? "bg-slate-900 text-white" : "text-slate-500 hover:text-slate-900")}>
                   {r === "all" ? "All time" : `Last ${r}`}
                 </Link>
               ))}
@@ -59,15 +59,15 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
           </div>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
-            <Card title="Recent activity" className="lg:col-span-2" actions={<Link href="/admin/inquiries" className="text-xs text-muted hover:text-on-dark">All inquiries</Link>}>
+            <Card title="Recent activity" className="lg:col-span-2" actions={<Link href="/admin/inquiries" className="text-xs text-slate-500 hover:text-slate-900">All inquiries</Link>}>
               {activity.length ? (
-                <ul className="divide-y divide-[rgba(245,245,243,0.06)]">
+                <ul className="divide-y divide-slate-100">
                   {activity.map((a) => (
                     <li key={`${a.kind}-${a.id}`} className="flex flex-col gap-1 py-2.5 sm:flex-row sm:items-center sm:justify-between">
                       <Link href={a.href} className="min-w-0 truncate text-sm hover:text-accent">
                         {a.label}
                       </Link>
-                      <div className="flex shrink-0 items-center gap-3 text-xs text-muted">
+                      <div className="flex shrink-0 items-center gap-3 text-xs text-slate-500">
                         <StatusBadge status={a.status} />
                         <span>{timeAgo(a.at)}</span>
                       </div>
@@ -87,12 +87,12 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
                         <Link href={`/admin/bookings/${b._id.toString()}`} className="hover:text-accent">
                           {b.name}
                         </Link>
-                        <p className="text-xs text-muted">{formatDateTime(b.startsAt, "Africa/Lagos")}</p>
+                        <p className="text-xs text-slate-500">{formatDateTime(b.startsAt, "Africa/Lagos")}</p>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-muted">No confirmed upcoming consultations.</p>
+                  <p className="text-sm text-slate-500">No confirmed upcoming consultations.</p>
                 )}
               </Card>
               <Card title="Requests by service">
@@ -104,9 +104,9 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
                         <li key={s.service} className="text-xs">
                           <div className="flex justify-between gap-2">
                             <span className="truncate">{s.service}</span>
-                            <span className="font-mono text-muted">{s.count}</span>
+                            <span className="font-mono text-slate-500">{s.count}</span>
                           </div>
-                          <div className="mt-1 h-1 rounded-full bg-[rgba(245,245,243,0.08)]">
+                          <div className="mt-1 h-1 rounded-full bg-slate-100">
                             <div className="h-1 rounded-full bg-accent" style={{ width: `${Math.round((s.count / max) * 100)}%` }} />
                           </div>
                         </li>
@@ -114,14 +114,14 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
                     })}
                   </ul>
                 ) : (
-                  <p className="text-sm text-muted">No project requests in this period.</p>
+                  <p className="text-sm text-slate-500">No project requests in this period.</p>
                 )}
               </Card>
               <Card title="Email delivery">
                 <p className="text-sm">
                   <span className={cn("font-mono", m.email.failed ? "text-danger" : "text-success")}>{m.email.failed}</span> failed, <span className="font-mono">{m.email.pending}</span> pending
                 </p>
-                <Link href="/admin/notifications#email" className="mt-2 inline-block text-xs text-muted hover:text-on-dark">
+                <Link href="/admin/notifications#email" className="mt-2 inline-block text-xs text-slate-500 hover:text-slate-900">
                   Email log
                 </Link>
               </Card>
@@ -135,9 +135,9 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
             { t: "Content", h: "/admin/content", d: "Services, solutions, articles, FAQs, careers, testimonials." },
             { t: "Media", h: "/admin/media", d: "Upload and approve images." },
           ].map(({ t, h, d }) => (
-            <Link key={h} href={h} className="rounded-xl border border-[rgba(245,245,243,0.1)] bg-surface-deep p-4 hover:border-accent">
+            <Link key={h} href={h} className="rounded-xl border border-slate-200 bg-white p-4 hover:border-accent">
               <p className="font-display font-semibold">{t}</p>
-              <p className="mt-1 text-xs text-muted">{d}</p>
+              <p className="mt-1 text-xs text-slate-500">{d}</p>
             </Link>
           ))}
         </div>

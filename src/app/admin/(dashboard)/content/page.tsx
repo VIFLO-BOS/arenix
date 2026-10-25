@@ -36,9 +36,9 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
           <Notice tone="warning">Public pages are serving fixture content (database collections empty). Run <code className="font-mono">npm run db:seed</code> to load editable records.</Notice>
         </div>
       )}
-      <div className="no-scrollbar mb-4 flex gap-1 overflow-x-auto rounded-lg border border-[rgba(245,245,243,0.12)] p-1" role="tablist" aria-label="Content type">
+      <div className="no-scrollbar mb-4 flex gap-1 overflow-x-auto rounded-lg border border-slate-200 p-1" role="tablist" aria-label="Content type">
         {TABS.map((t) => (
-          <Link key={t.key} href={`/admin/content?tab=${t.key}`} role="tab" aria-selected={t.key === tab} className={cn("shrink-0 rounded-md px-3 py-1.5 text-xs", t.key === tab ? "bg-on-dark text-ink" : "text-muted hover:text-on-dark")}>
+          <Link key={t.key} href={`/admin/content?tab=${t.key}`} role="tab" aria-selected={t.key === tab} className={cn("shrink-0 rounded-md px-3 py-1.5 text-xs", t.key === tab ? "bg-slate-900 text-white" : "text-slate-500 hover:text-slate-900")}>
             {t.label}
           </Link>
         ))}
@@ -54,12 +54,12 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
                 const published = !!it.published;
                 const editHref = slugKinds.includes(tab) ? `/admin/content/${tab}/${String(it.slug)}` : undefined;
                 return (
-                  <tr key={id} className="hover:bg-[rgba(245,245,243,0.03)]">
+                  <tr key={id} className="hover:bg-slate-50">
                     {tab === "faq" ? (
                       <>
                         <Td>
                           <p className="font-medium">{String(it.question)}</p>
-                          <p className="line-clamp-1 text-xs text-muted">{String(it.answer)}</p>
+                          <p className="line-clamp-1 text-xs text-slate-500">{String(it.answer)}</p>
                         </Td>
                         <Td muted>{String(it.scope)}</Td>
                         <Td muted>{String(it.sortOrder ?? 0)}</Td>
@@ -98,12 +98,12 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
                     <Td>
                       <div className="flex justify-end gap-2">
                         {editHref && canWrite && (
-                          <Link href={editHref} className="text-xs text-muted hover:text-on-dark">
+                          <Link href={editHref} className="text-xs text-slate-500 hover:text-slate-900">
                             Edit
                           </Link>
                         )}
                         {(tab === "faq" || tab === "testimonial") && canWrite && (
-                          <Link href={`/admin/content/${tab}/${id}`} className="text-xs text-muted hover:text-on-dark">
+                          <Link href={`/admin/content/${tab}/${id}`} className="text-xs text-slate-500 hover:text-slate-900">
                             Edit
                           </Link>
                         )}

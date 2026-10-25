@@ -37,7 +37,7 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
             {p.sentAt ? `, sent to ${p.sentTo} ${formatDate(p.sentAt)}` : ""}
           </span>
         }
-        actions={<Link href="/admin/proposals" className="text-xs text-muted hover:text-on-dark">All proposals</Link>}
+        actions={<Link href="/admin/proposals" className="text-xs text-slate-500 hover:text-slate-900">All proposals</Link>}
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -47,13 +47,13 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
               <>
                 {current.summary && <p className="mb-4 text-sm">{current.summary}</p>}
                 {current.scope && (
-                  <div className="mb-4 rounded-lg bg-[rgba(245,245,243,0.04)] p-4">
+                  <div className="mb-4 rounded-lg bg-slate-50 p-4">
                     <Markdown content={current.scope} className="text-sm" />
                   </div>
                 )}
                 {current.deliverables.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Deliverables</p>
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Deliverables</p>
                     <ul className="mt-1 list-disc pl-5 text-sm">
                       {current.deliverables.map((d) => (
                         <li key={d}>{d}</li>
@@ -67,22 +67,22 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
                       <tr key={i}>
                         <Td>
                           <p>{li.label}</p>
-                          {li.description && <p className="text-xs text-muted">{li.description}</p>}
+                          {li.description && <p className="text-xs text-slate-500">{li.description}</p>}
                         </Td>
                         <Td muted>{li.quantity}</Td>
                         <Td muted>{formatMoney(li.unitAmount, current.currency)}</Td>
                         <Td>{formatMoney(li.quantity * li.unitAmount, current.currency)}</Td>
                       </tr>
                     ))}
-                    <tr className="border-t border-[rgba(245,245,243,0.15)]">
-                      <Td className="text-right text-muted" colSpan={3}>
+                    <tr className="border-t border-slate-200">
+                      <Td className="text-right text-slate-500" colSpan={3}>
                         Subtotal
                       </Td>
                       <Td>{formatMoney(totals.subtotal, current.currency)}</Td>
                     </tr>
                     {totals.tax > 0 && (
                       <tr>
-                        <Td className="text-right text-muted" colSpan={3}>
+                        <Td className="text-right text-slate-500" colSpan={3}>
                           Tax ({current.taxRatePercent}%)
                         </Td>
                         <Td>{formatMoney(totals.tax, current.currency)}</Td>
@@ -99,7 +99,7 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
                 <KeyValue className="mt-4" items={[["Valid until", current.validUntil ? formatDate(current.validUntil) : undefined], ["Internal notes", current.notes]]} />
               </>
             ) : (
-              <p className="text-sm text-muted">No version content.</p>
+              <p className="text-sm text-slate-500">No version content.</p>
             )}
           </Card>
 
@@ -121,11 +121,11 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
                 {[...p.versions].reverse().map((v) => {
                   const t = proposalTotals({ lineItems: v.lineItems, taxRatePercent: v.taxRatePercent ?? 0 });
                   return (
-                    <li key={v.version} className="flex items-center justify-between gap-2 border-b border-[rgba(245,245,243,0.06)] pb-2 last:border-0">
+                    <li key={v.version} className="flex items-center justify-between gap-2 border-b border-slate-200 pb-2 last:border-0">
                       <span>
                         v{v.version} {v.version === p.currentVersion && <span className="text-xs text-accent">(current)</span>}
                       </span>
-                      <span className="text-xs text-muted">
+                      <span className="text-xs text-slate-500">
                         {formatMoney(t.total, v.currency)}, {formatDateTime(v.createdAt)}
                       </span>
                     </li>
@@ -222,14 +222,14 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
           <Card title="Status history">
             <ol className="flex flex-col gap-2 text-xs">
               {[...p.statusHistory].reverse().map((h, i) => (
-                <li key={i} className="flex justify-between gap-2 border-b border-[rgba(245,245,243,0.06)] pb-2 last:border-0">
+                <li key={i} className="flex justify-between gap-2 border-b border-slate-200 pb-2 last:border-0">
                   <span>
                     {h.from ? `${h.from} to ` : ""}
                     <strong>{h.to}</strong>
                     {h.note ? `, ${h.note}` : ""}
-                    <span className="text-muted"> by {h.actorLabel}</span>
+                    <span className="text-slate-500"> by {h.actorLabel}</span>
                   </span>
-                  <span className="shrink-0 text-muted">{formatDateTime(h.at)}</span>
+                  <span className="shrink-0 text-slate-500">{formatDateTime(h.at)}</span>
                 </li>
               ))}
             </ol>

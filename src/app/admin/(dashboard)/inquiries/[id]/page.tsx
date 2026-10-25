@@ -37,7 +37,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           </span>
         }
         actions={
-          <Link href="/admin/inquiries" className="text-xs text-muted hover:text-on-dark">
+          <Link href="/admin/inquiries" className="text-xs text-slate-500 hover:text-slate-900">
             All inquiries
           </Link>
         }
@@ -62,23 +62,23 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
             <KeyValue items={[["Service category", inquiry.serviceCategory], ["Solution context", inquiry.solutionContext], ["Project context", inquiry.projectContext], ["Budget", inquiry.budgetRange], ["Timeline", inquiry.timeline], ["Subject", inquiry.subject]]} className="mb-4" />
             {inquiry.goal && (
               <div className="mb-3">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Business goal</p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Business goal</p>
                 <p className="mt-1 whitespace-pre-wrap text-sm">{inquiry.goal}</p>
               </div>
             )}
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Description</p>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Description</p>
               <p className="mt-1 whitespace-pre-wrap text-sm">{inquiry.message}</p>
             </div>
             {inquiry.features && (
               <div className="mt-3">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Features</p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Features</p>
                 <p className="mt-1 whitespace-pre-wrap text-sm">{inquiry.features}</p>
               </div>
             )}
             {inquiry.attachments.length > 0 && (
               <div className="mt-4">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Attachments</p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Attachments</p>
                 <ul className="mt-1 flex flex-col gap-1 text-sm">
                   {inquiry.attachments.map((a) => (
                     <li key={a._id?.toString() ?? a.storageKey}>
@@ -89,7 +89,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
                       ) : (
                         a.filename
                       )}{" "}
-                      <span className="text-xs text-muted">
+                      <span className="text-xs text-slate-500">
                         ({a.mime}, {Math.round(a.size / 1024)} KB)
                       </span>
                     </li>
@@ -102,16 +102,16 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
             {inquiry.internalNotes.length ? (
               <ul className="mb-4 flex flex-col gap-3">
                 {inquiry.internalNotes.map((n, i) => (
-                  <li key={i} className="rounded-lg bg-[rgba(245,245,243,0.04)] p-3 text-sm">
+                  <li key={i} className="rounded-lg bg-slate-50 p-3 text-sm">
                     <p className="whitespace-pre-wrap">{n.body}</p>
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-xs text-slate-500">
                       {n.authorLabel}, {formatDateTime(n.at)}
                     </p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mb-4 text-sm text-muted">No notes yet.</p>
+              <p className="mb-4 text-sm text-slate-500">No notes yet.</p>
             )}
             {canWrite && (
               <ActionForm action={inquiryNoteAction} resetOnSuccess>
@@ -154,7 +154,7 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
                     <Submit>Update status</Submit>
                   </div>
                 </ActionForm>
-                <p className="mt-3 text-xs text-muted">Qualifying also moves the linked lead to QUALIFIED. Marking spam archives the lead.</p>
+                <p className="mt-3 text-xs text-slate-500">Qualifying also moves the linked lead to QUALIFIED. Marking spam archives the lead.</p>
               </Card>
               <Card title="Assignment">
                 <ActionForm action={inquiryAssignAction}>
@@ -180,17 +180,17 @@ export default async function InquiryDetailPage({ params }: { params: Promise<{ 
           <Card title="History">
             <ol className="flex flex-col gap-2 text-xs">
               {[...inquiry.statusHistory].reverse().map((h, i) => (
-                <li key={i} className="flex justify-between gap-2 border-b border-[rgba(245,245,243,0.06)] pb-2 last:border-0">
+                <li key={i} className="flex justify-between gap-2 border-b border-slate-200 pb-2 last:border-0">
                   <span>
                     {h.from ? `${h.from} to ` : ""}
                     <strong>{h.to}</strong>
                     {h.note ? `, ${h.note}` : ""}
                   </span>
-                  <span className="shrink-0 text-muted">{formatDateTime(h.at)}</span>
+                  <span className="shrink-0 text-slate-500">{formatDateTime(h.at)}</span>
                 </li>
               ))}
             </ol>
-            <p className="mt-3 text-xs text-muted">Submitted by {h(inquiry.statusHistory[0]?.actorLabel)}, {inquiry.userAgent ? "browser recorded" : "no user agent"}</p>
+            <p className="mt-3 text-xs text-slate-500">Submitted by {h(inquiry.statusHistory[0]?.actorLabel)}, {inquiry.userAgent ? "browser recorded" : "no user agent"}</p>
           </Card>
         </div>
       </div>

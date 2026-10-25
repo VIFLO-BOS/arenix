@@ -35,10 +35,10 @@ export default async function PortfolioEditPage({ params }: { params: Promise<{ 
         }
         actions={
           <>
-            <Link href="/admin/portfolio" className="text-xs text-muted hover:text-on-dark">
+            <Link href="/admin/portfolio" className="text-xs text-slate-500 hover:text-slate-900">
               Portfolio
             </Link>
-            <Link href={`/work/${project.slug}`} target="_blank" className="text-xs text-muted hover:text-on-dark">
+            <Link href={`/work/${project.slug}`} target="_blank" className="text-xs text-slate-500 hover:text-slate-900">
               Preview
             </Link>
           </>
@@ -47,7 +47,7 @@ export default async function PortfolioEditPage({ params }: { params: Promise<{ 
 
       <div className="grid gap-4 xl:grid-cols-5">
         <div className="flex flex-col gap-4 xl:col-span-3">
-          <Card title="Details">{canWrite ? <PortfolioForm project={project} allSlugs={slugs} /> : <p className="text-sm text-muted">Read only for your role.</p>}</Card>
+          <Card title="Details">{canWrite ? <PortfolioForm project={project} allSlugs={slugs} /> : <p className="text-sm text-slate-500">Read only for your role.</p>}</Card>
           {canPublish && (
             <Card title="Danger zone">
               <ActionButton action={portfolioDeleteAction} fields={{ slug: project.slug }} variant="danger" confirm={`Delete "${project.title}" permanently? The public page will 404.`}>
@@ -62,13 +62,13 @@ export default async function PortfolioEditPage({ params }: { params: Promise<{ 
             {project.gallery.length ? (
               <ul className="mb-4 flex flex-col gap-3">
                 {project.gallery.map((m) => (
-                  <li key={m.id} className="flex gap-3 rounded-lg border border-[rgba(245,245,243,0.08)] p-2">
-                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded bg-surface-raised">
+                  <li key={m.id} className="flex gap-3 rounded-lg border border-slate-200 p-2">
+                    <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded bg-slate-100">
                       <Image src={m.src} alt="" fill sizes="96px" className="object-cover object-top" />
                     </div>
                     <div className="min-w-0 flex-1 text-xs">
                       <p className="truncate font-medium">{m.pageLabel ?? m.caption ?? m.id}</p>
-                      <p className="truncate text-muted">{m.alt}</p>
+                      <p className="truncate text-slate-500">{m.alt}</p>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {project.coverMedia?.id === m.id && <Badge tone="accent">Cover</Badge>}
                         <Badge tone={m.approvedForPublication ? "success" : "warning"}>{m.approvedForPublication ? "Approved" : "Unapproved"}</Badge>
@@ -96,7 +96,7 @@ export default async function PortfolioEditPage({ params }: { params: Promise<{ 
             )}
 
             {canWrite && (
-              <ActionForm action={portfolioMediaAction} resetOnSuccess className="rounded-lg border border-dashed border-[rgba(245,245,243,0.15)] p-3">
+              <ActionForm action={portfolioMediaAction} resetOnSuccess className="rounded-lg border border-dashed border-slate-200 p-3">
                 <input type="hidden" name="slug" value={project.slug} />
                 <p className="text-xs font-semibold">Add or update media</p>
                 <FormRow>

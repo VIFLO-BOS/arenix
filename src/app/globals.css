@@ -850,9 +850,23 @@ html.lenis body {
 /* Admin compact scale */
 .admin-scope {
   font-size: 0.9rem;
+  color-scheme: light;
+  --bg: #f3f5f9;
+  --bg-raised: #ffffff;
+  --fg: #0f172a;
+  --fg-muted: #64748b;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --card-bg: #ffffff;
+  --card-bg-hover: #ffffff;
+  --glass-bg: #f8fafc;
 }
 .admin-scope table {
   font-size: 0.85rem;
+}
+.admin-scope ::selection {
+  background: #fc8f2d;
+  color: #ffffff;
 }
 
 .no-scrollbar {

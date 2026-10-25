@@ -31,7 +31,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             {project.deadline ? `, deadline ${formatDate(project.deadline)}` : ""}
           </span>
         }
-        actions={<Link href="/admin/projects" className="text-xs text-muted hover:text-on-dark">All projects</Link>}
+        actions={<Link href="/admin/projects" className="text-xs text-slate-500 hover:text-slate-900">All projects</Link>}
       />
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
@@ -39,10 +39,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             {project.milestones.length ? (
               <ul className="mb-4 flex flex-col gap-2">
                 {project.milestones.map((m) => (
-                  <li key={m._id?.toString()} className="flex flex-col gap-2 rounded-lg border border-[rgba(245,245,243,0.08)] p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <li key={m._id?.toString()} className="flex flex-col gap-2 rounded-lg border border-slate-200 p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="text-sm font-medium">{m.title}</p>
-                      <p className="text-xs text-muted">
+                      <p className="text-xs text-slate-500">
                         {m.dueAt ? `Due ${formatDate(m.dueAt)}` : "No due date"}
                         {m.completedAt ? `, done ${formatDate(m.completedAt)}` : ""}
                       </p>
@@ -63,10 +63,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 ))}
               </ul>
             ) : (
-              <p className="mb-4 text-sm text-muted">No milestones yet.</p>
+              <p className="mb-4 text-sm text-slate-500">No milestones yet.</p>
             )}
             {canWrite && (
-              <ActionForm action={milestoneAddAction} resetOnSuccess className="rounded-lg border border-dashed border-[rgba(245,245,243,0.15)] p-3">
+              <ActionForm action={milestoneAddAction} resetOnSuccess className="rounded-lg border border-dashed border-slate-200 p-3">
                 <input type="hidden" name="id" value={id} />
                 <div className="grid gap-2 sm:grid-cols-[1fr_160px_auto] sm:items-end">
                   <FormRow>
@@ -98,16 +98,16 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             {project.notes.length ? (
               <ul className="flex flex-col gap-2">
                 {[...project.notes].reverse().map((n, i) => (
-                  <li key={i} className="rounded-lg bg-[rgba(245,245,243,0.04)] p-3 text-sm">
+                  <li key={i} className="rounded-lg bg-slate-50 p-3 text-sm">
                     <p className="whitespace-pre-wrap">{n.body}</p>
-                    <p className="mt-1 text-xs text-muted">
+                    <p className="mt-1 text-xs text-slate-500">
                       {n.authorLabel}, {formatDateTime(n.at)}
                     </p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">No notes yet.</p>
+              <p className="text-sm text-slate-500">No notes yet.</p>
             )}
           </Card>
           {canWrite && (
@@ -129,9 +129,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                 ["Confidential", project.confidential ? "Yes" : "No"],
               ]}
             />
-            {project.summary && <p className="mt-4 whitespace-pre-wrap text-sm text-muted">{project.summary}</p>}
+            {project.summary && <p className="mt-4 whitespace-pre-wrap text-sm text-slate-500">{project.summary}</p>}
           </Card>
-          <div className="h-1.5 rounded-full bg-[rgba(245,245,243,0.08)]" aria-hidden="true">
+          <div className="h-1.5 rounded-full bg-slate-100" aria-hidden="true">
             <div className="h-1.5 rounded-full bg-accent" style={{ width: `${project.progressPercent ?? 0}%` }} />
           </div>
         </div>

@@ -121,11 +121,11 @@ export function PortfolioForm({ project, allSlugs }: { project?: P; allSlugs: { 
             Related projects
           </FieldLabel>
           <textarea id="pf-related" name="relatedSlugs" rows={2} defaultValue={join(project?.relatedSlugs)} className={`${inputClass} font-mono text-xs`} />
-          <p className="text-xs text-muted">Available: {allSlugs.filter((s) => s.slug !== project?.slug).map((s) => s.slug).join(", ") || ", "}</p>
+          <p className="text-xs text-slate-500">Available: {allSlugs.filter((s) => s.slug !== project?.slug).map((s) => s.slug).join(", ") || ", "}</p>
         </FormRow>
       </div>
-      <fieldset className="grid gap-2 rounded-lg border border-[rgba(245,245,243,0.1)] p-3 text-xs sm:grid-cols-2">
-        <legend className="px-1 text-[0.65rem] font-semibold uppercase tracking-wider text-muted">Publication</legend>
+      <fieldset className="grid gap-2 rounded-lg border border-slate-200 p-3 text-xs sm:grid-cols-2">
+        <legend className="px-1 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-500">Publication</legend>
         <label className="flex items-center gap-2">
           <input type="checkbox" name="isLiveUrlPublic" defaultChecked={project?.isLiveUrlPublic ?? false} className="accent-[var(--color-accent)]" />
           Live URL is public and approved (shows &ldquo;Visit Website&rdquo;)

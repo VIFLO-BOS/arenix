@@ -9,7 +9,7 @@ export default async function NewPortfolioPage() {
   const slugs = await listPortfolioSlugs();
   return (
     <>
-      <PageHeader title="New portfolio project" description="Create the record first. Add screenshots on the next screen. Publishing requires the approval flag." actions={<Link href="/admin/portfolio" className="text-xs text-muted hover:text-on-dark">Portfolio</Link>} />
+      <PageHeader title="New portfolio project" description="Create the record first. Add screenshots on the next screen. Publishing requires the approval flag." actions={<Link href="/admin/portfolio" className="text-xs text-slate-500 hover:text-slate-900">Portfolio</Link>} />
       <Card className="max-w-4xl">
         <PortfolioForm allSlugs={slugs} />
       </Card>

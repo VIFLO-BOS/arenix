@@ -9,7 +9,7 @@ export default async function ResetPasswordPage({ params }: { params: Promise<{ 
     return (
       <>
         <h1 className="font-display text-2xl font-semibold">Link not valid</h1>
-        <p className="mt-2 text-sm text-muted">This reset link has expired or was already used.</p>
+        <p className="mt-2 text-sm text-slate-500">This reset link has expired or was already used.</p>
         <Link href="/admin/forgot-password" className="mt-6 inline-block text-sm underline underline-offset-4">
           Request a new link
         </Link>
@@ -19,7 +19,7 @@ export default async function ResetPasswordPage({ params }: { params: Promise<{ 
   return (
     <>
       <h1 className="font-display text-2xl font-semibold">Choose a new password</h1>
-      <p className="mt-1 text-sm text-muted">All other sessions for this account will be signed out.</p>
+      <p className="mt-1 text-sm text-slate-500">All other sessions for this account will be signed out.</p>
       <div className="mt-6">
         <ResetPasswordForm token={token} />
       </div>

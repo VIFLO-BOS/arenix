@@ -20,9 +20,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         title="Analytics"
         description="Conversion funnel and operating metrics computed from real records. Website traffic analytics are separate and shown only when configured."
         actions={
-          <div className="flex gap-1 rounded-lg border border-[rgba(245,245,243,0.15)] p-1" role="group" aria-label="Time range">
+          <div className="flex gap-1 rounded-lg border border-slate-200 p-1" role="group" aria-label="Time range">
             {RANGES.map((r) => (
-              <Link key={r} href={`/admin/analytics?range=${r}`} aria-current={r === range ? "page" : undefined} className={cn("rounded-md px-2.5 py-1 text-xs", r === range ? "bg-on-dark text-ink" : "text-muted hover:text-on-dark")}>
+              <Link key={r} href={`/admin/analytics?range=${r}`} aria-current={r === range ? "page" : undefined} className={cn("rounded-md px-2.5 py-1 text-xs", r === range ? "bg-slate-900 text-white" : "text-slate-500 hover:text-slate-900")}>
                 {r === "all" ? "All time" : `Last ${r}`}
               </Link>
             ))}
@@ -52,9 +52,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
               <li key={f.stage} className="text-sm">
                 <div className="flex items-center justify-between">
                   <span>{f.stage}</span>
-                  <span className="font-mono text-muted">{f.value}</span>
+                  <span className="font-mono text-slate-500">{f.value}</span>
                 </div>
-                <div className="mt-1 h-2 rounded-full bg-[rgba(245,245,243,0.08)]" aria-hidden="true">
+                <div className="mt-1 h-2 rounded-full bg-slate-100" aria-hidden="true">
                   <div className="h-2 rounded-full bg-accent" style={{ width: `${Math.max(2, Math.round((f.value / funnelMax) * 100))}%` }} />
                 </div>
               </li>
@@ -69,9 +69,9 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted">No inquiries in this period.</p>
+            <p className="text-sm text-slate-500">No inquiries in this period.</p>
           )}
-          <p className="mt-2 text-xs text-muted">Only days with at least one inquiry are shown. Server timestamps (UTC).</p>
+          <p className="mt-2 text-xs text-slate-500">Only days with at least one inquiry are shown. Server timestamps (UTC).</p>
         </Card>
       </div>
 
@@ -119,7 +119,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
               <Td>{m.byService.length ? m.byService.map((s) => `${s.service} (${s.count})`).join(", ") : "None"}</Td>
             </tr>
           </Table>
-          <p className="mt-2 text-xs text-muted">WhatsApp clicks count link opens only. Messages are not received by this system.</p>
+          <p className="mt-2 text-xs text-slate-500">WhatsApp clicks count link opens only. Messages are not received by this system.</p>
         </Card>
       </div>
     </>

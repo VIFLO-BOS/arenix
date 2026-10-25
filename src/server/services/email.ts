@@ -119,7 +119,7 @@ function layout(title: string, bodyHtml: string) {
       <h1 style="font-size:20px;margin:0 0 16px">${esc(title)}</h1>
       ${bodyHtml}
     </div>
-    <p style="font-size:12px;color:#5f6977;margin-top:20px">${esc(siteConfig.legalName)} · <a href="${siteConfig.url}" style="color:#5f6977">${esc(siteConfig.url)}</a></p>
+    <p style="font-size:12px;color:#5f6977;margin-top:20px">${esc(siteConfig.legalName)}. <a href="${siteConfig.url}" style="color:#5f6977">${esc(siteConfig.url)}</a></p>
   </div></body></html>`;
 }
 
@@ -132,7 +132,7 @@ export const emailTemplates = {
   inquiryAcknowledgement(p: { name: string; reference: string; type: "CONTACT" | "PROJECT" }) {
     const what = p.type === "PROJECT" ? "project request" : "message";
     return {
-      subject: `We received your ${what} — ${p.reference}`,
+      subject: `We received your ${what}, reference ${p.reference}`,
       html: layout(
         `Thanks, ${p.name}.`,
         `<p style="font-size:15px;line-height:1.6">Your ${what} has been saved with reference <strong>${esc(p.reference)}</strong>. A member of the areniX team will review it and reply using the contact method you chose.</p>
@@ -155,10 +155,10 @@ export const emailTemplates = {
   },
   bookingRequested(p: { name: string; reference: string; consultationType: string }) {
     return {
-      subject: `Consultation request received — ${p.reference}`,
+      subject: `Consultation request received, reference ${p.reference}`,
       html: layout(
         `We have your consultation request, ${p.name}.`,
-        `<p style="font-size:15px;line-height:1.6">Reference <strong>${esc(p.reference)}</strong> · ${esc(p.consultationType)}.</p>
+        `<p style="font-size:15px;line-height:1.6">Reference <strong>${esc(p.reference)}</strong>, ${esc(p.consultationType)}.</p>
          <p style="font-size:15px;line-height:1.6">This is a <strong>request</strong>, not a confirmed appointment yet. The team will propose a time by email and the booking will be confirmed once you accept it.</p>`,
       ),
       text: `Consultation request ${p.reference} (${p.consultationType}) received. This is a request, not a confirmed appointment yet; we will propose a time by email.`,
@@ -166,24 +166,24 @@ export const emailTemplates = {
   },
   bookingConfirmed(p: { name: string; reference: string; consultationType: string; when: string; meetingUrl?: string; rescheduleUrl?: string; cancelUrl?: string }) {
     return {
-      subject: `Consultation confirmed — ${p.reference}`,
+      subject: `Consultation confirmed, reference ${p.reference}`,
       html: layout(
         `Your consultation is confirmed, ${p.name}.`,
         `<table style="border-collapse:collapse">${row("Reference", p.reference)}${row("Type", p.consultationType)}${row("When", p.when)}${row("Meeting link", p.meetingUrl)}</table>
-         ${p.rescheduleUrl ? `<p><a href="${p.rescheduleUrl}">Reschedule</a>${p.cancelUrl ? ` · <a href="${p.cancelUrl}">Cancel</a>` : ""}</p>` : ""}`,
+         ${p.rescheduleUrl ? `<p><a href="${p.rescheduleUrl}">Reschedule</a>${p.cancelUrl ? ` or <a href="${p.cancelUrl}">Cancel</a>` : ""}</p>` : ""}`,
       ),
       text: `Consultation ${p.reference} confirmed: ${p.consultationType}, ${p.when}. ${p.meetingUrl ?? ""}`,
     };
   },
   bookingStaffAlert(p: { reference: string; name: string; email: string; consultationType: string; status: string; adminUrl: string }) {
     return {
-      subject: `Booking ${p.status.toLowerCase()} — ${p.reference} (${p.name})`,
+      subject: `Booking ${p.status.toLowerCase()}, ${p.reference} (${p.name})`,
       html: layout(
         `Booking ${p.status.toLowerCase()}`,
         `<table style="border-collapse:collapse">${row("Reference", p.reference)}${row("Name", p.name)}${row("Email", p.email)}${row("Type", p.consultationType)}${row("Status", p.status)}</table>
          <p><a href="${p.adminUrl}" style="display:inline-block;background:#141821;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Open in dashboard</a></p>`,
       ),
-      text: `Booking ${p.reference} ${p.status} — ${p.name} <${p.email}> (${p.consultationType}). ${p.adminUrl}`,
+      text: `Booking ${p.reference} ${p.status}. ${p.name} <${p.email}> (${p.consultationType}). ${p.adminUrl}`,
     };
   },
   invitation(p: { name: string; inviterName: string; role: string; acceptUrl: string; expiresHours: number }) {
@@ -212,7 +212,7 @@ export const emailTemplates = {
   },
   proposalSent(p: { clientName: string; title: string; reference: string; version: number; summary?: string; validUntil?: string }) {
     return {
-      subject: `Proposal ${p.reference} — ${p.title}`,
+      subject: `Proposal ${p.reference}, ${p.title}`,
       html: layout(
         `Proposal: ${p.title}`,
         `<p style="font-size:15px;line-height:1.6">Hello ${esc(p.clientName)}, please find the details of proposal <strong>${esc(p.reference)}</strong> (version ${p.version}).</p>

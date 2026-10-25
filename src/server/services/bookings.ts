@@ -70,7 +70,7 @@ export async function createConsultationRequest(input: ConsultationRequestInput,
   });
 
   const lead = await Lead.create({
-    title: `${typeLabel(input.consultationType)} — ${input.company || input.name}`,
+    title: `${typeLabel(input.consultationType)} for ${input.company || input.name}`,
     status: "NEW",
     source: "website:book-consultation",
     serviceCategory: input.serviceContext || undefined,
@@ -88,7 +88,7 @@ export async function createConsultationRequest(input: ConsultationRequestInput,
   const alert = emailTemplates.bookingStaffAlert({ reference, name: input.name, email: input.email, consultationType: typeLabel(input.consultationType), status: "REQUESTED", adminUrl });
   const recipients = await bookingRecipients();
   if (recipients.length) await enqueueEmail({ to: recipients, subject: alert.subject, html: alert.html, text: alert.text, template: "booking-staff", entityType: "Booking", entityId: booking._id.toString() });
-  await notifyRoles({ roles: ["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT"], type: "booking.requested", title: `Consultation requested ${reference}`, body: `${input.name} · ${typeLabel(input.consultationType)}`, link: `/admin/bookings/${booking._id.toString()}`, entityType: "Booking", entityId: booking._id.toString() });
+  await notifyRoles({ roles: ["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT"], type: "booking.requested", title: `Consultation requested ${reference}`, body: `${input.name}, ${typeLabel(input.consultationType)}`, link: `/admin/bookings/${booking._id.toString()}`, entityType: "Booking", entityId: booking._id.toString() });
   await recordAudit({ action: "booking.requested", entityType: "Booking", entityId: booking._id.toString(), metadata: { reference }, ipHash: meta.ipHash });
   return { reference, id: booking._id.toString() };
 }

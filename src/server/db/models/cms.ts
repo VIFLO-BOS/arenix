@@ -1,5 +1,9 @@
 import mongoose, { Schema, Types, type Model } from "mongoose";
-import { PROJECT_STATUSES, type MediaKind, type ProjectStatus } from "@/types/content";
+import {
+  PROJECT_STATUSES,
+  type MediaKind,
+  type ProjectStatus,
+} from "@/types/content";
 
 /* ------------------------------ Interfaces ----------------------------- */
 
@@ -188,14 +192,57 @@ export interface MediaAssetDoc {
 export interface SiteSettingDoc {
   _id: Types.ObjectId;
   key: string;
-  brand: { legalName: string; shortName: string; tagline: string; description: string; logoUrl: string; accentColor: string };
-  contact: { email: string; phone: string; whatsappDigits: string; addressLine: string; city: string; country: string; showLocation: boolean };
-  socials: { linkedin: string; github: string; x: string; instagram: string; youtube: string };
-  booking: { mode: "request" | "calcom"; publicEventLink: string; operatingHoursNote: string };
+  brand: {
+    legalName: string;
+    shortName: string;
+    tagline: string;
+    description: string;
+    logoUrl: string;
+    accentColor: string;
+  };
+  contact: {
+    email: string;
+    phone: string;
+    whatsappDigits: string;
+    addressLine: string;
+    city: string;
+    country: string;
+    showLocation: boolean;
+  };
+  socials: {
+    linkedin: string;
+    github: string;
+    x: string;
+    instagram: string;
+    youtube: string;
+  };
+  booking: {
+    mode: "request" | "calcom";
+    publicEventLink: string;
+    operatingHoursNote: string;
+  };
   notifications: { inquiryEmails: string[]; bookingEmails: string[] };
-  seo: { defaultTitle: string; titleTemplate: string; defaultDescription: string; ogImageUrl: string; indexable: boolean };
-  home: { heroHeadline: string; heroSupport: string; showreelVideoUrl: string; showreelPosterUrl: string; featuredProjectSlugs: string[]; showcaseProjectSlugs: string[] };
-  legal: { privacyMarkdown: string; termsMarkdown: string; privacyReviewed: boolean; termsReviewed: boolean };
+  seo: {
+    defaultTitle: string;
+    titleTemplate: string;
+    defaultDescription: string;
+    ogImageUrl: string;
+    indexable: boolean;
+  };
+  home: {
+    heroHeadline: string;
+    heroSupport: string;
+    showreelVideoUrl: string;
+    showreelPosterUrl: string;
+    featuredProjectSlugs: string[];
+    showcaseProjectSlugs: string[];
+  };
+  legal: {
+    privacyMarkdown: string;
+    termsMarkdown: string;
+    privacyReviewed: boolean;
+    termsReviewed: boolean;
+  };
   updatedBy?: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -209,7 +256,11 @@ const ProjectMediaSchema = new Schema<ProjectMediaSub>(
     src: { type: String, required: true },
     alt: { type: String, required: true },
     caption: { type: String },
-    kind: { type: String, enum: ["screenshot", "video", "illustration", "device-mockup"], default: "screenshot" },
+    kind: {
+      type: String,
+      enum: ["screenshot", "video", "illustration", "device-mockup"],
+      default: "screenshot",
+    },
     pageLabel: { type: String },
     device: { type: String, enum: ["desktop", "mobile"] },
     isAuthenticScreenshot: { type: Boolean, default: false },
@@ -223,7 +274,13 @@ const ProjectMediaSchema = new Schema<ProjectMediaSub>(
 
 const PortfolioProjectSchema = new Schema<PortfolioProjectDoc>(
   {
-    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     title: { type: String, required: true },
     teaser: { type: String, required: true },
     description: { type: String, required: true },
@@ -254,14 +311,33 @@ const PortfolioProjectSchema = new Schema<PortfolioProjectDoc>(
   },
   { timestamps: true },
 );
-PortfolioProjectSchema.index({ title: "text", teaser: "text", industry: "text" });
+PortfolioProjectSchema.index({
+  title: "text",
+  teaser: "text",
+  industry: "text",
+});
 
-const FaqItemSchema = new Schema<FaqItemSub>({ question: { type: String, required: true }, answer: { type: String, required: true } }, { _id: false });
-const TitleDetailSchema = new Schema<{ title: string; detail: string }>({ title: { type: String }, detail: { type: String } }, { _id: false });
+const FaqItemSchema = new Schema<FaqItemSub>(
+  {
+    question: { type: String, required: true },
+    answer: { type: String, required: true },
+  },
+  { _id: false },
+);
+const TitleDetailSchema = new Schema<{ title: string; detail: string }>(
+  { title: { type: String }, detail: { type: String } },
+  { _id: false },
+);
 
 const ServiceSchema = new Schema<ServiceDoc>(
   {
-    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     index: { type: String, required: true },
     title: { type: String, required: true },
     shortTitle: { type: String },
@@ -282,7 +358,13 @@ const ServiceSchema = new Schema<ServiceDoc>(
 
 const SolutionSchema = new Schema<SolutionDoc>(
   {
-    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     sector: { type: String, required: true },
     title: { type: String, required: true },
     summary: { type: String, required: true },
@@ -292,7 +374,11 @@ const SolutionSchema = new Schema<SolutionDoc>(
     workflow: [{ type: String }],
     architectureNotes: { type: String },
     proofProjectSlugs: [{ type: String }],
-    capabilityStatus: { type: String, enum: ["delivered", "proposed", "mixed"], default: "proposed" },
+    capabilityStatus: {
+      type: String,
+      enum: ["delivered", "proposed", "mixed"],
+      default: "proposed",
+    },
     published: { type: Boolean, default: true },
     sortOrder: { type: Number, default: 0 },
   },
@@ -313,7 +399,13 @@ const TechnologySchema = new Schema<TechnologyDoc>(
 
 const ArticleSchema = new Schema<ArticleDoc>(
   {
-    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     title: { type: String, required: true },
     excerpt: { type: String, required: true },
     content: { type: String, required: true },
@@ -335,7 +427,11 @@ const CareerOpeningSchema = new Schema<CareerOpeningDoc>(
     slug: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     location: { type: String, default: "Remote" },
-    type: { type: String, enum: ["Full-time", "Part-time", "Contract", "Internship"], default: "Full-time" },
+    type: {
+      type: String,
+      enum: ["Full-time", "Part-time", "Contract", "Internship"],
+      default: "Full-time",
+    },
     summary: { type: String, required: true },
     description: { type: String, required: true },
     requirements: [{ type: String }],
@@ -394,7 +490,10 @@ const SiteSettingSchema = new Schema<SiteSettingDoc>(
     brand: {
       legalName: { type: String, default: "areniX Technologies Limited" },
       shortName: { type: String, default: "areniX" },
-      tagline: { type: String, default: "We build technology that moves ideas forward." },
+      tagline: {
+        type: String,
+        default: "We build technology that moves ideas forward.",
+      },
       description: { type: String, default: "" },
       logoUrl: { type: String, default: "" },
       accentColor: { type: String, default: "" },
@@ -418,21 +517,30 @@ const SiteSettingSchema = new Schema<SiteSettingDoc>(
     booking: {
       mode: { type: String, enum: ["request", "calcom"], default: "request" },
       publicEventLink: { type: String, default: "" },
-      operatingHoursNote: { type: String, default: "Monday to Friday, 9am to 5pm Lagos time" },
+      operatingHoursNote: {
+        type: String,
+        default: "Monday to Friday, 9am to 5pm Lagos time",
+      },
     },
     notifications: {
       inquiryEmails: [{ type: String }],
       bookingEmails: [{ type: String }],
     },
     seo: {
-      defaultTitle: { type: String, default: "areniX | Software, Websites and Business Systems" },
+      defaultTitle: {
+        type: String,
+        default: "areniX | Software, Websites and Business Systems",
+      },
       titleTemplate: { type: String, default: "%s | areniX" },
       defaultDescription: { type: String, default: "" },
       ogImageUrl: { type: String, default: "" },
       indexable: { type: Boolean, default: true },
     },
     home: {
-      heroHeadline: { type: String, default: "We build technology that moves ideas forward." },
+      heroHeadline: {
+        type: String,
+        default: "We build technology that moves ideas forward.",
+      },
       heroSupport: { type: String, default: "" },
       showreelVideoUrl: { type: String, default: "" },
       showreelPosterUrl: { type: String, default: "" },
@@ -454,13 +562,28 @@ function model<T>(name: string, schema: Schema<T>): Model<T> {
   return (mongoose.models[name] as Model<T>) || mongoose.model<T>(name, schema);
 }
 
-export const PortfolioProjectModel = model<PortfolioProjectDoc>("PortfolioProject", PortfolioProjectSchema);
+export const PortfolioProjectModel = model<PortfolioProjectDoc>(
+  "PortfolioProject",
+  PortfolioProjectSchema,
+);
 export const ServiceModel = model<ServiceDoc>("Service", ServiceSchema);
 export const SolutionModel = model<SolutionDoc>("Solution", SolutionSchema);
-export const TechnologyModel = model<TechnologyDoc>("Technology", TechnologySchema);
+export const TechnologyModel = model<TechnologyDoc>(
+  "Technology",
+  TechnologySchema,
+);
 export const ArticleModel = model<ArticleDoc>("Article", ArticleSchema);
-export const CareerOpeningModel = model<CareerOpeningDoc>("CareerOpening", CareerOpeningSchema);
-export const TestimonialModel = model<TestimonialDoc>("Testimonial", TestimonialSchema);
+export const CareerOpeningModel = model<CareerOpeningDoc>(
+  "CareerOpening",
+  CareerOpeningSchema,
+);
+export const TestimonialModel = model<TestimonialDoc>(
+  "Testimonial",
+  TestimonialSchema,
+);
 export const FaqModel = model<FaqDoc>("Faq", FaqSchema);
 export const MediaAsset = model<MediaAssetDoc>("MediaAsset", MediaAssetSchema);
-export const SiteSetting = model<SiteSettingDoc>("SiteSetting", SiteSettingSchema);
+export const SiteSetting = model<SiteSettingDoc>(
+  "SiteSetting",
+  SiteSettingSchema,
+);

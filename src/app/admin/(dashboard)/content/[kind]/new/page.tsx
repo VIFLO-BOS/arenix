@@ -13,7 +13,7 @@ export default async function NewContentPage({ params }: { params: Promise<{ kin
   const k = kind as keyof typeof KINDS;
   return (
     <>
-      <PageHeader title={`New ${KINDS[k]}`} actions={<Link href={`/admin/content?tab=${k}`} className="text-xs text-muted hover:text-on-dark">Content</Link>} />
+      <PageHeader title={`New ${KINDS[k]}`} actions={<Link href={`/admin/content?tab=${k}`} className="text-xs text-slate-500 hover:text-slate-900">Content</Link>} />
       <Card className="max-w-4xl">
         {k === "service" && <ServiceForm />}
         {k === "solution" && <SolutionForm />}

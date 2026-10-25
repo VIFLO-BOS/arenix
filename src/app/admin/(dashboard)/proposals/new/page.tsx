@@ -15,7 +15,7 @@ export default async function NewProposalPage({ searchParams }: { searchParams: 
 
   return (
     <>
-      <PageHeader title="New proposal" description={lead ? `For lead ${lead.title}` : "Create a draft. Pricing is only ever stated here, in a versioned document."} actions={<Link href="/admin/proposals" className="text-xs text-muted hover:text-on-dark">All proposals</Link>} />
+      <PageHeader title="New proposal" description={lead ? `For lead ${lead.title}` : "Create a draft. Pricing is only ever stated here, in a versioned document."} actions={<Link href="/admin/proposals" className="text-xs text-slate-500 hover:text-slate-900">All proposals</Link>} />
       <Card className="max-w-3xl">
         <ActionForm action={proposalCreateAction} refresh={false}>
           {lead && <input type="hidden" name="leadId" value={lead._id.toString()} />}

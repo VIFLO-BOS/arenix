@@ -36,7 +36,7 @@ export default async function ProposalsPage({ searchParams }: { searchParams: Pr
               const client = p.clientId as unknown as { name?: string } | null;
               const lead = p.leadId as unknown as { title?: string } | null;
               return (
-                <tr key={p._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+                <tr key={p._id.toString()} className="hover:bg-slate-50">
                   <Td>
                     <Link href={`/admin/proposals/${p._id.toString()}`} className="font-mono text-xs text-accent hover:underline">
                       {p.reference}

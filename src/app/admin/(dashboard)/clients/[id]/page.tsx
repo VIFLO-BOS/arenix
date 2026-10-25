@@ -19,7 +19,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
   return (
     <>
-      <PageHeader eyebrow="Client" title={client.name} description={org?.name ? `${org.name}${client.jobTitle ? `, ${client.jobTitle}` : ""}` : client.jobTitle} actions={<Link href="/admin/clients" className="text-xs text-muted hover:text-on-dark">All clients</Link>} />
+      <PageHeader eyebrow="Client" title={client.name} description={org?.name ? `${org.name}${client.jobTitle ? `, ${client.jobTitle}` : ""}` : client.jobTitle} actions={<Link href="/admin/clients" className="text-xs text-slate-500 hover:text-slate-900">All clients</Link>} />
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
           {canWrite ? (
@@ -45,7 +45,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-muted">No leads.</p>
+                <p className="text-sm text-slate-500">No leads.</p>
               )}
             </Card>
           )}
@@ -64,7 +64,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted">None.</p>
+              <p className="text-sm text-slate-500">None.</p>
             )}
           </Card>
           {canCrm && (
@@ -76,12 +76,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                       <Link href={`/admin/inquiries/${i._id.toString()}`} className="font-mono text-xs text-accent hover:underline">
                         {i.reference}
                       </Link>
-                      <p className="text-xs text-muted">{formatDateTime(i.createdAt as Date)}</p>
+                      <p className="text-xs text-slate-500">{formatDateTime(i.createdAt as Date)}</p>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-muted">None.</p>
+                <p className="text-sm text-slate-500">None.</p>
               )}
             </Card>
           )}

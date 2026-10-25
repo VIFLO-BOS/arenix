@@ -1,12 +1,23 @@
 // Admin smoke test: logs in with the bootstrap admin and visits every dashboard route.
 import { chromium } from "playwright";
 import mongoose from "mongoose";
+import { readFileSync } from "node:fs";
 
 const BASE = process.env.BASE_URL ?? "http://localhost:3100";
+// Credentials come from the environment or from .env.local. Nothing is embedded here.
+const envLocal = (() => {
+  try {
+    return Object.fromEntries(
+      readFileSync(".env.local", "utf8")
+        .split(/\r?\n/)
+        .filter((l) => l.includes("=") && !l.startsWith("#"))
+        .map((l) => [l.slice(0, l.indexOf("=")).trim(), l.slice(l.indexOf("=") + 1).trim()]),
+    );
+  } catch {
+    return {};
+  }
+})();
 const EMAIL = process.env.ADMIN_EMAIL ?? envLocal.BOOTSTRAP_ADMIN_EMAIL ?? "admin@arenix.local";
-import { readFileSync } from "node:fs";
-const envLocal = (() => { try { return Object.fromEntries(readFileSync(".env.local", "utf8").split(/?
-/).filter((l) => l.includes("=") && !l.startsWith("#")).map((l) => [l.slice(0, l.indexOf("=")).trim(), l.slice(l.indexOf("=") + 1).trim()])); } catch { return {}; } })();
 const PASSWORD = process.env.ADMIN_PASSWORD ?? envLocal.BOOTSTRAP_ADMIN_PASSWORD;
 if (!PASSWORD) throw new Error("Set ADMIN_PASSWORD or BOOTSTRAP_ADMIN_PASSWORD in .env.local");
 const ROUTES = ["/admin", "/admin/inquiries", "/admin/leads", "/admin/leads?view=board", "/admin/clients", "/admin/clients/new", "/admin/bookings", "/admin/proposals", "/admin/proposals/new", "/admin/projects", "/admin/projects/new", "/admin/portfolio", "/admin/portfolio/clenest", "/admin/portfolio/new", "/admin/content", "/admin/content?tab=article", "/admin/content?tab=faq", "/admin/content/service/custom-software-web-applications", "/admin/content/article/new", "/admin/media", "/admin/notifications", "/admin/analytics", "/admin/team", "/admin/settings", "/admin/audit"];
@@ -51,7 +62,7 @@ const appears = (await page.locator("body").innerText()).includes(q);
 console.log(`${appears ? "✓" : "✗"} FAQ create + list refresh`);
 if (!appears) failures++;
 
-// Confirm the e2e-created consultation request can be opened (if any)
+// Confirm the e2e created consultation request can be opened (if any)
 await page.goto(`${BASE}/admin/bookings`);
 const firstRef = page.locator("a[href^='/admin/bookings/']").first();
 if (await firstRef.count()) {
@@ -60,11 +71,13 @@ if (await firstRef.count()) {
   console.log(`✓ booking detail renders: ${page.url()}`);
 }
 
-// Sign out
-await page.getByRole("button", { name: /sign out/i }).first().click();
+// Sign out through the account menu in the top bar.
+await page.getByRole("button", { name: /account menu/i }).click();
+await page.getByRole("menuitem", { name: /sign out/i }).click();
 await page.waitForURL(/\/admin\/login/);
 console.log("logout ok");
 await browser.close();
+
 // Remove the FAQ this run created so test data never reaches the public site.
 try {
   await mongoose.connect(process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/arenix");

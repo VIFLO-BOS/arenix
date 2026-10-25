@@ -22,7 +22,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
         {items.length ? (
           <Table head={["Name", "Email", "Organisation", "Preferred", "Source", "Added"]} caption="Clients">
             {items.map((c) => (
-              <tr key={c._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+              <tr key={c._id.toString()} className="hover:bg-slate-50">
                 <Td>
                   <Link href={`/admin/clients/${c._id.toString()}`} className="font-medium hover:text-accent">
                     {c.name}

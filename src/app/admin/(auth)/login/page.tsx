@@ -11,7 +11,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <>
       <h1 className="font-display text-2xl font-semibold">Sign in</h1>
-      <p className="mt-1 text-sm text-muted">areniX business dashboard</p>
+      <p className="mt-1 text-sm text-slate-500">areniX business dashboard</p>
       {!health.ok && (
         <p role="alert" className="mt-4 rounded-xl border border-danger/40 bg-danger/10 p-3 text-xs">
           Database unreachable. {health.error}. Make sure the MongoDB service is running and MONGODB_URI is correct.

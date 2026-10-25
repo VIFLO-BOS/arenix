@@ -23,7 +23,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ ki
 
   return (
     <>
-      <PageHeader eyebrow={`Edit ${kind}`} title={String(title)} actions={<Link href={`/admin/content?tab=${kind}`} className="text-xs text-muted hover:text-on-dark">Content</Link>} />
+      <PageHeader eyebrow={`Edit ${kind}`} title={String(title)} actions={<Link href={`/admin/content?tab=${kind}`} className="text-xs text-slate-500 hover:text-slate-900">Content</Link>} />
       <Card className="max-w-4xl">
         {kind === "service" && <ServiceForm item={item as never} />}
         {kind === "solution" && <SolutionForm item={item as never} />}

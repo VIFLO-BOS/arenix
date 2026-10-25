@@ -9,18 +9,18 @@ export default function AdminError({ error, reset }: { error: Error & { digest?:
   }, [error]);
   const denied = error.name === "AuthorizationError" || /permission/i.test(error.message);
   return (
-    <div className="mx-auto max-w-lg rounded-xl border border-[rgba(245,245,243,0.12)] bg-surface-deep p-6 text-center">
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">{denied ? "Access denied" : "Something went wrong"}</p>
+    <div className="mx-auto max-w-lg rounded-xl border border-slate-200 bg-white p-6 text-center">
+      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-slate-500">{denied ? "Access denied" : "Something went wrong"}</p>
       <h1 className="mt-2 font-display text-xl font-semibold">{denied ? "You do not have permission for this area." : "The dashboard hit an unexpected error."}</h1>
-      <p className="mt-2 text-sm text-muted">{denied ? "The attempt has been recorded. Ask an administrator if you need access." : error.message}</p>
-      {error.digest && <p className="mt-2 font-mono text-xs text-muted">Reference {error.digest}</p>}
+      <p className="mt-2 text-sm text-slate-500">{denied ? "The attempt has been recorded. Ask an administrator if you need access." : error.message}</p>
+      {error.digest && <p className="mt-2 font-mono text-xs text-slate-500">Reference {error.digest}</p>}
       <div className="mt-5 flex flex-wrap justify-center gap-2">
         {!denied && (
-          <button type="button" onClick={reset} className="rounded-lg bg-on-dark px-3.5 py-2 text-sm font-medium text-ink">
+          <button type="button" onClick={reset} className="rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-medium text-white">
             Try again
           </button>
         )}
-        <Link href="/admin" className="rounded-lg border border-[rgba(245,245,243,0.2)] px-3.5 py-2 text-sm">
+        <Link href="/admin" className="rounded-lg border border-slate-200 px-3.5 py-2 text-sm">
           Back to overview
         </Link>
       </div>

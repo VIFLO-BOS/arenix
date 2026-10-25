@@ -24,17 +24,17 @@ export default async function PortfolioAdminPage() {
         {items.length ? (
           <Table head={["Cover", "Project", "Status", "Media", "Live link", "Flags", ""]} caption="Portfolio projects">
             {items.map((p) => (
-              <tr key={p.slug} className="hover:bg-[rgba(245,245,243,0.03)]">
+              <tr key={p.slug} className="hover:bg-slate-50">
                 <Td>
-                  <div className="relative h-12 w-20 overflow-hidden rounded-md border border-[rgba(245,245,243,0.1)] bg-surface-raised">
-                    {p.coverMedia?.src ? <Image src={p.coverMedia.src} alt="" fill sizes="80px" className="object-cover object-top" /> : <span className="flex h-full items-center justify-center text-[0.6rem] text-muted">none</span>}
+                  <div className="relative h-12 w-20 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+                    {p.coverMedia?.src ? <Image src={p.coverMedia.src} alt="" fill sizes="80px" className="object-cover object-top" /> : <span className="flex h-full items-center justify-center text-[0.6rem] text-slate-500">none</span>}
                   </div>
                 </Td>
                 <Td>
                   <Link href={`/admin/portfolio/${p.slug}`} className="font-medium hover:text-accent">
                     {p.title}
                   </Link>
-                  <p className="font-mono text-xs text-muted">/work/{p.slug}</p>
+                  <p className="font-mono text-xs text-slate-500">/work/{p.slug}</p>
                 </Td>
                 <Td>
                   <ProjectStatusBadge status={p.status as ProjectStatus} />
@@ -52,7 +52,7 @@ export default async function PortfolioAdminPage() {
                 </Td>
                 <Td>
                   {p.published && (
-                    <Link href={`/work/${p.slug}`} className="text-xs text-muted hover:text-on-dark" target="_blank">
+                    <Link href={`/work/${p.slug}`} className="text-xs text-slate-500 hover:text-slate-900" target="_blank">
                       View
                     </Link>
                   )}

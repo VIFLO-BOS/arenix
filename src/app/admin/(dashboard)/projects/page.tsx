@@ -31,7 +31,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
         {items.length ? (
           <Table head={["Project", "Client", "Owner", "Status", "Progress", "Deadline"]} caption="Internal projects">
             {items.map((p) => (
-              <tr key={p._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+              <tr key={p._id.toString()} className="hover:bg-slate-50">
                 <Td>
                   <Link href={`/admin/projects/${p._id.toString()}`} className="font-medium hover:text-accent">
                     {p.name}
@@ -44,10 +44,10 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
                 </Td>
                 <Td>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-20 rounded-full bg-[rgba(245,245,243,0.08)]">
+                    <div className="h-1.5 w-20 rounded-full bg-slate-100">
                       <div className="h-1.5 rounded-full bg-accent" style={{ width: `${p.progressPercent ?? 0}%` }} />
                     </div>
-                    <span className="font-mono text-xs text-muted">{p.progressPercent ?? 0}%</span>
+                    <span className="font-mono text-xs text-slate-500">{p.progressPercent ?? 0}%</span>
                   </div>
                 </Td>
                 <Td muted>{p.deadline ? formatDate(p.deadline) : "Not set"}</Td>

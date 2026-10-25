@@ -77,7 +77,7 @@ export async function createContactInquiry(input: ContactFormInput, meta: Meta) 
 
   const clientId = await upsertClient({ name: input.name, email: input.email, phone: input.phone || undefined, preferredContact: input.preferredContact });
   const lead = await Lead.create({
-    title: `${input.subject} — ${input.name}`,
+    title: `${input.subject} from ${input.name}`,
     status: "NEW",
     source: "website:contact",
     clientId,
@@ -133,7 +133,7 @@ export async function createProjectInquiry(input: ProjectRequestInput, files: St
 
   const clientId = await upsertClient({ name: input.name, email: input.email, phone: input.phone || undefined, company: input.company || undefined, preferredContact: input.preferredContact });
   const lead = await Lead.create({
-    title: `${input.serviceCategory} — ${input.company || input.name}`,
+    title: `${input.serviceCategory} for ${input.company || input.name}`,
     status: "NEW",
     source: "website:start-project",
     serviceCategory: input.serviceCategory,
@@ -151,7 +151,7 @@ export async function createProjectInquiry(input: ProjectRequestInput, files: St
   const alert = emailTemplates.inquiryStaffAlert({ reference, type: "PROJECT", name: input.name, email: input.email, company: input.company || undefined, service: input.serviceCategory, message: `${input.goal}\n\n${input.message}`, adminUrl });
   const recipients = await notificationRecipients("inquiryEmails");
   if (recipients.length) await enqueueEmail({ to: recipients, subject: alert.subject, html: alert.html, text: alert.text, template: "inquiry-staff", entityType: "Inquiry", entityId: inquiry._id.toString() });
-  await notifyRoles({ roles: ["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT"], type: "inquiry.new", title: `New project request ${reference}`, body: `${input.name} · ${input.serviceCategory}`, link: `/admin/inquiries/${inquiry._id.toString()}`, entityType: "Inquiry", entityId: inquiry._id.toString() });
+  await notifyRoles({ roles: ["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT"], type: "inquiry.new", title: `New project request ${reference}`, body: `${input.name}, ${input.serviceCategory}`, link: `/admin/inquiries/${inquiry._id.toString()}`, entityType: "Inquiry", entityId: inquiry._id.toString() });
   await recordAudit({ action: "inquiry.created", entityType: "Inquiry", entityId: inquiry._id.toString(), metadata: { reference, type: "PROJECT", attachments: files.length }, ipHash: meta.ipHash });
   return { reference, id: inquiry._id.toString(), duplicate: false as const };
 }

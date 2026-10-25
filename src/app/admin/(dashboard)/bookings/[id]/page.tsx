@@ -32,7 +32,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <StatusBadge status={booking.status} /> {type?.label ?? booking.consultationType}, requested {formatDateTime(booking.createdAt as Date)}
           </span>
         }
-        actions={<Link href="/admin/bookings" className="text-xs text-muted hover:text-on-dark">All bookings</Link>}
+        actions={<Link href="/admin/bookings" className="text-xs text-slate-500 hover:text-slate-900">All bookings</Link>}
       />
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
@@ -50,16 +50,16 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             />
             {booking.summary && (
               <div className="mt-4">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">What they want to discuss</p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">What they want to discuss</p>
                 <p className="mt-1 whitespace-pre-wrap text-sm">{booking.summary}</p>
               </div>
             )}
             {booking.preferredWindows.length > 0 && (
               <div className="mt-4">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">Preferred windows (visitor time)</p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-slate-500">Preferred windows (visitor time)</p>
                 <ul className="mt-1 flex flex-wrap gap-1.5">
                   {booking.preferredWindows.map((w) => (
-                    <li key={w} className="rounded-full border border-[rgba(245,245,243,0.15)] px-2 py-0.5 text-xs">
+                    <li key={w} className="rounded-full border border-slate-200 px-2 py-0.5 text-xs">
                       {w}
                     </li>
                   ))}
@@ -78,7 +78,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
               ]}
             />
             {isProvider && (
-              <p className="mt-3 text-xs text-muted">This booking is owned by the scheduling provider. Reschedule or cancel through Cal.com, and the webhook will update this record. Local status changes below are for record keeping, completed or no show.</p>
+              <p className="mt-3 text-xs text-slate-500">This booking is owned by the scheduling provider. Reschedule or cancel through Cal.com, and the webhook will update this record. Local status changes below are for record keeping, completed or no show.</p>
             )}
           </Card>
         </div>
@@ -124,26 +124,26 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                 <div>
                   <Submit>Apply</Submit>
                 </div>
-                <p className="text-xs text-muted">Confirming or rescheduling emails the visitor the confirmed time and meeting link.</p>
+                <p className="text-xs text-slate-500">Confirming or rescheduling emails the visitor the confirmed time and meeting link.</p>
               </ActionForm>
             </Card>
           )}
           <Card title="Timeline">
             <ol className="flex flex-col gap-2 text-xs">
               {[...booking.statusHistory].reverse().map((h, i) => (
-                <li key={i} className="flex justify-between gap-2 border-b border-[rgba(245,245,243,0.06)] pb-2 last:border-0">
+                <li key={i} className="flex justify-between gap-2 border-b border-slate-200 pb-2 last:border-0">
                   <span>
                     {h.from ? `${h.from} to ` : ""}
                     <strong>{h.to}</strong>
                     {h.note ? `, ${h.note}` : ""}
-                    <span className="text-muted"> by {h.actorLabel}</span>
+                    <span className="text-slate-500"> by {h.actorLabel}</span>
                   </span>
-                  <span className="shrink-0 text-muted">{formatDateTime(h.at)}</span>
+                  <span className="shrink-0 text-slate-500">{formatDateTime(h.at)}</span>
                 </li>
               ))}
             </ol>
             {booking.events.length > 0 && (
-              <details className="mt-3 text-xs text-muted">
+              <details className="mt-3 text-xs text-slate-500">
                 <summary className="cursor-pointer">Provider / system events ({booking.events.length})</summary>
                 <ul className="mt-2 flex flex-col gap-1">
                   {booking.events.map((e, i) => (

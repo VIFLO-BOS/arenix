@@ -29,17 +29,17 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         description="Pipeline runs NEW, CONTACTED, QUALIFIED, PROPOSAL_SENT and WON, with LOST, ON_HOLD and ARCHIVED outcomes."
         actions={
           <>
-            <div className="flex rounded-lg border border-[rgba(245,245,243,0.15)] p-1 text-xs" role="group" aria-label="View">
-              <Link href={qs({ view: "table" })} className={cn("rounded-md px-2.5 py-1", view === "table" ? "bg-on-dark text-ink" : "text-muted")}>
+            <div className="flex rounded-lg border border-slate-200 p-1 text-xs" role="group" aria-label="View">
+              <Link href={qs({ view: "table" })} className={cn("rounded-md px-2.5 py-1", view === "table" ? "bg-slate-900 text-white" : "text-slate-500")}>
                 Table
               </Link>
-              <Link href={qs({ view: "board" })} className={cn("rounded-md px-2.5 py-1", view === "board" ? "bg-on-dark text-ink" : "text-muted")}>
+              <Link href={qs({ view: "board" })} className={cn("rounded-md px-2.5 py-1", view === "board" ? "bg-slate-900 text-white" : "text-slate-500")}>
                 Board
               </Link>
             </div>
             {userCan(user, "leads:write") && (
               <ActionButton action={dispatchFollowUpsAction} fields={{}} variant="secondary">
-                Send due follow-up reminders
+                Send due follow up reminders
               </ActionButton>
             )}
           </>
@@ -78,16 +78,16 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                 const owner = l.assignedTo as unknown as { name?: string } | null;
                 const overdue = isOverdue(l.followUpAt, l.status);
                 return (
-                  <tr key={l._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+                  <tr key={l._id.toString()} className="hover:bg-slate-50">
                     <Td>
                       <Link href={`/admin/leads/${l._id.toString()}`} className="font-medium hover:text-accent">
                         {l.title}
                       </Link>
-                      <p className="text-xs text-muted">{l.source}</p>
+                      <p className="text-xs text-slate-500">{l.source}</p>
                     </Td>
                     <Td>
                       <p>{client?.name ?? "Not set"}</p>
-                      <p className="text-xs text-muted">{client?.email}</p>
+                      <p className="text-xs text-slate-500">{client?.email}</p>
                     </Td>
                     <Td>
                       <StatusBadge status={l.status} />
@@ -96,7 +96,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                       <Badge tone={l.priority === "HIGH" ? "danger" : l.priority === "LOW" ? "neutral" : "outline"}>{l.priority}</Badge>
                     </Td>
                     <Td muted>{l.estimatedValue ? formatMoney(l.estimatedValue, l.currency) : "Not set"}</Td>
-                    <Td className={overdue ? "text-danger" : "text-muted"}>{l.followUpAt ? formatDate(l.followUpAt) : "Not set"}</Td>
+                    <Td className={overdue ? "text-danger" : "text-slate-500"}>{l.followUpAt ? formatDate(l.followUpAt) : "Not set"}</Td>
                     <Td muted>{owner?.name ?? "Not set"}</Td>
                     <Td muted>{timeAgo(l.updatedAt as Date)}</Td>
                   </tr>
@@ -114,20 +114,20 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         <div className="-mx-3 overflow-x-auto px-3 pb-4 sm:-mx-5 sm:px-5">
           <div className="flex min-w-max gap-3">
             {board.map((col) => (
-              <section key={col.stage} className="w-64 shrink-0 rounded-xl border border-[rgba(245,245,243,0.1)] bg-surface-deep" aria-label={`${col.stage} column`}>
-                <header className="flex items-center justify-between border-b border-[rgba(245,245,243,0.08)] px-3 py-2">
+              <section key={col.stage} className="w-64 shrink-0 rounded-xl border border-slate-200 bg-white" aria-label={`${col.stage} column`}>
+                <header className="flex items-center justify-between border-b border-slate-200 px-3 py-2">
                   <h2 className="text-xs font-semibold uppercase tracking-wider">{col.stage.replace(/_/g, " ")}</h2>
-                  <span className="font-mono text-xs text-muted">{col.leads.length}</span>
+                  <span className="font-mono text-xs text-slate-500">{col.leads.length}</span>
                 </header>
                 <ul className="flex max-h-[70vh] flex-col gap-2 overflow-y-auto p-2">
                   {col.leads.map((l) => {
                     const client = l.clientId as unknown as { name?: string } | null;
                     return (
                       <li key={l._id.toString()}>
-                        <Link href={`/admin/leads/${l._id.toString()}`} className="block rounded-lg border border-[rgba(245,245,243,0.08)] p-3 text-sm hover:border-accent">
+                        <Link href={`/admin/leads/${l._id.toString()}`} className="block rounded-lg border border-slate-200 p-3 text-sm hover:border-accent">
                           <p className="font-medium leading-snug">{l.title}</p>
-                          <p className="mt-1 text-xs text-muted">{client?.name ?? "Not set"}</p>
-                          <div className="mt-2 flex items-center justify-between text-[0.65rem] text-muted">
+                          <p className="mt-1 text-xs text-slate-500">{client?.name ?? "Not set"}</p>
+                          <div className="mt-2 flex items-center justify-between text-[0.65rem] text-slate-500">
                             <span>{l.priority}</span>
                             <span>{timeAgo(l.updatedAt as Date)}</span>
                           </div>
@@ -135,7 +135,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                       </li>
                     );
                   })}
-                  {col.leads.length === 0 && <li className="p-3 text-center text-xs text-muted">Empty</li>}
+                  {col.leads.length === 0 && <li className="p-3 text-center text-xs text-slate-500">Empty</li>}
                 </ul>
               </section>
             ))}

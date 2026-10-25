@@ -38,7 +38,7 @@ export default async function InquiriesPage({ searchParams }: { searchParams: Pr
         {items.length ? (
           <Table head={["Reference", "From", "Type / service", "Status", "Assigned", "Received"]} caption="Inquiries">
             {items.map((i) => (
-              <tr key={i._id.toString()} className="hover:bg-[rgba(245,245,243,0.03)]">
+              <tr key={i._id.toString()} className="hover:bg-slate-50">
                 <Td>
                   <Link href={`/admin/inquiries/${i._id.toString()}`} className="font-mono text-xs text-accent hover:underline">
                     {i.reference}
@@ -46,11 +46,11 @@ export default async function InquiriesPage({ searchParams }: { searchParams: Pr
                 </Td>
                 <Td>
                   <p className="font-medium">{i.name}</p>
-                  <p className="text-xs text-muted">{i.email}</p>
+                  <p className="text-xs text-slate-500">{i.email}</p>
                 </Td>
                 <Td>
                   <p>{i.type === "PROJECT" ? "Project request" : "Contact"}</p>
-                  <p className="text-xs text-muted">{truncate(i.serviceCategory ?? i.subject ?? "", 50)}</p>
+                  <p className="text-xs text-slate-500">{truncate(i.serviceCategory ?? i.subject ?? "", 50)}</p>
                 </Td>
                 <Td>
                   <StatusBadge status={i.status} />

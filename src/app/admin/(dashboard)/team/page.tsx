@@ -26,9 +26,9 @@ export default async function TeamPage() {
                   <tr key={u._id.toString()}>
                     <Td>
                       <p className="font-medium">
-                        {u.name} {isMe && <span className="text-xs text-muted">(you)</span>}
+                        {u.name} {isMe && <span className="text-xs text-slate-500">(you)</span>}
                       </p>
-                      <p className="text-xs text-muted">{u.email}</p>
+                      <p className="text-xs text-slate-500">{u.email}</p>
                     </Td>
                     <Td>
                       {isMe || (u.role === "SUPER_ADMIN" && me.role !== "SUPER_ADMIN") ? (
@@ -72,7 +72,7 @@ export default async function TeamPage() {
                   <tr key={i._id.toString()}>
                     <Td>
                       <p>{i.email}</p>
-                      <p className="text-xs text-muted">{i.name}</p>
+                      <p className="text-xs text-slate-500">{i.name}</p>
                     </Td>
                     <Td muted>{i.role ? ROLE_LABEL[i.role] : "Not set"}</Td>
                     <Td muted>{formatDateTime(i.expiresAt)}</Td>
@@ -85,7 +85,7 @@ export default async function TeamPage() {
                 ))}
               </Table>
             ) : (
-              <p className="text-sm text-muted">No pending invitations.</p>
+              <p className="text-sm text-slate-500">No pending invitations.</p>
             )}
           </Card>
           <Card title="Role matrix" description="What each role can do (enforced server side on every action).">
@@ -96,7 +96,7 @@ export default async function TeamPage() {
                     <span className="font-medium">{ROLE_LABEL[r]}</span>
                   </Td>
                   <Td>
-                    <p className="text-xs text-muted">{[...ROLE_PERMISSIONS[r]].join(", ")}</p>
+                    <p className="text-xs text-slate-500">{[...ROLE_PERMISSIONS[r]].join(", ")}</p>
                   </Td>
                 </tr>
               ))}

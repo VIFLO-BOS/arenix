@@ -9,7 +9,7 @@ export default async function NewProjectPage() {
   const opts = await listPickerOptions();
   return (
     <>
-      <PageHeader title="New internal project" description="Delivery record with owner, milestones and notes. Not published anywhere." actions={<Link href="/admin/projects" className="text-xs text-muted hover:text-on-dark">All projects</Link>} />
+      <PageHeader title="New internal project" description="Delivery record with owner, milestones and notes. Not published anywhere." actions={<Link href="/admin/projects" className="text-xs text-slate-500 hover:text-slate-900">All projects</Link>} />
       <Card className="max-w-3xl">
         <ProjectForm clients={opts.clients} staff={opts.staff} leads={opts.leads} proposals={opts.proposals} />
       </Card>

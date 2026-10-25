@@ -25,18 +25,18 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
             {items.length ? (
               <ul className="grid gap-3 xs:grid-cols-2 md:grid-cols-3">
                 {items.map((a) => (
-                  <li key={a._id.toString()} className="flex flex-col gap-2 rounded-lg border border-[rgba(245,245,243,0.08)] p-2">
-                    <div className="relative aspect-[4/3] overflow-hidden rounded bg-surface-raised">
+                  <li key={a._id.toString()} className="flex flex-col gap-2 rounded-lg border border-slate-200 p-2">
+                    <div className="relative aspect-[4/3] overflow-hidden rounded bg-slate-100">
                       <Image src={a.url} alt={a.alt} fill sizes="(max width 768px) 50vw, 25vw" className="object-cover object-top" />
                     </div>
                     <div className="flex flex-wrap gap-1">
                       <Badge tone={a.approvedForPublication ? "success" : "warning"}>{a.approvedForPublication ? "Approved" : "Unapproved"}</Badge>
                       {a.isAuthenticScreenshot && <Badge tone="outline">Authentic</Badge>}
                     </div>
-                    <p className="truncate font-mono text-[0.65rem] text-muted" title={a.url}>
+                    <p className="truncate font-mono text-[0.65rem] text-slate-500" title={a.url}>
                       {a.url}
                     </p>
-                    <p className="text-[0.65rem] text-muted">
+                    <p className="text-[0.65rem] text-slate-500">
                       {a.width && a.height ? `${a.width}×${a.height}, ` : ""}
                       {Math.round(a.size / 1024)} KB, {formatDate(a.createdAt as Date)}
                     </p>
@@ -63,7 +63,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
                         </div>
                       </ActionForm>
                     ) : (
-                      <p className="text-xs text-muted">{a.alt}</p>
+                      <p className="text-xs text-slate-500">{a.alt}</p>
                     )}
                   </li>
                 ))}
@@ -80,7 +80,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
               <ActionForm action={mediaUploadAction} resetOnSuccess>
                 <FormRow>
                   <FieldLabel htmlFor="up-file">File</FieldLabel>
-                  <input id="up-file" name="file" type="file" accept="image/png,image/jpeg,image/webp,image/avif" required className="block w-full text-xs file:mr-3 file:rounded-lg file:border file:border-[rgba(245,245,243,0.2)] file:bg-transparent file:px-3 file:py-1.5 file:text-xs file:text-on-dark" />
+                  <input id="up-file" name="file" type="file" accept="image/png,image/jpeg,image/webp,image/avif" required className="block w-full text-xs file:mr-3 file:rounded-lg file:border file:border-slate-200 file:bg-transparent file:px-3 file:py-1.5 file:text-xs file:text-slate-900" />
                 </FormRow>
                 <FormRow>
                   <FieldLabel htmlFor="up-alt">Alt text (what is on screen)</FieldLabel>
@@ -102,7 +102,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
             </Card>
           ) : (
             <Card title="Upload">
-              <p className="text-sm text-muted">Your role can view media but not upload.</p>
+              <p className="text-sm text-slate-500">Your role can view media but not upload.</p>
             </Card>
           )}
         </div>

@@ -21,11 +21,11 @@ export default async function NotificationsPage() {
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2" title="Alert center">
           {notifications.length ? (
-            <ul className="divide-y divide-[rgba(245,245,243,0.06)]">
+            <ul className="divide-y divide-slate-100">
               {notifications.map((n) => {
                 const isUnread = !n.readBy.some((r) => r.toString() === user.id);
                 return (
-                  <li key={n._id.toString()} className={cn("flex flex-col gap-1 py-3 sm:flex-row sm:items-start sm:justify-between", isUnread && "bg-[rgba(252,143,45,0.04)]")}>
+                  <li key={n._id.toString()} className={cn("flex flex-col gap-1 py-3 sm:flex-row sm:items-start sm:justify-between", isUnread && "bg-orange-50")}>
                     <div className="min-w-0">
                       <p className="flex items-center gap-2 text-sm">
                         {isUnread && <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />}
@@ -37,9 +37,9 @@ export default async function NotificationsPage() {
                           <span className="font-medium">{n.title}</span>
                         )}
                       </p>
-                      {n.body && <p className="text-xs text-muted">{n.body}</p>}
+                      {n.body && <p className="text-xs text-slate-500">{n.body}</p>}
                     </div>
-                    <p className="shrink-0 text-xs text-muted">
+                    <p className="shrink-0 text-xs text-slate-500">
                       {n.type}, {timeAgo(n.createdAt as Date)}
                     </p>
                   </li>
@@ -77,7 +77,7 @@ export default async function NotificationsPage() {
                   ))}
                 </Table>
               ) : (
-                <p className="text-sm text-muted">No emails yet.</p>
+                <p className="text-sm text-slate-500">No emails yet.</p>
               )}
             </Card>
           )}
