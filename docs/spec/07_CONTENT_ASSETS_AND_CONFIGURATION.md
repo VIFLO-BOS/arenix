@@ -6,8 +6,8 @@ Use this as a dependency list for the owner, content manager and implementation 
 
 - Legal name: **areniX Technologies Limited**.
 - Short brand: **areniX** (case-sensitive identity).
-- Known public sample project: **Passion Nutrition Clinic** — https://passion-nutrition-clinic.vercel.app/
-- Known public project: **CleNest** — https://www.clenest.site
+- Known public sample project: **Passion Nutrition Clinic**, https://passion-nutrition-clinic.vercel.app/
+- Known public project: **CleNest**, https://www.clenest.site
 - Work named for portfolio: Paylio Staff Management; Paylio Dashboard; netHuk (under development); ArenoX LMS; Annotrix; AreniX Branch Manager.
 - Owner wants a highly original marketing UI influenced by **five** specific reference links, authentic project screenshots, click-through live sites, WhatsApp/service contact, online booking, and internal company dashboard.
 
@@ -51,7 +51,7 @@ From custom business systems to ambitious digital products, we turn complex need
 **Let's turn your idea into something useful.** Tell us what you're building, or book a discovery conversation.
 
 ### Portfolio CTA
-**See what we've built.** Explore real websites, applications and systems—through authentic interfaces and project stories.
+**See what we've built.** Explore real websites, applications and systems, through authentic interfaces and project stories.
 
 ### Footer CTA
 **Have a project in mind? Let's build it.**

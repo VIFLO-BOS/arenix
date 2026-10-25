@@ -14,7 +14,7 @@ Visitors discover services and portfolio projects on the cinematic marketing sit
 - Track only privacy-appropriate click events and optional lead-source parameters; never imply message was delivered or received.
 - Phase-two official WhatsApp Business Platform two-way integration only after approved Meta configuration, permissions, webhook verification and privacy review.
 
-### B. Book consultation — `/book-consultation`
+### B. Book consultation, `/book-consultation`
 
 Bookable meeting types: discovery, website development, custom software, enterprise/business systems, mobile app, technical consulting. Configure descriptions, durations and operating hours through approved scheduling service or admin controls.
 
@@ -30,7 +30,7 @@ Actual workflow:
 
 Preferred v1 implementation: embed or integrate Cal.com when the owner configures it; choose integration depth based on available access/API/webhooks. If not configured, provide an honest `Request a Consultation` form in a distinct **REQUESTED** status. Do **not** show imaginary slots or “Booking Confirmed” for unconfirmed requests.
 
-### C. Request a service / project quote — `/start-project`
+### C. Request a service / project quote, `/start-project`
 
 Fields:
 - Name, verified format email
@@ -47,7 +47,7 @@ Fields:
 
 Server Zod validation; spam-rate protection, safe file upload, storage record, timestamp and unique reference ID. Show success only after authoritative DB persistence; send internal notification/autoack via reliable email provider with retries. Use queue/outbox if needed so an email outage does not falsely mark the inquiry lost.
 
-### D. General contact — `/contact`
+### D. General contact, `/contact`
 
 Simple form: name/email/subject/message/consent; persistent inquiry and confirmation. Email/web social channels must be verified. Add FAQ and click-to-chat/booking buttons.
 
@@ -110,7 +110,7 @@ Additional outcomes `LOST`, `ARCHIVED`; `ON_HOLD` optional. Keep status history 
 - Template system with preview mode, provider return status and safe retry handling.
 - Keep unsubscribe/preferences appropriate for optional marketing messages; transactional email is distinct from marketing consent.
 
-## Client portal — future phase
+## Client portal, future phase
 
 Architect role separation to permit a future `/portal` for authenticated clients to review **only their own** approved proposals, project milestones, documents, support requests and consultations. Do not launch fake client pages or allow client access to `/admin`.
 

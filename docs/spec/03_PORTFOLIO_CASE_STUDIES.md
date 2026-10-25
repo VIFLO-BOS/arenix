@@ -1,4 +1,4 @@
-# Portfolio System — Real Screenshot Galleries, Case Studies & Live Links
+# Portfolio System, Real Screenshot Galleries, Case Studies & Live Links
 
 ## User-critical requirement
 
@@ -11,7 +11,7 @@
 
 Display **In Development**, **Private System**, **Concept**, **Live**, or **Completed** clearly. A private system may have screenshots only if sanitized/authorized; it must not offer a public live URL or unauthorized demo credentials. Case studies remain viewable without live URLs.
 
-## Initial records — no fabricated URLs
+## Initial records, no fabricated URLs
 
 | Project | Focus | Known public URL | Media recommendation | Status/data rule |
 |---|---|---|---|---|
@@ -56,7 +56,7 @@ Other verified projects can be added through admin CMS. Avoid counting a single 
 - **View Case Study** internal link
 - **Visit Website** external link if `liveUrl && isPublic && approved`; `target="_blank" rel="noopener noreferrer"`
 - Optional `View GitHub` only when a repository is legitimately public/approved
-- Optional preview switcher with 2–3 screenshots using arrows/dots on touch; hover crossfade on precise-pointer devices
+- Optional preview switcher with 2 to 3 screenshots using arrows/dots on touch; hover crossfade on precise-pointer devices
 - Loading skeleton, errors and missing-media safe state
 
 Cards support keyboard focus and clear separate click targets; don't nest links inside links or cause ambiguous click areas.

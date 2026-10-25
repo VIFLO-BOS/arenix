@@ -1,4 +1,4 @@
-# QA report — initial build (2026-10-19)
+# QA report, initial build (2026-10-19)
 
 Environment: Windows 11, Node 24.12, MongoDB Community 8.2 (local service), Next.js 16.4.2 dev server on `http://localhost:3100`, Playwright Chromium 1248. Database seeded with `npm run db:seed`; bootstrap admin created with `npm run db:create-admin`.
 
@@ -8,11 +8,11 @@ Environment: Windows 11, Node 24.12, MongoDB Community 8.2 (local service), Next
 |---|---|---|
 | Typecheck | `npm run typecheck` | **Pass** (0 errors, ~40 s). Note: the first run exceeded 10 minutes / 4 GB because of Mongoose `InferSchemaType`; models were rewritten with explicit interfaces (`src/server/db/models/*`). |
 | Lint | `npm run lint` | **Pass** (0 errors, 0 warnings after fixes for `react-hooks/set-state-in-effect`, impure render calls, unused vars). |
-| Unit tests | `npm run test` | **Pass** — 27 tests in 5 files (links/WhatsApp URL, Zod form + admin schemas, RBAC matrix, markdown/utilities, proposal totals). |
-| Production build | `npm run build` | **Pass** — all routes compiled; static prerender for marketing pages, SSG for `/services/[slug]`, `/solutions/[slug]`, `/work/[slug]`, `/insights/[slug]`; dynamic for forms, `/work`, admin, API. |
+| Unit tests | `npm run test` | **Pass**, 27 tests in 5 files (links/WhatsApp URL, Zod form + admin schemas, RBAC matrix, markdown/utilities, proposal totals). |
+| Production build | `npm run build` | **Pass**, all routes compiled; static prerender for marketing pages, SSG for `/services/[slug]`, `/solutions/[slug]`, `/work/[slug]`, `/insights/[slug]`; dynamic for forms, `/work`, admin, API. |
 | E2E (Playwright) | `BASE_URL=http://localhost:3100 npm run test:e2e` | 54 scenarios (27 × desktop, 27 × 320px). First run 46/54 → root causes fixed (see below) → final subset 10/10 on the previously failing scenarios; full final run recorded in the table at the end of this file. |
-| Admin smoke | `node scripts/qa/admin-smoke.mjs` | **Pass** — login, 25 dashboard routes render (200, h1, no error text), FAQ create + list refresh, booking detail, logout. |
-| Responsive sweep | `npm run qa:responsive` | **Pass** — 22 routes × 8 widths (250, 320, 375, 430, 768, 1024, 1440, 1920) = 176 checks: 0 horizontal overflow, 0 load failures, h1 present on every 200 page. Only console messages: the expected 404 resource log on `/does-not-exist`. Full table: `docs/qa/responsive-report.md`. |
+| Admin smoke | `node scripts/qa/admin-smoke.mjs` | **Pass**, login, 25 dashboard routes render (200, h1, no error text), FAQ create + list refresh, booking detail, logout. |
+| Responsive sweep | `npm run qa:responsive` | **Pass**, 22 routes × 8 widths (250, 320, 375, 430, 768, 1024, 1440, 1920) = 176 checks: 0 horizontal overflow, 0 load failures, h1 present on every 200 page. Only console messages: the expected 404 resource log on `/does-not-exist`. Full table: `docs/qa/responsive-report.md`. |
 | Screenshots | `npm run screenshots` | 8 authentic captures (CleNest ×4: home, services, pricing, mobile; Passion Nutrition Clinic ×4: home, services, appointment, mobile), each visually reviewed; no login/dashboard/account pages, no personal data. Log: `docs/screenshot-log.md`. |
 
 ## Defects found and fixed during QA
@@ -42,7 +42,7 @@ Environment: Windows 11, Node 24.12, MongoDB Community 8.2 (local service), Next
 | `View Case Study` | Internal route works for all 8 published projects (SSG at build) |
 | `Visit Website` | Only CleNest and Passion Nutrition Clinic render it; https, `target=_blank`, `rel=noopener noreferrer` (e2e) |
 | Screenshot gallery | Authentic captions, lightbox with arrows/Escape/swipe (manual) |
-| Private Paylio / netHuk | Placeholder visuals labelled; no live link; "In development — no public link yet" (e2e) |
+| Private Paylio / netHuk | Placeholder visuals labelled; no live link; "In development, no public link yet" (e2e) |
 | WhatsApp button | Hidden until a number is configured (no number supplied); URL builder unit-tested |
 | Contact submission | Server validation errors shown; persisted with `ARX-INQ-…` reference; ack + staff emails stored as DEMO_LOGGED (e2e + dev log) |
 | Project request | 3-step wizard, attachments validated server-side (MIME, size, magic bytes); DB record + role notification (manual) |
@@ -64,7 +64,7 @@ Environment: Windows 11, Node 24.12, MongoDB Community 8.2 (local service), Next
 
 ## Final e2e run
 
-- Full suite after all fixes: **53 passed, 1 failed** (2.6 min). The single failure (desktop contact form) was caused by the per-IP form rate limit (5 submissions / 10 min) after several back-to-back runs from the same local IP — confirmed by `scripts/qa/rate-limit-ux.mjs`, which shows the 6th rapid submission is refused with a clear message while typed values are retained (correct behaviour).
+- Full suite after all fixes: **53 passed, 1 failed** (2.6 min). The single failure (desktop contact form) was caused by the per-IP form rate limit (5 submissions / 10 min) after several back-to-back runs from the same local IP, confirmed by `scripts/qa/rate-limit-ux.mjs`, which shows the 6th rapid submission is refused with a clear message while typed values are retained (correct behaviour).
 - The forms spec now sends a unique `x-forwarded-for` per run; re-run of the form scenarios: **4/4 passed**. Combined with the full run, all 54 scenarios pass.
 - Rate-limit UX check: `node scripts/qa/rate-limit-ux.mjs` → `RATE LIMIT UX OK`.
 

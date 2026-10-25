@@ -21,9 +21,9 @@ Status legend: ✅ verified working · 🟡 works with documented fallback / pen
 | `/contact` | ✅ | ✅ | ✅ | ✅ | Persists inquiry + lead, reference, emails (demo-log) |
 | `/book-consultation` | ✅ | ✅ | ✅ | ✅ | 🟡 request-only until Cal.com configured |
 | `/start-project` | ✅ | ✅ 3-step wizard | ✅ | ✅ | Attachments validated server-side |
-| `/privacy`, `/terms` | ✅ | ✅ | ✅ | — | 🟡 Draft banner until legal review |
+| `/privacy`, `/terms` | ✅ | ✅ | ✅ | none | 🟡 Draft banner until legal review |
 | `not-found`, `error`, `loading` | ✅ | ✅ | ✅ | ✅ | |
-| `/sitemap.xml`, `/robots.txt` | ✅ | — | — | — | |
+| `/sitemap.xml`, `/robots.txt` | ✅ | none | none | none | |
 
 ## Conversion & integrations
 

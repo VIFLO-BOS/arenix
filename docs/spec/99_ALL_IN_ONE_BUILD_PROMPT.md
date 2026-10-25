@@ -1,11 +1,11 @@
-# ARENIX — ALL-IN-ONE PRODUCTION BUILD PROMPT
+# ARENIX, ALL-IN-ONE PRODUCTION BUILD PROMPT
 
 **Copy/paste this file into a coding agent when it cannot read the companion Markdown specifications.** It combines the entire build plan and acceptance rules below. Follow section order, record unresolved inputs, and implement in verified phases. Never invent project facts, asset permissions or functioning external integrations.
 
 ---
 <!-- BEGIN 00_MASTER_BUILD_PROMPT.md -->
 
-# MASTER BUILD PROMPT — areniX Corporate Website & Business Operating Platform
+# MASTER BUILD PROMPT, areniX Corporate Website & Business Operating Platform
 
 ## Role and objective
 
@@ -13,7 +13,7 @@ You are a coordinated senior team: creative director, brand designer, interactiv
 
 Build a complete, original, production-ready digital headquarters for **areniX Technologies Limited**, publicly branded **areniX**. The deliverable comprises:
 
-1. A **cinematic, design-led public marketing website**—every route and significant section has considered typography, layout, motion, and meaningful interactions.
+1. A **cinematic, design-led public marketing website**, every route and significant section has considered typography, layout, motion, and meaningful interactions.
 2. A **real interactive portfolio** with authorized screenshots of actual project pages and working internal case-study links plus external `Visit Website` / `Open App` links only where public deployments exist.
 3. Multi-channel **client acquisition**: service inquiries, WhatsApp click-to-chat, consultation scheduling, quote requests, consent-aware confirmation emails, and actionable calls to action.
 4. A protected **areniX business dashboard**: leads, CRM, inquiries, bookings, project/quote pipeline, notifications, content management, portfolio media and settings.
@@ -21,7 +21,7 @@ Build a complete, original, production-ready digital headquarters for **areniX T
 
 This is not a static design exercise, copied Webflow template, generic dashboard starter, or portfolio-only one-pager. Produce working, connected functionality.
 
-## Required reference websites — MUST analyze them before implementation
+## Required reference websites, MUST analyze them before implementation
 
 - https://altreex.webflow.io/
 - https://onart-studio.webflow.io/project/voyage (and https://onart-studio.webflow.io/)
@@ -48,18 +48,18 @@ Build the route inventory specified in `02_PUBLIC_WEBSITE_PAGES.md`:
 
 Every public page needs page-specific section composition and motion. Reuse the *system*, not one generic section template everywhere. Ensure mobile-friendly equivalents and reduced-motion fallbacks.
 
-## Portfolio — make actual work the centerpiece
+## Portfolio, make actual work the centerpiece
 
 Initial project roster:
 
-- **Passion Nutrition Clinic** — healthcare/nutrition website; known public URL: https://passion-nutrition-clinic.vercel.app/
-- **Paylio Staff Management** — staff/workforce system; publish only approved, non-sensitive screenshots and facts.
-- **Paylio Dashboard** — operations/admin dashboard; connect to the same case study where the modules are one delivery.
-- **netHuk** — *In Development*; do not assume industry, features, URL, release date or production readiness.
-- **CleNest** — laundry and cleaning service web platform; known public URL: https://www.clenest.site
-- **ArenoX LMS** — education/learning platform; only confirmed capabilities.
-- **Annotrix** — assessment and evaluation platform; only confirmed capabilities.
-- **AreniX Branch Manager** — retail/inventory/sales/operations management solution; state delivery status truthfully.
+- **Passion Nutrition Clinic**, healthcare/nutrition website; known public URL: https://passion-nutrition-clinic.vercel.app/
+- **Paylio Staff Management**, staff/workforce system; publish only approved, non-sensitive screenshots and facts.
+- **Paylio Dashboard**, operations/admin dashboard; connect to the same case study where the modules are one delivery.
+- **netHuk**, *In Development*; do not assume industry, features, URL, release date or production readiness.
+- **CleNest**, laundry and cleaning service web platform; known public URL: https://www.clenest.site
+- **ArenoX LMS**, education/learning platform; only confirmed capabilities.
+- **Annotrix**, assessment and evaluation platform; only confirmed capabilities.
+- **AreniX Branch Manager**, retail/inventory/sales/operations management solution; state delivery status truthfully.
 
 Use real project images: chosen live website pages, dashboards, mobile pages and screenshot galleries. Automate screenshots of genuinely public accessible pages using Playwright where permitted; sanitize customer/user/private data. Each card must support **View Case Study** (internal `/work/[slug]`) and **Visit Website / Open App** (external URL, new tab) only where valid/public; no invented URLs. Build detailed, distinctive case studies with challenge, implementation, gallery, engineering contributions, verified outcomes, related projects. CMS-configurable content and media.
 
@@ -84,7 +84,7 @@ Create authenticated, server-authorized `/admin` with:
 - Team invitations and roles
 - Brand and integration settings
 
-Use a restrained modern SaaS interface—not scroll-jacking or huge headline animations inside operational tables. Roles: `SUPER_ADMIN`, `ADMIN`, `BUSINESS_DEVELOPMENT`, `CONTENT_MANAGER`, `PROJECT_MANAGER`; enforce server-side least privilege. Do not allow public admin signup. Do not expose internal client materials to public pages.
+Use a restrained modern SaaS interface, not scroll-jacking or huge headline animations inside operational tables. Roles: `SUPER_ADMIN`, `ADMIN`, `BUSINESS_DEVELOPMENT`, `CONTENT_MANAGER`, `PROJECT_MANAGER`; enforce server-side least privilege. Do not allow public admin signup. Do not expose internal client materials to public pages.
 
 A **client portal** is phase-two/three architecture unless deliberately included in the agreed build scope; never give customers admin accounts. Support later `/portal` for their own projects, milestones, files and approved communications.
 
@@ -177,9 +177,9 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 - Rhythm: large display headings, short lead text, good empty space, carefully aligned media.
 
 ### Spatial system
-- Container max width ~1360–1520px with fluid gutters, not fixed-width.
+- Container max width ~1360 to 1520px with fluid gutters, not fixed-width.
 - 12-column large-screen grid, flexible tablet 6-column, mobile 4-column where practical.
-- Narrow readable text lines (~55–75 characters for long-form body).
+- Narrow readable text lines (~55 to 75 characters for long-form body).
 - Intentional responsive image crops, full-width visual moments, asymmetric sections where helpful.
 - Clear focus, error, success, disabled states.
 
@@ -199,7 +199,7 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 | Animated nav overlay | Mobile navigation | Focus trap, Escape, overlay dismissal |
 | Grid morph/reorder | Work filters | Do not move focus unexpectedly |
 | Animated project screenshots | Portfolio hover, case study viewer | Real/approved media, accessible next/previous controls |
-| Dashboard micro-motion | Drawer, toast, filter, tabs, dialogs | 100–250ms, functional, no scroll hijacking |
+| Dashboard micro-motion | Drawer, toast, filter, tabs, dialogs | 100 to 250ms, functional, no scroll hijacking |
 
 ## Motion architecture
 
@@ -211,10 +211,10 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 - Centralize motion duration/ease tokens, cleanup and breakpoints.
 
 ### Motion timing guidelines
-- Press/hover response: 120–250 ms
-- Card interactions: 250–500 ms
-- Reveals: 500–850 ms
-- Page transitions: 450–900 ms maximum, subject to user control
+- Press/hover response: 120 to 250 ms
+- Card interactions: 250 to 500 ms
+- Reveals: 500 to 850 ms
+- Page transitions: 450 to 900 ms maximum, subject to user control
 - No artificially prolonged preloader; allow skip, avoid repeat on every navigation.
 
 ### Cross-device rules
@@ -256,11 +256,11 @@ For *every* public page and major section, record: `section ID | composition ins
 
 <!-- BEGIN 02_PUBLIC_WEBSITE_PAGES.md -->
 
-# Public Marketing Website — Complete Route & Section Inventory
+# Public Marketing Website, Complete Route & Section Inventory
 
 **Global:** Shared navigation, animated but accessible route entrance, breadcrumb where relevant, consistent CTA strategy, intentional branded footer, business WhatsApp action, keyboard usability, accurate SEO metadata. Every page must feel distinct within the same brand system. Internal `/admin` is specified separately.
 
-## 01. Home — `/`
+## 01. Home, `/`
 
 **Purpose:** Identity + immediate credibility + portfolio-first conversion.
 
@@ -270,8 +270,8 @@ For *every* public page and major section, record: `section ID | composition ins
 | 2 | Authentic project showreel | Cinematic media mask and restrained scroll scale, pause/controls; poster if no real footage | View Work |
 | 3 | Company preview | Editorial text block, number label, offset real studio/product image, image parallax | About areniX |
 | 4 | Services preview | Indexed giant rows, media-change on hover/focus; tap expand on mobile | All Services |
-| 5 | Selected portfolio (6–8 configurable projects) | Varied size real screenshots, hover live previews, tasteful active image transitions, case-study overlay | View Case Study + Visit Website where available |
-| 6 | Real dashboard showcase | 2–4 permission-approved software screens, floating layered frames, scroll narrative | Explore Solutions |
+| 5 | Selected portfolio (6 to 8 configurable projects) | Varied size real screenshots, hover live previews, tasteful active image transitions, case-study overlay | View Case Study + Visit Website where available |
+| 6 | Real dashboard showcase | 2 to 4 permission-approved software screens, floating layered frames, scroll narrative | Explore Solutions |
 | 7 | Industries | Interactive sector switcher, changing supporting media; clarify use cases vs completed engagements | Explore Solutions |
 | 8 | Technology stack | Categorized technical grid with responsive reveal | Technologies |
 | 9 | Working process | Sticky vertical step timeline or mobile accordion with visual changes | Our Process |
@@ -279,11 +279,11 @@ For *every* public page and major section, record: `section ID | composition ins
 | 11 | Insights preview | Latest *published* articles; empty state until they exist | Insights |
 | 12 | Large contact CTA | Dramatic color/typography shift and big button | Book Consultation / Start Project |
 
-## 02. About — `/about`
+## 02. About, `/about`
 
 Sections: editorial hero; who we are; verified company story; vision/mission; values; approach to engineering & design; team or leadership if authorized; authentic milestones; where we work (publish only approved location/contact); final CTA. Motion: words/lines reveals, scroll storytelling with sticky image, value-card activation, timeline movement, contrasting section transitions. Keep text searchable and accessible.
 
-## 03. Services — `/services`
+## 03. Services, `/services`
 
 Sections: major editorial hero; service positioning; 8 primary service categories; featured delivery examples; technical approach; delivery stages; engagement models without invented prices; relevant portfolio; FAQs; consultation CTA.
 
@@ -301,17 +301,17 @@ Only actively market confirmed capabilities; admin can unpublish offerings not y
 
 Interactions: typography reveal, indexed hover rows, service media swap, accordion details, anchor/sticky navigation, CTA scroll; responsive explicit controls.
 
-### Service detail — `/services/[slug]`
+### Service detail, `/services/[slug]`
 
 Sections: service-specific hero with custom imagery; problems addressed; solutions/deliverables; sample workflow; technical approach; related **real** case studies; FAQ; booking and project CTA. Use distinct layouts/hero art for meaningful service differences rather than template title swaps. Motion: masked screenshot, category pills, column stagger, optional sticky value statement, related project transition.
 
-## 04. Portfolio — `/work`
+## 04. Portfolio, `/work`
 
 Sections: portfolio hero; featured case study; searchable/filterable work grid; status/industry/service filters; capability highlights; large lead-generation CTA. Each project image/title links to internal `/work/[slug]`. Render clearly labeled **View Case Study** and **Visit Website / Open App** actions; external link only if public and configured. Screenshots should be authentic, user-authorized and cropped intentionally.
 
 Motion: dynamic layout reflow without scroll jumps, image switching on hover, keyboard focus visual, correct mobile touch controls, branded detail-page entrance.
 
-### Individual case study — `/work/[slug]`
+### Individual case study, `/work/[slug]`
 
 Use **Onart/Voyage** as a strong composition reference:
 1. Back to work / breadcrumb
@@ -332,45 +332,45 @@ Use **Onart/Voyage** as a strong composition reference:
 
 Motion: media reveal, selective gallery parallax, metadata stagger, scroll-led feature panels, focusable lightbox, real UI tab/slide interactions, next-case transition. No project may have a dead page or fake outcome.
 
-## 05. Solutions — `/solutions` and `/solutions/[slug]`
+## 05. Solutions, `/solutions` and `/solutions/[slug]`
 
 Sections: hero; grouped sectors (education, healthcare, retail, workforce, hospitality, startup); problems/business needs; relevant real solutions vs proposed capabilities; dashboard-supported product imagery; integrations; delivery method; case studies; CTA. Detail pages: sector-specific use cases, workflow, architecture high level, related proof and conversion. Motion: interactive category selector, image swap, scroll-linked product mockups, accessible tabs and content reveals.
 
-## 06. Technologies — `/technologies`
+## 06. Technologies, `/technologies`
 
 Sections: engineering philosophy; frontend (React/Next.js/TypeScript), backend (Node/NestJS/Express/Python where verified), databases (PostgreSQL/Prisma/MongoDB), mobile (React Native), cloud/deployment, systems architecture and integrations; stack-to-project mapping; CTA. Interactive grouped tech grid and visual architectural diagrams; no false certificate/vendor partnership logos.
 
-## 07. Process — `/process`
+## 07. Process, `/process`
 
 Sections: discover; scope; product/UX design; architecture; build; QA/security; launch; maintenance/support; expectation-setting; CTA. Editorial process timeline with sticky visual, scene transitions, progress indicator and practical deliverables. Mobile version uses stack/accordion, not broken pinning.
 
-## 08. Insights — `/insights` and `/insights/[slug]`
+## 08. Insights, `/insights` and `/insights/[slug]`
 
 Listing: blog hero, featured article, category filters, text search, article grid, pagination, newsletter only if consent-compliant and functional. Article: hero, real author/date, reading time, optional TOC, cover, structured rich text, code blocks and syntax highlighting, accessible media, reading progress, related articles, service CTA. Motion: understated article image reveal, card hover and controlled transitions. Empty state if unpublished.
 
-## 09. Innovation Lab — `/lab`
+## 09. Innovation Lab, `/lab`
 
 Explain product experiments and work in progress honestly. Sections: experimental hero; in-development work incl. netHuk; prototypes; technical notes; available demos; updates. Must not represent concepts as shipped software. Use distinctive cards, layered visuals and thoughtful motion.
 
-## 10. Careers — `/careers`
+## 10. Careers, `/careers`
 
 Sections: editorial hero; culture/principles; work approach; verified roles from CMS; application or contact workflow; FAQ. Show professional **no current openings** state when empty. Do not invent hiring or collect unnecessary personal information. Motion: balanced reveals, tasteful role hover, not distracting effects.
 
-## 11. Contact — `/contact`
+## 11. Contact, `/contact`
 
 Sections: large editorial invitation; short contact options; official WhatsApp link; email (only after configured); general inquiry form; location if appropriate; social links if verified; FAQ; closing CTA. Motion: heading reveal, animated fields and true submission state. Include anti-spam, validated persistence, acknowledgment email, and helpful error reporting.
 
-## 12. Consultation booking — `/book-consultation`
+## 12. Consultation booking, `/book-consultation`
 
 Sections: consultation choice, expectation and optional duration, working embedded scheduler with valid availability or clearly labeled callback-request fallback; timezone display, contact details, confirmation/reschedule/cancel states. No fake slot inventory, no placeholder confirmation. Maintain branded framing, accessible date/time selection and service context in link.
 
-## 13. Start a project — `/start-project`
+## 13. Start a project, `/start-project`
 
 Sections: short explainer, inquiry wizard or well-designed single form; service/solution category, client details, project requirements, budget optional, timeline optional, attachments optional, preferred contact method, consent. Validate server-side; on success show unique saved reference and action for booking consultation. If multipart wizard, preserve progress and avoid unnecessary mandatory fields.
 
 ## 14. Policies and system pages
 
-`/privacy`, `/terms`, `not-found`, loading and error states. Use readable editorial layout and consistent brand. Add legally reviewable placeholder text marked **Draft — review before launch**, not fake polished legal guarantees. A business owner/legal professional should review policies against real data flows and applicable law before publication.
+`/privacy`, `/terms`, `not-found`, loading and error states. Use readable editorial layout and consistent brand. Add legally reviewable placeholder text marked **Draft, review before launch**, not fake polished legal guarantees. A business owner/legal professional should review policies against real data flows and applicable law before publication.
 
 ## Navigation and footer
 
@@ -386,7 +386,7 @@ Services and case studies should offer contextual CTAs: **Book a consultation**,
 
 <!-- BEGIN 03_PORTFOLIO_CASE_STUDIES.md -->
 
-# Portfolio System — Real Screenshot Galleries, Case Studies & Live Links
+# Portfolio System, Real Screenshot Galleries, Case Studies & Live Links
 
 ## User-critical requirement
 
@@ -399,7 +399,7 @@ Services and case studies should offer contextual CTAs: **Book a consultation**,
 
 Display **In Development**, **Private System**, **Concept**, **Live**, or **Completed** clearly. A private system may have screenshots only if sanitized/authorized; it must not offer a public live URL or unauthorized demo credentials. Case studies remain viewable without live URLs.
 
-## Initial records — no fabricated URLs
+## Initial records, no fabricated URLs
 
 | Project | Focus | Known public URL | Media recommendation | Status/data rule |
 |---|---|---|---|---|
@@ -444,7 +444,7 @@ Other verified projects can be added through admin CMS. Avoid counting a single 
 - **View Case Study** internal link
 - **Visit Website** external link if `liveUrl && isPublic && approved`; `target="_blank" rel="noopener noreferrer"`
 - Optional `View GitHub` only when a repository is legitimately public/approved
-- Optional preview switcher with 2–3 screenshots using arrows/dots on touch; hover crossfade on precise-pointer devices
+- Optional preview switcher with 2 to 3 screenshots using arrows/dots on touch; hover crossfade on precise-pointer devices
 - Loading skeleton, errors and missing-media safe state
 
 Cards support keyboard focus and clear separate click targets; don't nest links inside links or cause ambiguous click areas.
@@ -562,7 +562,7 @@ Visitors discover services and portfolio projects on the cinematic marketing sit
 - Track only privacy-appropriate click events and optional lead-source parameters; never imply message was delivered or received.
 - Phase-two official WhatsApp Business Platform two-way integration only after approved Meta configuration, permissions, webhook verification and privacy review.
 
-### B. Book consultation — `/book-consultation`
+### B. Book consultation, `/book-consultation`
 
 Bookable meeting types: discovery, website development, custom software, enterprise/business systems, mobile app, technical consulting. Configure descriptions, durations and operating hours through approved scheduling service or admin controls.
 
@@ -578,7 +578,7 @@ Actual workflow:
 
 Preferred v1 implementation: embed or integrate Cal.com when the owner configures it; choose integration depth based on available access/API/webhooks. If not configured, provide an honest `Request a Consultation` form in a distinct **REQUESTED** status. Do **not** show imaginary slots or “Booking Confirmed” for unconfirmed requests.
 
-### C. Request a service / project quote — `/start-project`
+### C. Request a service / project quote, `/start-project`
 
 Fields:
 - Name, verified format email
@@ -595,7 +595,7 @@ Fields:
 
 Server Zod validation; spam-rate protection, safe file upload, storage record, timestamp and unique reference ID. Show success only after authoritative DB persistence; send internal notification/autoack via reliable email provider with retries. Use queue/outbox if needed so an email outage does not falsely mark the inquiry lost.
 
-### D. General contact — `/contact`
+### D. General contact, `/contact`
 
 Simple form: name/email/subject/message/consent; persistent inquiry and confirmation. Email/web social channels must be verified. Add FAQ and click-to-chat/booking buttons.
 
@@ -658,7 +658,7 @@ Additional outcomes `LOST`, `ARCHIVED`; `ON_HOLD` optional. Keep status history 
 - Template system with preview mode, provider return status and safe retry handling.
 - Keep unsubscribe/preferences appropriate for optional marketing messages; transactional email is distinct from marketing consent.
 
-## Client portal — future phase
+## Client portal, future phase
 
 Architect role separation to permit a future `/portal` for authenticated clients to review **only their own** approved proposals, project milestones, documents, support requests and consultations. Do not launch fake client pages or allow client access to `/admin`.
 
@@ -907,7 +907,7 @@ Treat examples as a starting point, not a demand to expose secrets to frontend. 
 
 Build in vertical slices that **work end-to-end**, not thousands of lines of attractive placeholders. Review existing repo before editing. Make design and implementation decisions explicit. Keep every link/animation functional at its phase checkpoint. Avoid unnecessary assistant subagents; a single sequential coding agent can use these phases as a task list.
 
-## Phase 0 — Discovery and constraints
+## Phase 0, Discovery and constraints
 
 - Inspect existing project files, package versions, assets and hosting constraints.
 - Research all five specified Webflow reference sites; document observed elements vs areniX-inspired proposed effects.
@@ -918,16 +918,16 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 **Gate:** reference audit, route list and asset inventory exist.
 
-## Phase 1 — Shared frontend foundation
+## Phase 1, Shared frontend foundation
 
 - Set up Next.js strict TypeScript, Tailwind v4, component primitives, typography, design tokens and animation utilities.
 - Build responsive marketing shell, accessible nav, mobile menu, CTA buttons, branded footer and legal/system page wrappers.
 - Motion infrastructure: GSAP/ScrollTrigger isolation + cleanup, React component transitions, reduced-motion fallback.
 - Establish typed CMS/project fixture data and reusable URL/CTA helpers.
 
-**Gate:** core shell works on 320–1920px and basic a11y; no broken routes or animation leakage.
+**Gate:** core shell works on 320 to 1920px and basic a11y; no broken routes or animation leakage.
 
-## Phase 2 — Cinematic marketing UI
+## Phase 2, Cinematic marketing UI
 
 - Build Home with all described sections and original five-reference synthesis.
 - Complete About, Services + service details, Solutions + details, Technologies, Process, Insights, Innovation Lab and Careers.
@@ -936,7 +936,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 **Gate:** all public routes have coherent real content states, navigation, responsive visual QA and accessible motion.
 
-## Phase 3 — Authentic portfolio and case studies
+## Phase 3, Authentic portfolio and case studies
 
 - Implement searchable/filterable work grid and status indicators.
 - Create seeded entries for eight initial known portfolio projects.
@@ -946,7 +946,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 **Gate:** every public project has working `View Case Study`; only approved/live projects have `Visit Website`; screenshots are authentic/approved.
 
-## Phase 4 — Visitor conversion workflows
+## Phase 4, Visitor conversion workflows
 
 - Configure true WhatsApp link (official areniX number), validated context text and accessible placement.
 - Implement persisted contact and project inquiry forms with reference ID and staff email notification.
@@ -955,7 +955,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 **Gate:** site-submitted inquiry persists, staff sees it and receives real notification or queued notification; booking behavior matches actual availability state.
 
-## Phase 5 — Protected operations dashboard
+## Phase 5, Protected operations dashboard
 
 - Secure invitation-only authentication and RBAC.
 - Live overview analytics and inquiry queue.
@@ -967,7 +967,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 **Gate:** admin functions connected to real DB; unauthorized users cannot read/write sensitive records.
 
-## Phase 6 — Harden and deploy
+## Phase 6, Harden and deploy
 
 - Complete unit/integration/E2E tests.
 - Test email/webhook failures, security boundaries, admin role changes and data leak prevention.
@@ -1009,7 +1009,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 ## Reporting template for each phase
 
 ```markdown
-## Phase N — [name]
+## Phase N, [name]
 **Completed routes/components:** ...
 **Working interactions verified:** ...
 **Motion and responsive checks:** ...
@@ -1022,7 +1022,7 @@ Build in vertical slices that **work end-to-end**, not thousands of lines of att
 
 Do not claim “complete” based on visual inspection alone. Run the applications and tests as available; document exactly what was checked.
 
-## Final acceptance — must all be true
+## Final acceptance, must all be true
 
 1. All five reference influences have been intentionally synthesized into the **public marketing** experience, without copying assets/layouts wholesale.
 2. Not only Home: every required route has appropriate visual and animation treatment.
@@ -1059,8 +1059,8 @@ Use this as a dependency list for the owner, content manager and implementation 
 
 - Legal name: **areniX Technologies Limited**.
 - Short brand: **areniX** (case-sensitive identity).
-- Known public sample project: **Passion Nutrition Clinic** — https://passion-nutrition-clinic.vercel.app/
-- Known public project: **CleNest** — https://www.clenest.site
+- Known public sample project: **Passion Nutrition Clinic**, https://passion-nutrition-clinic.vercel.app/
+- Known public project: **CleNest**, https://www.clenest.site
 - Work named for portfolio: Paylio Staff Management; Paylio Dashboard; netHuk (under development); ArenoX LMS; Annotrix; AreniX Branch Manager.
 - Owner wants a highly original marketing UI influenced by **five** specific reference links, authentic project screenshots, click-through live sites, WhatsApp/service contact, online booking, and internal company dashboard.
 
@@ -1104,7 +1104,7 @@ From custom business systems to ambitious digital products, we turn complex need
 **Let's turn your idea into something useful.** Tell us what you're building, or book a discovery conversation.
 
 ### Portfolio CTA
-**See what we've built.** Explore real websites, applications and systems—through authentic interfaces and project stories.
+**See what we've built.** Explore real websites, applications and systems, through authentic interfaces and project stories.
 
 ### Footer CTA
 **Have a project in mind? Let's build it.**

@@ -1,6 +1,6 @@
 /**
  * Captures authentic screenshots of PUBLIC portfolio sites with Playwright and writes WebP
- * files to public/screenshots/<slug>/. Only pages listed here are captured — never login,
+ * files to public/screenshots/<slug>/. Only pages listed here are captured, never login,
  * dashboard, account or tracking routes. Review every image before publishing.
  *
  *   npm run screenshots

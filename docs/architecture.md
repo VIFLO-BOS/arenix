@@ -65,7 +65,7 @@ The owner specified MongoDB Community Edition. Consequences handled in code:
 | `/start-project` | `Inquiry(PROJECT)` with scanned attachments | same | reference + CTA to book |
 | `/book-consultation` (request mode) | `Booking(REQUESTED)` + `Client` + `Lead` | "request received" email (explicitly *not* a confirmation) | reference `ARX-BKG-…`, "not yet confirmed" |
 | Cal.com webhook | `Booking(CONFIRMED…)` keyed by provider id | confirmation email | provider UI |
-| WhatsApp | `ClickEvent` only (no personal data) | — | opens WhatsApp |
+| WhatsApp | `ClickEvent` only (no personal data) | none | opens WhatsApp |
 
 Attachments: allowlisted MIME, 8 MB, max 3, magic-number sniffed; stored under `public/uploads/attachments`.
 

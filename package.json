@@ -2,7 +2,7 @@
   "name": "arenix",
   "version": "0.1.0",
   "private": true,
-  "description": "areniX Technologies Limited — public marketing website and business operating platform",
+  "description": "areniX Technologies Limited public marketing website and business operating platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

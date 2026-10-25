@@ -47,9 +47,9 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 - Rhythm: large display headings, short lead text, good empty space, carefully aligned media.
 
 ### Spatial system
-- Container max width ~1360–1520px with fluid gutters, not fixed-width.
+- Container max width ~1360 to 1520px with fluid gutters, not fixed-width.
 - 12-column large-screen grid, flexible tablet 6-column, mobile 4-column where practical.
-- Narrow readable text lines (~55–75 characters for long-form body).
+- Narrow readable text lines (~55 to 75 characters for long-form body).
 - Intentional responsive image crops, full-width visual moments, asymmetric sections where helpful.
 - Clear focus, error, success, disabled states.
 
@@ -69,7 +69,7 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 | Animated nav overlay | Mobile navigation | Focus trap, Escape, overlay dismissal |
 | Grid morph/reorder | Work filters | Do not move focus unexpectedly |
 | Animated project screenshots | Portfolio hover, case study viewer | Real/approved media, accessible next/previous controls |
-| Dashboard micro-motion | Drawer, toast, filter, tabs, dialogs | 100–250ms, functional, no scroll hijacking |
+| Dashboard micro-motion | Drawer, toast, filter, tabs, dialogs | 100 to 250ms, functional, no scroll hijacking |
 
 ## Motion architecture
 
@@ -81,10 +81,10 @@ Use dark/light alternation with meaningful contrast; restrained luminous gradien
 - Centralize motion duration/ease tokens, cleanup and breakpoints.
 
 ### Motion timing guidelines
-- Press/hover response: 120–250 ms
-- Card interactions: 250–500 ms
-- Reveals: 500–850 ms
-- Page transitions: 450–900 ms maximum, subject to user control
+- Press/hover response: 120 to 250 ms
+- Card interactions: 250 to 500 ms
+- Reveals: 500 to 850 ms
+- Page transitions: 450 to 900 ms maximum, subject to user control
 - No artificially prolonged preloader; allow skip, avoid repeat on every navigation.
 
 ### Cross-device rules

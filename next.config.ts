@@ -9,6 +9,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // AGENTS.md is maintained by hand, so next dev must not rewrite it.
+  agentRules: false,
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

@@ -1,9 +1,11 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Notes for AI agents
 
-## This is NOT the Next.js you know
+## This is not the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+This project runs Next.js 16, which has breaking changes in APIs, conventions and file structure compared with older versions. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code, and heed deprecation notices. For example, request middleware lives in `src/proxy.ts`, and route `params` and `searchParams` are promises.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Project rules
 
-<!-- END:nextjs-agent-rules -->
+- Public copy avoids em dashes, en dashes, colons, semicolons and hyphenated words.
+- Commit messages carry no co-author trailers or tool credits.
+- Never run bulk text replacements over source files. Edit strings deliberately and run `node scripts/qa/syntax-check.mjs src` after any large change.

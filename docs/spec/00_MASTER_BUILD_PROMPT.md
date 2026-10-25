@@ -1,4 +1,4 @@
-# MASTER BUILD PROMPT — areniX Corporate Website & Business Operating Platform
+# MASTER BUILD PROMPT, areniX Corporate Website & Business Operating Platform
 
 ## Role and objective
 
@@ -6,7 +6,7 @@ You are a coordinated senior team: creative director, brand designer, interactiv
 
 Build a complete, original, production-ready digital headquarters for **areniX Technologies Limited**, publicly branded **areniX**. The deliverable comprises:
 
-1. A **cinematic, design-led public marketing website**—every route and significant section has considered typography, layout, motion, and meaningful interactions.
+1. A **cinematic, design-led public marketing website**, every route and significant section has considered typography, layout, motion, and meaningful interactions.
 2. A **real interactive portfolio** with authorized screenshots of actual project pages and working internal case-study links plus external `Visit Website` / `Open App` links only where public deployments exist.
 3. Multi-channel **client acquisition**: service inquiries, WhatsApp click-to-chat, consultation scheduling, quote requests, consent-aware confirmation emails, and actionable calls to action.
 4. A protected **areniX business dashboard**: leads, CRM, inquiries, bookings, project/quote pipeline, notifications, content management, portfolio media and settings.
@@ -14,7 +14,7 @@ Build a complete, original, production-ready digital headquarters for **areniX T
 
 This is not a static design exercise, copied Webflow template, generic dashboard starter, or portfolio-only one-pager. Produce working, connected functionality.
 
-## Required reference websites — MUST analyze them before implementation
+## Required reference websites, MUST analyze them before implementation
 
 - https://altreex.webflow.io/
 - https://onart-studio.webflow.io/project/voyage (and https://onart-studio.webflow.io/)
@@ -41,18 +41,18 @@ Build the route inventory specified in `02_PUBLIC_WEBSITE_PAGES.md`:
 
 Every public page needs page-specific section composition and motion. Reuse the *system*, not one generic section template everywhere. Ensure mobile-friendly equivalents and reduced-motion fallbacks.
 
-## Portfolio — make actual work the centerpiece
+## Portfolio, make actual work the centerpiece
 
 Initial project roster:
 
-- **Passion Nutrition Clinic** — healthcare/nutrition website; known public URL: https://passion-nutrition-clinic.vercel.app/
-- **Paylio Staff Management** — staff/workforce system; publish only approved, non-sensitive screenshots and facts.
-- **Paylio Dashboard** — operations/admin dashboard; connect to the same case study where the modules are one delivery.
-- **netHuk** — *In Development*; do not assume industry, features, URL, release date or production readiness.
-- **CleNest** — laundry and cleaning service web platform; known public URL: https://www.clenest.site
-- **ArenoX LMS** — education/learning platform; only confirmed capabilities.
-- **Annotrix** — assessment and evaluation platform; only confirmed capabilities.
-- **AreniX Branch Manager** — retail/inventory/sales/operations management solution; state delivery status truthfully.
+- **Passion Nutrition Clinic**, healthcare/nutrition website; known public URL: https://passion-nutrition-clinic.vercel.app/
+- **Paylio Staff Management**, staff/workforce system; publish only approved, non-sensitive screenshots and facts.
+- **Paylio Dashboard**, operations/admin dashboard; connect to the same case study where the modules are one delivery.
+- **netHuk**, *In Development*; do not assume industry, features, URL, release date or production readiness.
+- **CleNest**, laundry and cleaning service web platform; known public URL: https://www.clenest.site
+- **ArenoX LMS**, education/learning platform; only confirmed capabilities.
+- **Annotrix**, assessment and evaluation platform; only confirmed capabilities.
+- **AreniX Branch Manager**, retail/inventory/sales/operations management solution; state delivery status truthfully.
 
 Use real project images: chosen live website pages, dashboards, mobile pages and screenshot galleries. Automate screenshots of genuinely public accessible pages using Playwright where permitted; sanitize customer/user/private data. Each card must support **View Case Study** (internal `/work/[slug]`) and **Visit Website / Open App** (external URL, new tab) only where valid/public; no invented URLs. Build detailed, distinctive case studies with challenge, implementation, gallery, engineering contributions, verified outcomes, related projects. CMS-configurable content and media.
 
@@ -77,7 +77,7 @@ Create authenticated, server-authorized `/admin` with:
 - Team invitations and roles
 - Brand and integration settings
 
-Use a restrained modern SaaS interface—not scroll-jacking or huge headline animations inside operational tables. Roles: `SUPER_ADMIN`, `ADMIN`, `BUSINESS_DEVELOPMENT`, `CONTENT_MANAGER`, `PROJECT_MANAGER`; enforce server-side least privilege. Do not allow public admin signup. Do not expose internal client materials to public pages.
+Use a restrained modern SaaS interface, not scroll-jacking or huge headline animations inside operational tables. Roles: `SUPER_ADMIN`, `ADMIN`, `BUSINESS_DEVELOPMENT`, `CONTENT_MANAGER`, `PROJECT_MANAGER`; enforce server-side least privilege. Do not allow public admin signup. Do not expose internal client materials to public pages.
 
 A **client portal** is phase-two/three architecture unless deliberately included in the agreed build scope; never give customers admin accounts. Support later `/portal` for their own projects, milestones, files and approved communications.
 

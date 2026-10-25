@@ -1,5 +1,5 @@
 /**
- * Visual/responsive QA: loads every public route at 250–1920px widths, checks for horizontal
+ * Visual/responsive QA: loads every public route at 250 to 1920px widths, checks for horizontal
  * overflow and console errors, saves screenshots to docs/qa/screens and writes
  * docs/qa/responsive-report.md.
  *
@@ -86,13 +86,13 @@ async function main() {
     ``,
     `## Problems`,
     ``,
-    problems.length ? `| Route | Width | Status | Overflow | Errors |\n|---|---|---|---|---|\n${problems.map((p) => `| ${p.route} | ${p.width} | ${p.status ?? "—"} | ${p.overflow === -1 ? "load failed" : `${p.overflow}px`} | ${p.errors.join("<br>").replace(/\|/g, "\\|") || "—"} |`).join("\n")}` : "None.",
+    problems.length ? `| Route | Width | Status | Overflow | Errors |\n|---|---|---|---|---|\n${problems.map((p) => `| ${p.route} | ${p.width} | ${p.status ?? "n/a"} | ${p.overflow === -1 ? "load failed" : `${p.overflow}px`} | ${p.errors.join("<br>").replace(/\|/g, "\\|") || "none"} |`).join("\n")}` : "None.",
     ``,
     `## All checks`,
     ``,
     `| Route | Width | Status | Overflow | h1 | Errors |`,
     `|---|---|---|---|---|---|`,
-    ...rows.map((r) => `| ${r.route} | ${r.width} | ${r.status ?? "—"} | ${r.overflow === -1 ? "fail" : r.overflow} | ${r.h1 ? "yes" : "no"} | ${r.errors.length} |`),
+    ...rows.map((r) => `| ${r.route} | ${r.width} | ${r.status ?? "n/a"} | ${r.overflow === -1 ? "fail" : r.overflow} | ${r.h1 ? "yes" : "no"} | ${r.errors.length} |`),
     ``,
   ].join("\n");
   await writeFile(path.join(process.cwd(), "docs", "qa", "responsive-report.md"), md);

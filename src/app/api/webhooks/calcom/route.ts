@@ -105,7 +105,7 @@ export async function POST(req: Request) {
       statusHistory: [{ to: "CONFIRMED", actorLabel: "calcom webhook" }],
     });
     const lead = await Lead.create({
-      title: `${consultationType} — ${attendee?.name ?? email}`,
+      title: `${consultationType} for ${attendee?.name ?? email}`,
       status: "NEW",
       source: "calcom",
       clientId,
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
     existing.statusHistory.push({ from, to: "RESCHEDULED", actorLabel: "calcom webhook", at: new Date() });
     await existing.save();
     const t = emailTemplates.bookingConfirmed({ name: existing.name, reference: existing.reference, consultationType: existing.consultationType, when: existing.startsAt ? formatDateTime(existing.startsAt, existing.visitorTimezone || undefined) : "see calendar", meetingUrl: existing.meetingUrl ?? undefined });
-    await enqueueEmail({ to: existing.email, subject: `Rescheduled — ${t.subject}`, html: t.html, text: t.text, template: "booking-rescheduled", entityType: "Booking", entityId: existing._id.toString() });
+    await enqueueEmail({ to: existing.email, subject: `Rescheduled, ${t.subject}`, html: t.html, text: t.text, template: "booking-rescheduled", entityType: "Booking", entityId: existing._id.toString() });
   } else if (triggerEvent === "BOOKING_CANCELLED") {
     const from = existing.status;
     existing.status = "CANCELLED";

@@ -8,7 +8,7 @@ import { siteConfig } from "@/config/site";
 /**
  * Outbox-style email dispatch. Every email is first persisted (PENDING) and then an
  * attempt is made. If Resend is not configured, the dispatch is stored as DEMO_LOGGED and
- * printed to the server log — never reported as "sent".
+ * printed to the server log, never reported as "sent".
  */
 
 type EmailInput = {
@@ -104,7 +104,7 @@ export async function retryPendingEmails(limit = 20) {
 }
 
 /* ------------------------------------------------------------------------ */
-/* Templates — plain, brand-consistent, no external assets                   */
+/* Templates. Plain, brand consistent, no external assets                   */
 /* ------------------------------------------------------------------------ */
 
 function esc(s: string) {

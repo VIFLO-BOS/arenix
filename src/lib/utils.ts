@@ -51,7 +51,7 @@ export function timeAgo(value: Date | string) {
 }
 
 export function formatMoney(amount: number | null | undefined, currency = "NGN") {
-  if (amount == null) return "—";
+  if (amount == null) return "Not set";
   try {
     return new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
   } catch {

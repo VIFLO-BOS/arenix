@@ -29,7 +29,7 @@
 
 ## Hosting notes
 
-- **Vercel**: works out of the box; uploads with the `local` driver are ephemeral there — use the S3 adapter boundary for production media, or host on a Node server with a persistent disk.
+- **Vercel**: works out of the box; uploads with the `local` driver are ephemeral there, use the S3 adapter boundary for production media, or host on a Node server with a persistent disk.
 - **Node/VM/Docker**: `npm run build && npm run start`; mount `public/uploads` on persistent storage; run MongoDB Community with `--auth` and daily `mongodump`.
 - Rate limiting is in-memory per instance. For multiple instances replace the store in `src/lib/rate-limit.ts` with Redis.
 

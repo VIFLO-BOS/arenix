@@ -1,4 +1,4 @@
-# areniX — website & business operating platform
+# areniX, website & business operating platform
 
 Production codebase for **areniX Technologies Limited**: a cinematic public marketing site, an authentic portfolio with case studies, visitor conversion flows (contact, project request, consultation request, WhatsApp click-to-chat) and a protected business dashboard (inquiries, CRM leads, clients, bookings, proposals, projects, CMS, media, team, settings, audit).
 
@@ -6,7 +6,7 @@ Production codebase for **areniX Technologies Limited**: a cinematic public mark
 |---|---|
 | Framework | Next.js 16 (App Router, React 19, TypeScript strict) |
 | Styling / motion | Tailwind CSS v4 tokens · GSAP ScrollTrigger (scroll media) · Motion for React (component/route transitions) · CSS for hover |
-| Database | **MongoDB Community Edition** via Mongoose 9 (`MONGODB_URI`) — no Prisma/Postgres |
+| Database | **MongoDB Community Edition** via Mongoose 9 (`MONGODB_URI`), no Prisma/Postgres |
 | Auth | Invitation-only, bcrypt passwords, DB-backed HTTP-only sessions, server-side RBAC (5 roles) |
 | Email | Resend through an outbox (`EmailDispatch`); demo-log mode when no key |
 | Booking | Request-only by default; optional Cal.com embed + verified webhook |
@@ -29,7 +29,7 @@ Optional:
 
 ```bash
 npm run screenshots        # Playwright captures of the two PUBLIC portfolio sites → public/screenshots
-npm run qa:responsive      # 250–1920px overflow/console check → docs/qa/responsive-report.md
+npm run qa:responsive      # 250 to 1920px overflow/console check → docs/qa/responsive-report.md
 npm run test               # unit tests (Vitest)
 npm run test:e2e           # Playwright e2e against the dev server
 npm run typecheck && npm run lint && npm run build
@@ -55,7 +55,7 @@ docs/…                  architecture, deployment, admin guide, design audit, Q
 
 ## Honesty rules baked in
 
-- Portfolio cards show an **authentic screenshot** or a clearly labelled “preview being prepared” placeholder — never a fake.
+- Portfolio cards show an **authentic screenshot** or a clearly labelled “preview being prepared” placeholder, never a fake.
 - `Visit Website` renders only when `liveUrl` is https **and** `isLiveUrlPublic` is approved.
 - Booking without a provider is a **request** (status `REQUESTED`), never a fake confirmation.
 - Email without `RESEND_API_KEY` is stored as `DEMO_LOGGED`, never reported as sent.

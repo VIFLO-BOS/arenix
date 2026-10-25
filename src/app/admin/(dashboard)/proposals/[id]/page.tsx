@@ -143,7 +143,7 @@ export default async function ProposalDetailPage({ params }: { params: Promise<{
               items={[
                 ["Client", client ? <Link key="c" href={`/admin/clients/${client._id.toString()}`} className="underline underline-offset-4">{client.name}</Link> : ", "],
                 ["Client email", client?.email ?? ",  (needed to send)"],
-                ["Lead", lead ? <Link key="l" href={`/admin/leads/${lead._id.toString()}`} className="underline underline-offset-4">{lead.title}</Link> : "—"],
+                ["Lead", lead ? <Link key="l" href={`/admin/leads/${lead._id.toString()}`} className="underline underline-offset-4">{lead.title}</Link> : "Not set"],
               ]}
             />
             {canWrite && (

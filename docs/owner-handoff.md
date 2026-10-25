@@ -21,14 +21,14 @@ Status as of the initial build (2026-10-19). Nothing listed as pending is invent
 | Domain + hosting | `NEXT_PUBLIC_SITE_URL`, DNS | localhost / staging URL in metadata |
 | Resend account + verified sender domain | `RESEND_API_KEY`, `EMAIL_FROM` | Emails stored as `DEMO_LOGGED`, printed to server log; dashboard shows demo banner |
 | Scheduling provider (Cal.com) | `SCHEDULER_*` env + Settings → Booking | Honest "Request a consultation" flow (status REQUESTED); staff confirm manually |
-| Paylio screenshots + client permission | Media → upload sanitised images → Portfolio → attach, tick Approved | Labelled "Private system — screenshots pending approval" placeholder |
+| Paylio screenshots + client permission | Media → upload sanitised images → Portfolio → attach, tick Approved | Labelled "Private system, screenshots pending approval" placeholder |
 | ArenoX LMS / Annotrix / Branch Manager URLs, status, screenshots | Portfolio editor | Case studies list confirmed capabilities only; no live link |
-| netHuk description / features / release | Portfolio editor + Lab page copy | "In development — no public preview yet" |
+| netHuk description / features / release | Portfolio editor + Lab page copy | "In development, no public preview yet" |
 | Team members, milestones, founding date | About page copy (code) or future CMS block | Dashed "published when verified" blocks |
 | Client testimonials (approved wording) | Content → Testimonials (approve + publish) | Verified-facts cards instead of quotes |
 | Case-study outcomes / metrics | Portfolio editor → Outcomes (verifiable statements only) | Qualitative capabilities only |
 | Pricing / packages | Not published by design | Written, versioned proposals only |
-| Privacy & Terms legal review | Settings → Legal (tick "reviewed") | **Draft — review before launch** banner shown |
+| Privacy & Terms legal review | Settings → Legal (tick "reviewed") | **Draft, review before launch** banner shown |
 | Error monitoring (e.g. Sentry) | Add SDK + DSN | Server logs + audit log only |
 | Object storage for production media | `MEDIA_STORAGE_DRIVER=s3` + adapter | Local `public/uploads` (fine for a Node host with a persistent disk; ephemeral on Vercel) |
 
@@ -40,7 +40,7 @@ Sibling folders of this project (e.g. `staff-management-platform`, `payliocommer
 
 - Official WhatsApp Business Platform two-way messaging (requires Meta configuration and a privacy review).
 - Payment collection or public fee display.
-- Client portal (`/portal`) — role separation is in place; UI not built.
+- Client portal (`/portal`), role separation is in place; UI not built.
 
 ## Signing in to the dashboard
 

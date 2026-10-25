@@ -190,7 +190,7 @@ export const getPublicSettings = cache(async (): Promise<PublicSettings> => {
     await connectDb();
     const doc = await SiteSetting.findOne({ key: "site" }).lean();
     if (doc) {
-      // Empty strings in the DB mean "not set" — drop them so defaults/env fallbacks apply.
+      // Empty strings in the DB mean "not set", so drop them so defaults/env fallbacks apply.
       const stripEmpty = <T,>(section: T): T => {
         if (!section || typeof section !== "object") return section;
         return Object.fromEntries(Object.entries(section as Record<string, unknown>).filter(([, v]) => v !== "" && v !== null && v !== undefined)) as T;
