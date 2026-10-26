@@ -196,3 +196,17 @@ The owner supplied the logo as a 12600 by 9000 PNG. `scripts/build-brand-assets.
 
 Owner feedback. "The dashboard is quite horrible, it should look like a window system layout." The admin area moved from the dark marketing styling to a light application window. Collapsible icon sidebar, breadcrumb top bar with search, notifications and an account menu, light grey workspace with white cards and clean tables, a light sign in screen, and a slide in drawer on phones. 33 admin pages were relit by replacing dark surface classes with slate equivalents. Generated lead titles and activity labels no longer use em dashes or middle dots. Verified by signing in and capturing the overview, inquiries, leads board, settings, portfolio and the phone drawer with zero console errors.
 - Final gates after the dashboard relayout: typecheck, lint and unit tests pass, production build passes, admin smoke passes (25 routes, FAQ create, booking detail, sign out through the account menu), full end to end suite 54 of 54. Committed and pushed to the private repository.
+
+# Verification after the history rewrite and dash removal (2026-10-26)
+
+Run against the working tree, which also contains formatting from the owner's editor (Prettier style and three equivalent Tailwind class rewrites in the site header). Each of those files was checked by formatting the committed and working copies with Prettier and comparing them, and none changes behaviour.
+
+| Check | Result |
+|---|---|
+| Em or en dashes in tracked files | none |
+| Syntax check, typecheck, lint | pass |
+| End to end suite | 54 of 54 pass |
+| Admin smoke | pass, 25 routes, create, detail, sign out |
+| Responsive sweep, 22 routes at 8 widths | 0 overflow, 0 load failures, only the intentional 404 page logs an error |
+
+The first end to end run timed out on 8 page loads while another session on the machine was encoding video and free memory fell to 0.6 GB. MongoDB answered in under 200 ms throughout. All 8 passed once the encoding finished.
