@@ -210,3 +210,9 @@ Run against the working tree, which also contains formatting from the owner's ed
 | Responsive sweep, 22 routes at 8 widths | 0 overflow, 0 load failures, only the intentional 404 page logs an error |
 
 The first end to end run timed out on 8 page loads while another session on the machine was encoding video and free memory fell to 0.6 GB. MongoDB answered in under 200 ms throughout. All 8 passed once the encoding finished.
+
+# Vercel build fix (2026-11-01)
+
+The first Vercel deployment of commit b2f2c97 failed with 20 Turbopack errors of the form "Can't resolve '@vercel/turbopack-next/internal/font/google/font'", one per Montserrat weight and subset, all raised inside `next/font/google`. A fresh clone of the same commit built cleanly on this machine, and Google returned ordinary font URLs here, so the failure depended on what Google served to Vercel's build machine.
+
+Fix. Montserrat and Roboto are now bundled as variable WOFF2 files in `src/app/fonts` (SIL Open Font License, 70 KB and 35 KB, Latin and Latin Extended including the naira sign) and loaded with `next/font/local`. A clean build of the fix succeeded, the production server rendered headings in Montserrat and body text in Roboto, and the page made no requests to Google Fonts.

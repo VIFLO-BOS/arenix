@@ -24,8 +24,9 @@ Sections switch theme with `data-surface="dark|light|deep"`, which remaps `--bg`
 
 ## Typography
 
-- Display slot `--font-display` is Montserrat (weights 500 to 800), self hosted through `next/font`. Headings, navigation, buttons, labels, pills, tabs and table heads use it.
-- Body slot `--font-sans` is Roboto (400, 500, 700), also through `next/font`. Paragraphs, lists and form fields use it.
+- Display slot `--font-display` is Montserrat (variable, 500 to 800), bundled in `src/app/fonts` and loaded with `next/font/local`. Headings, navigation, buttons, labels, pills, tabs and table heads use it.
+- Body slot `--font-sans` is Roboto (variable, 400 to 700), bundled the same way. Paragraphs, lists and form fields use it.
+- No font is fetched from Google at build or run time, which keeps builds deterministic on any host (see `public/fonts/README.md`).
 - Decided 22 October 2026 after the owner asked for Roboto or Montserrat. The earlier Sheepman W03 and Amatry slots were removed, including their `local()` lookups, so a font installed on a visitor's machine can never replace the brand type.
 - Scale (fluid, deliberately small). `text-display-xl` `clamp(2rem, 4.3vw, 3.9rem)`. `lg` `clamp(1.8rem, 3.5vw, 3.25rem)`. `md` `clamp(1.5rem, 2.6vw, 2.6rem)`. `sm` `clamp(1.2rem, 1.7vw, 1.6rem)`. Lead `clamp(1rem, 1.1vw, 1.125rem)`. Body 16px. Micro labels `0.7rem` uppercase with 0.14em tracking.
 - Headings use `text-wrap: balance` and `overflow-wrap: break-word` so long product names never crop at 250px.

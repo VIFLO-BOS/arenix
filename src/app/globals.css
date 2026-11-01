@@ -25,8 +25,8 @@
   --color-danger: #ef5d5d;
   --color-info: #5aa9ff;
 
-  --font-display: var(--font-montserrat), Montserrat, ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-roboto), Roboto, ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "Geist Mono", "Cascadia Mono", Consolas, monospace;
 
   --breakpoint-2xs: 300px;

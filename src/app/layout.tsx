@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Roboto } from "next/font/google";
+import localFont from "next/font/local";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 /**
- * Brand type. Montserrat for headings and interface text, Roboto for body copy. Both load
- * through next/font so the files are self hosted and there is no layout shift.
+ * Brand type. Montserrat for headings and interface text, Roboto for body copy. The variable
+ * font files live in ./fonts (SIL Open Font License), so builds never download fonts from
+ * Google. next/font still generates size adjusted fallbacks, so there is no layout shift.
  */
-const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", weight: ["500", "600", "700", "800"], display: "swap" });
-const roboto = Roboto({ subsets: ["latin"], variable: "--font-roboto", weight: ["400", "500", "700"], display: "swap" });
+const montserrat = localFont({ src: "./fonts/montserrat-latin-wght.woff2", variable: "--font-montserrat", weight: "500 800", display: "swap" });
+const roboto = localFont({ src: "./fonts/roboto-latin-wght.woff2", variable: "--font-roboto", weight: "400 700", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
