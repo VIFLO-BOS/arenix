@@ -27,24 +27,51 @@ export const ctaNav = {
   secondary: { label: "Book a Call", href: "/book-consultation" },
 };
 
-export const adminNav: { group: string; links: { label: string; href: string; permission: string }[] }[] = [
+export const adminNav: {
+  group: string;
+  links: { label: string; href: string; permission: string }[];
+}[] = [
   {
     group: "Overview",
     links: [
       { label: "Dashboard", href: "/admin", permission: "dashboard:read" },
-      { label: "Notifications", href: "/admin/notifications", permission: "dashboard:read" },
-      { label: "Analytics", href: "/admin/analytics", permission: "analytics:read" },
+      {
+        label: "Notifications",
+        href: "/admin/notifications",
+        permission: "dashboard:read",
+      },
+      {
+        label: "Analytics",
+        href: "/admin/analytics",
+        permission: "analytics:read",
+      },
     ],
   },
   {
     group: "Pipeline",
     links: [
-      { label: "Inquiries", href: "/admin/inquiries", permission: "inquiries:read" },
+      {
+        label: "Inquiries",
+        href: "/admin/inquiries",
+        permission: "inquiries:read",
+      },
       { label: "Leads", href: "/admin/leads", permission: "leads:read" },
       { label: "Clients", href: "/admin/clients", permission: "clients:read" },
-      { label: "Bookings", href: "/admin/bookings", permission: "bookings:read" },
-      { label: "Proposals", href: "/admin/proposals", permission: "proposals:read" },
-      { label: "Projects", href: "/admin/projects", permission: "projects:read" },
+      {
+        label: "Bookings",
+        href: "/admin/bookings",
+        permission: "bookings:read",
+      },
+      {
+        label: "Proposals",
+        href: "/admin/proposals",
+        permission: "proposals:read",
+      },
+      {
+        label: "Projects",
+        href: "/admin/projects",
+        permission: "projects:read",
+      },
     ],
   },
   {
@@ -59,7 +86,11 @@ export const adminNav: { group: string; links: { label: string; href: string; pe
     group: "Organisation",
     links: [
       { label: "Team", href: "/admin/team", permission: "team:manage" },
-      { label: "Settings", href: "/admin/settings", permission: "settings:write" },
+      {
+        label: "Settings",
+        href: "/admin/settings",
+        permission: "settings:write",
+      },
       { label: "Audit log", href: "/admin/audit", permission: "audit:read" },
     ],
   },

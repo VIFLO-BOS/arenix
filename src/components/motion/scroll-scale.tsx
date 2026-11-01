@@ -12,12 +12,22 @@ gsap.registerPlugin(ScrollTrigger);
  * slight zoom as it scrolls into view, scrubbed to the scroll position for a slow, cinematic
  * feel. Reduced motion and narrow screens render the media statically.
  */
-export function ScrollScale({ children, className, scrub = true }: { children: ReactNode; className?: string; scrub?: boolean }) {
+export function ScrollScale({
+  children,
+  className,
+  scrub = true,
+}: {
+  children: ReactNode;
+  className?: string;
+  scrub?: boolean;
+}) {
   const wrap = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const narrow = window.matchMedia("(max-width: 640px)").matches;
     if (prefersReduced || narrow || !wrap.current || !inner.current) return;
 
@@ -28,7 +38,13 @@ export function ScrollScale({ children, className, scrub = true }: { children: R
         {
           clipPath: "inset(0% 0% 0% 0% round 14px)",
           ease: "none",
-          scrollTrigger: { trigger: wrap.current, start: "top 90%", end: "top 35%", scrub: scrub ? 1.2 : false, once: !scrub },
+          scrollTrigger: {
+            trigger: wrap.current,
+            start: "top 90%",
+            end: "top 35%",
+            scrub: scrub ? 1.2 : false,
+            once: !scrub,
+          },
         },
       );
       gsap.fromTo(
@@ -37,7 +53,13 @@ export function ScrollScale({ children, className, scrub = true }: { children: R
         {
           scale: 1,
           ease: "none",
-          scrollTrigger: { trigger: wrap.current, start: "top 90%", end: "top 35%", scrub: scrub ? 1.2 : false, once: !scrub },
+          scrollTrigger: {
+            trigger: wrap.current,
+            start: "top 90%",
+            end: "top 35%",
+            scrub: scrub ? 1.2 : false,
+            once: !scrub,
+          },
         },
       );
     }, wrap);
@@ -45,8 +67,14 @@ export function ScrollScale({ children, className, scrub = true }: { children: R
   }, [scrub]);
 
   return (
-    <div ref={wrap} className={cn("relative overflow-hidden rounded-2xl", className)}>
-      <div ref={inner} className="h-full w-full origin-center will-change-transform">
+    <div
+      ref={wrap}
+      className={cn("relative overflow-hidden rounded-2xl", className)}
+    >
+      <div
+        ref={inner}
+        className="h-full w-full origin-center will-change-transform"
+      >
         {children}
       </div>
     </div>

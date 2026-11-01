@@ -7,13 +7,23 @@ import { cn } from "@/lib/utils";
  * Magnetic hover for precise pointer desktops only. Touch and keyboard get a plain element.
  * Uses transform only and cleans up listeners.
  */
-export function Magnetic({ children, className, strength = 0.22 }: { children: ReactNode; className?: string; strength?: number }) {
+export function Magnetic({
+  children,
+  className,
+  strength = 0.22,
+}: {
+  children: ReactNode;
+  className?: string;
+  strength?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const fine = window.matchMedia("(pointer: fine)").matches;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (!fine || reduce) return;
 
     let raf = 0;
@@ -40,7 +50,13 @@ export function Magnetic({ children, className, strength = 0.22 }: { children: R
   }, [strength]);
 
   return (
-    <div ref={ref} className={cn("inline-block transition-transform duration-[600ms] ease-[var(--ease-out-expo)]", className)}>
+    <div
+      ref={ref}
+      className={cn(
+        "inline-block transition-transform duration-[600ms] ease-[var(--ease-out-expo)]",
+        className,
+      )}
+    >
       {children}
     </div>
   );

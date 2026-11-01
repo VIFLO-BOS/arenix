@@ -2,33 +2,85 @@ import { z } from "zod";
 import { PROJECT_STATUSES } from "@/types/content";
 
 const objectId = z.string().regex(/^[a-f\d]{24}$/i, "Invalid id");
-const optStr = (max = 2000) => z.string().trim().max(max).optional().or(z.literal(""));
+const optStr = (max = 2000) =>
+  z.string().trim().max(max).optional().or(z.literal(""));
 const slug = z
   .string()
   .trim()
   .min(2)
   .max(80)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and hyphens");
-const httpsUrl = z.string().trim().url().refine((u) => u.startsWith("https://"), "Must be an https:// URL");
+  .regex(
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "Use lowercase letters, numbers and hyphens",
+  );
+const httpsUrl = z
+  .string()
+  .trim()
+  .url()
+  .refine((u) => u.startsWith("https://"), "Must be an https:// URL");
 const lines = z
   .string()
   .max(20000)
   .optional()
-  .transform((v) => (v ?? "").split(/\r?\n/).map((s) => s.trim()).filter(Boolean));
-const bool = z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean());
-const num = (min = 0, max = 1e12) => z.preprocess((v) => (v === "" || v === null || v === undefined ? undefined : Number(v)), z.number().min(min).max(max).optional());
-const dateOpt = z.preprocess((v) => (v === "" || v === null || v === undefined ? undefined : new Date(String(v))), z.date().optional());
+  .transform((v) =>
+    (v ?? "")
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+const bool = z.preprocess(
+  (v) => v === "on" || v === "true" || v === true,
+  z.boolean(),
+);
+const num = (min = 0, max = 1e12) =>
+  z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+    z.number().min(min).max(max).optional(),
+  );
+const dateOpt = z.preprocess(
+  (v) =>
+    v === "" || v === null || v === undefined ? undefined : new Date(String(v)),
+  z.date().optional(),
+);
 
 export const idSchema = z.object({ id: objectId });
 
-export const inquiryStatusSchema = z.object({ id: objectId, status: z.enum(["NEW", "REVIEWED", "QUALIFIED", "CONVERTED", "SPAM", "CLOSED"]), note: optStr(1000) });
-export const inquiryNoteSchema = z.object({ id: objectId, body: z.string().trim().min(1, "Write a note").max(4000) });
-export const assignSchema = z.object({ id: objectId, userId: z.union([objectId, z.literal("")]) });
+export const inquiryStatusSchema = z.object({
+  id: objectId,
+  status: z.enum([
+    "NEW",
+    "REVIEWED",
+    "QUALIFIED",
+    "CONVERTED",
+    "SPAM",
+    "CLOSED",
+  ]),
+  note: optStr(1000),
+});
+export const inquiryNoteSchema = z.object({
+  id: objectId,
+  body: z.string().trim().min(1, "Write a note").max(4000),
+});
+export const assignSchema = z.object({
+  id: objectId,
+  userId: z.union([objectId, z.literal("")]),
+});
 
 export const leadUpdateSchema = z.object({
   id: objectId,
   title: optStr(200),
-  status: z.enum(["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL_SENT", "WON", "LOST", "ON_HOLD", "ARCHIVED"]).optional(),
+  status: z
+    .enum([
+      "NEW",
+      "CONTACTED",
+      "QUALIFIED",
+      "PROPOSAL_SENT",
+      "WON",
+      "LOST",
+      "ON_HOLD",
+      "ARCHIVED",
+    ])
+    .optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   assignedTo: z.union([objectId, z.literal("")]).optional(),
   estimatedValue: num(),
@@ -38,7 +90,11 @@ export const leadUpdateSchema = z.object({
   lostReason: optStr(500),
   note: optStr(2000),
 });
-export const leadActivitySchema = z.object({ id: objectId, kind: z.enum(["NOTE", "CALL", "EMAIL", "MEETING", "WHATSAPP"]), body: z.string().trim().min(1, "Write something").max(4000) });
+export const leadActivitySchema = z.object({
+  id: objectId,
+  kind: z.enum(["NOTE", "CALL", "EMAIL", "MEETING", "WHATSAPP"]),
+  body: z.string().trim().min(1, "Write something").max(4000),
+});
 
 export const clientSchema = z.object({
   id: z.union([objectId, z.literal("")]).optional(),
@@ -56,7 +112,14 @@ export const clientSchema = z.object({
 
 export const bookingTransitionSchema = z.object({
   id: objectId,
-  status: z.enum(["REQUESTED", "CONFIRMED", "RESCHEDULED", "CANCELLED", "COMPLETED", "NO_SHOW"]),
+  status: z.enum([
+    "REQUESTED",
+    "CONFIRMED",
+    "RESCHEDULED",
+    "CANCELLED",
+    "COMPLETED",
+    "NO_SHOW",
+  ]),
   startsAt: dateOpt,
   durationMinutes: num(5, 480),
   meetingUrl: z.union([httpsUrl, z.literal("")]).optional(),
@@ -78,8 +141,15 @@ export const proposalVersionSchema = z.object({
         .filter(Boolean)
         .map((l) => {
           // "Label | qty | unit amount | description"
-          const [label = "", qty = "1", unit = "0", ...desc] = l.split("|").map((s) => s.trim());
-          return { label, quantity: Number(qty) || 1, unitAmount: Number(unit) || 0, description: desc.join(" | ") || undefined };
+          const [label = "", qty = "1", unit = "0", ...desc] = l
+            .split("|")
+            .map((s) => s.trim());
+          return {
+            label,
+            quantity: Number(qty) || 1,
+            unitAmount: Number(unit) || 0,
+            description: desc.join(" | ") || undefined,
+          };
         })
         .filter((li) => li.label),
     ),
@@ -93,13 +163,30 @@ export const proposalCreateSchema = proposalVersionSchema.extend({
   leadId: z.union([objectId, z.literal("")]).optional(),
   clientId: z.union([objectId, z.literal("")]).optional(),
 });
-export const proposalVersionAddSchema = proposalVersionSchema.extend({ id: objectId });
-export const proposalTransitionSchema = z.object({ id: objectId, status: z.enum(["DRAFT", "IN_REVIEW", "APPROVED", "SENT", "ACCEPTED", "REJECTED", "EXPIRED"]), note: optStr(1000), sentTo: z.union([z.email(), z.literal("")]).optional() });
+export const proposalVersionAddSchema = proposalVersionSchema.extend({
+  id: objectId,
+});
+export const proposalTransitionSchema = z.object({
+  id: objectId,
+  status: z.enum([
+    "DRAFT",
+    "IN_REVIEW",
+    "APPROVED",
+    "SENT",
+    "ACCEPTED",
+    "REJECTED",
+    "EXPIRED",
+  ]),
+  note: optStr(1000),
+  sentTo: z.union([z.email(), z.literal("")]).optional(),
+});
 
 export const internalProjectSchema = z.object({
   id: z.union([objectId, z.literal("")]).optional(),
   name: z.string().trim().min(2).max(200),
-  status: z.enum(["PLANNED", "ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"]).default("PLANNED"),
+  status: z
+    .enum(["PLANNED", "ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"])
+    .default("PLANNED"),
   clientId: z.union([objectId, z.literal("")]).optional(),
   leadId: z.union([objectId, z.literal("")]).optional(),
   proposalId: z.union([objectId, z.literal("")]).optional(),
@@ -111,9 +198,20 @@ export const internalProjectSchema = z.object({
   progressPercent: num(0, 100),
   confidential: bool.optional(),
 });
-export const milestoneSchema = z.object({ id: objectId, title: z.string().trim().min(1).max(200), dueAt: dateOpt });
-export const milestoneStatusSchema = z.object({ id: objectId, milestoneId: objectId, status: z.enum(["PENDING", "IN_PROGRESS", "DONE", "BLOCKED"]) });
-export const projectNoteSchema = z.object({ id: objectId, body: z.string().trim().min(1).max(4000) });
+export const milestoneSchema = z.object({
+  id: objectId,
+  title: z.string().trim().min(1).max(200),
+  dueAt: dateOpt,
+});
+export const milestoneStatusSchema = z.object({
+  id: objectId,
+  milestoneId: objectId,
+  status: z.enum(["PENDING", "IN_PROGRESS", "DONE", "BLOCKED"]),
+});
+export const projectNoteSchema = z.object({
+  id: objectId,
+  body: z.string().trim().min(1).max(4000),
+});
 
 export const portfolioSchema = z.object({
   originalSlug: optStr(80),
@@ -151,14 +249,19 @@ export const portfolioMediaSchema = z.object({
   alt: z.string().trim().min(5, "Describe what is on screen").max(300),
   caption: optStr(300),
   pageLabel: optStr(80),
-  kind: z.enum(["screenshot", "video", "illustration", "device-mockup"]).default("screenshot"),
+  kind: z
+    .enum(["screenshot", "video", "illustration", "device-mockup"])
+    .default("screenshot"),
   device: z.enum(["desktop", "mobile", ""]).optional(),
   isAuthenticScreenshot: bool.optional(),
   approvedForPublication: bool.optional(),
   sortOrder: num(0, 999),
   setAsCover: bool.optional(),
 });
-export const portfolioMediaRemoveSchema = z.object({ slug, mediaId: z.string().min(1) });
+export const portfolioMediaRemoveSchema = z.object({
+  slug,
+  mediaId: z.string().min(1),
+});
 
 export const serviceSchema = z.object({
   originalSlug: optStr(80),
@@ -172,7 +275,18 @@ export const serviceSchema = z.object({
   deliverables: lines,
   workflow: lines, // "Title :: detail"
   technicalApproach: optStr(3000),
-  heroStyle: z.enum(["grid", "stack", "frame", "orbit", "split", "ledger", "flow", "cloud"]).default("grid"),
+  heroStyle: z
+    .enum([
+      "grid",
+      "stack",
+      "frame",
+      "orbit",
+      "split",
+      "ledger",
+      "flow",
+      "cloud",
+    ])
+    .default("grid"),
   faqs: lines, // "Question :: answer"
   relatedProjectSlugs: lines,
   published: bool.optional(),
@@ -191,7 +305,9 @@ export const solutionSchema = z.object({
   workflow: lines,
   architectureNotes: optStr(3000),
   proofProjectSlugs: lines,
-  capabilityStatus: z.enum(["delivered", "proposed", "mixed"]).default("proposed"),
+  capabilityStatus: z
+    .enum(["delivered", "proposed", "mixed"])
+    .default("proposed"),
   published: bool.optional(),
   sortOrder: num(0, 999),
 });
@@ -252,12 +368,40 @@ export const faqSchema = z.object({
   published: bool.optional(),
 });
 
-export const deleteSchema = z.object({ id: z.string().min(1), kind: z.enum(["service", "solution", "technology", "article", "career", "testimonial", "faq", "media", "portfolio"]) });
+export const deleteSchema = z.object({
+  id: z.string().min(1),
+  kind: z.enum([
+    "service",
+    "solution",
+    "technology",
+    "article",
+    "career",
+    "testimonial",
+    "faq",
+    "media",
+    "portfolio",
+  ]),
+});
 
-export const mediaUpdateSchema = z.object({ id: objectId, alt: z.string().trim().max(300), caption: optStr(300), approvedForPublication: bool.optional(), isAuthenticScreenshot: bool.optional() });
+export const mediaUpdateSchema = z.object({
+  id: objectId,
+  alt: z.string().trim().max(300),
+  caption: optStr(300),
+  approvedForPublication: bool.optional(),
+  isAuthenticScreenshot: bool.optional(),
+});
 
 export const settingsSchema = z.object({
-  section: z.enum(["brand", "contact", "socials", "booking", "notifications", "seo", "home", "legal"]),
+  section: z.enum([
+    "brand",
+    "contact",
+    "socials",
+    "booking",
+    "notifications",
+    "seo",
+    "home",
+    "legal",
+  ]),
   // brand
   legalName: optStr(160),
   shortName: optStr(60),
@@ -311,9 +455,31 @@ export const settingsSchema = z.object({
   termsReviewed: bool.optional(),
 });
 
-export const inviteSchema = z.object({ email: z.email(), name: z.string().trim().min(2).max(120), role: z.enum(["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT", "CONTENT_MANAGER", "PROJECT_MANAGER"]) });
-export const roleChangeSchema = z.object({ id: objectId, role: z.enum(["SUPER_ADMIN", "ADMIN", "BUSINESS_DEVELOPMENT", "CONTENT_MANAGER", "PROJECT_MANAGER"]) });
-export const activeSchema = z.object({ id: objectId, active: z.enum(["true", "false"]) });
+export const inviteSchema = z.object({
+  email: z.email(),
+  name: z.string().trim().min(2).max(120),
+  role: z.enum([
+    "SUPER_ADMIN",
+    "ADMIN",
+    "BUSINESS_DEVELOPMENT",
+    "CONTENT_MANAGER",
+    "PROJECT_MANAGER",
+  ]),
+});
+export const roleChangeSchema = z.object({
+  id: objectId,
+  role: z.enum([
+    "SUPER_ADMIN",
+    "ADMIN",
+    "BUSINESS_DEVELOPMENT",
+    "CONTENT_MANAGER",
+    "PROJECT_MANAGER",
+  ]),
+});
+export const activeSchema = z.object({
+  id: objectId,
+  active: z.enum(["true", "false"]),
+});
 
 export function splitPair(line: string): { a: string; b: string } {
   const [a = "", ...rest] = line.split("::");

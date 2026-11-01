@@ -14,15 +14,28 @@ export const BUDGET_RANGES = [
   "Prefer to discuss",
 ] as const;
 
-export const TIMELINES = ["As soon as possible", "Within 1 month", "1 to 3 months", "3 to 6 months", "Flexible, still exploring"] as const;
+export const TIMELINES = [
+  "As soon as possible",
+  "Within 1 month",
+  "1 to 3 months",
+  "3 to 6 months",
+  "Flexible, still exploring",
+] as const;
 
-const honeypot = z.string().max(0, "Spam check failed").optional().or(z.literal(""));
+const honeypot = z
+  .string()
+  .max(0, "Spam check failed")
+  .optional()
+  .or(z.literal(""));
 
 export const contactFormSchema = z.object({
   name: trimmed(120).min(2, "Please enter your name"),
   email: z.email("Enter a valid email address").max(200),
   subject: trimmed(160).min(3, "Add a short subject"),
-  message: trimmed(5000).min(20, "Tell us a little more (at least 20 characters)"),
+  message: trimmed(5000).min(
+    20,
+    "Tell us a little more (at least 20 characters)",
+  ),
   phone: trimmed(40).optional().or(z.literal("")),
   preferredContact: contactMethodSchema.default("EMAIL"),
   consent: z.literal(true, { error: "Please agree so we can reply to you" }),
@@ -41,19 +54,27 @@ export const projectRequestSchema = z.object({
   solutionContext: trimmed(120).optional().or(z.literal("")),
   projectContext: trimmed(120).optional().or(z.literal("")),
   goal: trimmed(400).min(10, "Describe the business goal in a sentence or two"),
-  message: trimmed(6000).min(30, "Describe the project (at least 30 characters)"),
+  message: trimmed(6000).min(
+    30,
+    "Describe the project (at least 30 characters)",
+  ),
   features: trimmed(3000).optional().or(z.literal("")),
   budgetRange: z.enum(BUDGET_RANGES).optional().or(z.literal("")),
   timeline: z.enum(TIMELINES).optional().or(z.literal("")),
   preferredContact: contactMethodSchema.default("EMAIL"),
-  consent: z.literal(true, { error: "Please agree so we can contact you about this request" }),
+  consent: z.literal(true, {
+    error: "Please agree so we can contact you about this request",
+  }),
   website: honeypot,
   sourcePath: trimmed(300).optional(),
   idempotencyKey: trimmed(80).optional(),
 });
 export type ProjectRequestInput = z.infer<typeof projectRequestSchema>;
 
-const consultationKeys = CONSULTATION_TYPES.map((c) => c.key) as [string, ...string[]];
+const consultationKeys = CONSULTATION_TYPES.map((c) => c.key) as [
+  string,
+  ...string[],
+];
 
 export const consultationRequestSchema = z.object({
   consultationType: z.enum(consultationKeys),
@@ -65,11 +86,15 @@ export const consultationRequestSchema = z.object({
   summary: trimmed(2000).min(10, "Tell us what you would like to discuss"),
   preferredWindows: z.array(trimmed(80)).max(5).default([]),
   visitorTimezone: trimmed(80).optional().or(z.literal("")),
-  consent: z.literal(true, { error: "Please agree so we can contact you to schedule" }),
+  consent: z.literal(true, {
+    error: "Please agree so we can contact you to schedule",
+  }),
   website: honeypot,
   idempotencyKey: trimmed(80).optional(),
 });
-export type ConsultationRequestInput = z.infer<typeof consultationRequestSchema>;
+export type ConsultationRequestInput = z.infer<
+  typeof consultationRequestSchema
+>;
 
 export const loginSchema = z.object({
   email: z.email().max(200),
@@ -80,7 +105,10 @@ export const passwordSchema = z
   .string()
   .min(12, "Use at least 12 characters")
   .max(200)
-  .refine((v) => /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v), "Mix upper case, lower case and numbers");
+  .refine(
+    (v) => /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v),
+    "Mix upper case, lower case and numbers",
+  );
 
 export const acceptInviteSchema = z
   .object({
@@ -89,11 +117,21 @@ export const acceptInviteSchema = z
     password: passwordSchema,
     confirm: z.string(),
   })
-  .refine((d) => d.password === d.confirm, { path: ["confirm"], message: "Passwords do not match" });
+  .refine((d) => d.password === d.confirm, {
+    path: ["confirm"],
+    message: "Passwords do not match",
+  });
 
 export const resetPasswordSchema = z
-  .object({ token: z.string().min(10), password: passwordSchema, confirm: z.string() })
-  .refine((d) => d.password === d.confirm, { path: ["confirm"], message: "Passwords do not match" });
+  .object({
+    token: z.string().min(10),
+    password: passwordSchema,
+    confirm: z.string(),
+  })
+  .refine((d) => d.password === d.confirm, {
+    path: ["confirm"],
+    message: "Passwords do not match",
+  });
 
 export const ALLOWED_UPLOAD_MIME = new Set([
   "application/pdf",
@@ -107,7 +145,12 @@ export const ALLOWED_UPLOAD_MIME = new Set([
 export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 export const MAX_UPLOAD_FILES = 3;
 
-export const IMAGE_MIME = new Set(["image/png", "image/jpeg", "image/webp", "image/avif"]);
+export const IMAGE_MIME = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/avif",
+]);
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 /** Flattens Zod issues into { field: message } for form UIs. */

@@ -8,7 +8,10 @@ export type FormState = {
 
 export const initialFormState: FormState = { ok: false };
 
-export function formValues(fd: FormData, keys: string[]): Record<string, string> {
+export function formValues(
+  fd: FormData,
+  keys: string[],
+): Record<string, string> {
   const out: Record<string, string> = {};
   for (const k of keys) {
     const v = fd.get(k);
