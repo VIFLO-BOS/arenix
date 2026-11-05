@@ -972,3 +972,50 @@ html.lenis body {
     transform: none;
   }
 }
+
+/* Phones. Centre the public site (main and footer carry .mobile-center). Larger screens keep the
+   left aligned editorial layout. Forms, articles (the Markdown component) and anything marked
+   data-align="start" stay left aligned because centred lines are hard to scan. Bullet lists keep left aligned lines
+   but sit in the middle as a block. */
+@media (max-width: 639.98px) {
+  .mobile-center {
+    text-align: center;
+  }
+  .mobile-center :where(form, table, pre, [data-align="start"]) {
+    text-align: left;
+  }
+  .mobile-center :where(nav[aria-label="Breadcrumb"]) {
+    justify-content: center;
+  }
+  /* Narrow text blocks such as headings sit in the middle of the screen. */
+  .mobile-center :where(h1, h2, h3, h4, p, blockquote)[class*="max-w-"] {
+    margin-inline: auto;
+  }
+  .mobile-center :where([data-align="start"], form) :where(h1, h2, h3, h4, p, blockquote)[class*="max-w-"] {
+    margin-inline: 0;
+  }
+  /* Rows of tags, chips and buttons gather in the middle. */
+  .mobile-center :where(.flex-wrap):not([data-align="start"] *, form *) {
+    justify-content: center;
+  }
+  /* Stacks that were pinned to the left edge move to the middle, and so do compact links, buttons
+     and pills inside stacks, which would otherwise stretch or hug the left edge. */
+  .mobile-center :where(.flex-col.items-start):not([data-align="start"] *, form *) {
+    align-items: center;
+  }
+  .mobile-center :where(.flex-col > .w-fit, .flex-col > .self-start, .flex-col > .inline-flex, .flex-col > .pill, .flex-col > .num-chip):not([data-align="start"] *, form *) {
+    align-self: center;
+  }
+  /* Rolling marquee lists show as wrapped rows when motion is reduced. */
+  .mobile-center .marquee-track {
+    justify-content: center;
+  }
+  /* Bullet and link lists. Lines stay left aligned, the list sits centred. Lists that lay out
+     sections rather than bullets opt out with data-center. */
+  .mobile-center :where(ul, ol):not(.grid, .divide-y, [role], [data-align="start"], [data-center], .flex-wrap) {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    text-align: left;
+  }
+}

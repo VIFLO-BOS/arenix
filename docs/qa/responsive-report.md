@@ -1,7 +1,7 @@
 # Responsive QA report
 
-Base URL: http://localhost:3100  
-Run: 2026-10-26T15:28:07.985Z  
+Base URL: http://localhost:3000  
+Run: 2026-11-05T21:57:21.687Z  
 Widths: 250, 320, 375, 430, 768, 1024, 1440, 1920px · Routes: 22
 
 ## Summary

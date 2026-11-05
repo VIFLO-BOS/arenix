@@ -56,7 +56,7 @@ export function ProcessTimeline({ steps, compact = false }: { steps: ProcessStep
         </div>
       </div>
 
-      <ol className="flex flex-col gap-10 lg:col-span-7 lg:gap-20">
+      <ol data-center className="flex flex-col gap-10 lg:col-span-7 lg:gap-20">
         {steps.map((s, i) => (
           <li
             key={s.index}
@@ -66,7 +66,7 @@ export function ProcessTimeline({ steps, compact = false }: { steps: ProcessStep
             className={cn("transition-opacity duration-700 lg:opacity-50", i === active && "lg:opacity-100")}
           >
             <Reveal>
-              <div className="flex items-baseline gap-4">
+              <div className="flex items-baseline gap-4 max-sm:justify-center">
                 <span className="font-mono text-sm text-accent">{s.index}</span>
                 <h3 className={cn("font-display font-semibold leading-tight", compact ? "text-[1.15rem]" : "text-display-sm")}>{s.title}</h3>
               </div>

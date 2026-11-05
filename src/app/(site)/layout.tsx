@@ -16,7 +16,8 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <Spotlight />
       <Cursor />
       <SiteHeader whatsappDigits={settings.contact.whatsappDigits} />
-      <main id="main" className="min-h-dvh">
+      {/* mobile-center (globals.css) centres content on phones. Desktop layout is unchanged. */}
+      <main id="main" className="mobile-center min-h-dvh">
         {children}
       </main>
       <SiteFooter settings={settings} />

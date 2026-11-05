@@ -151,7 +151,8 @@ function slugId(text: string) {
 export function Markdown({ content, className }: { content: string; className?: string }) {
   const blocks = parseBlocks(content);
   return (
-    <div className={cn("prose-editorial", className)}>
+    // Articles and legal text stay left aligned on phones, see .mobile-center in globals.css.
+    <div data-align="start" className={cn("prose-editorial", className)}>
       {blocks.map((b, idx) => {
         const key = `b${idx}`;
         switch (b.type) {

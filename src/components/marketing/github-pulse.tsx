@@ -432,7 +432,7 @@ function LanguageBar({ languages }: { languages: GithubLanguageShare[] }) {
           <span key={l.name} title={`${l.name} ${pct(l.share)}`} className="h-full min-w-[3px] first:rounded-l-full last:rounded-r-full" style={{ flexGrow: l.share, flexBasis: 0, background: l.color }} />
         ))}
       </div>
-      <ul className="mt-5 grid gap-2.5">
+      <ul className="mt-5 grid gap-2.5" data-align="start">
         {languages.map((l) => (
           <li key={l.name} className="flex items-center gap-3 text-sm">
             <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full" style={{ background: l.color }} />
@@ -607,7 +607,7 @@ export function GithubPulse({ initial, pollSeconds }: { initial: GithubSnapshot;
         <Card className="lg:col-span-7">
           <h3 className="font-display text-[1.05rem] font-semibold">Recent activity</h3>
           <p className="mt-1 text-xs text-[var(--fg-muted)]">Latest pushes. Client repositories show totals only.</p>
-          <ul className="mt-3 divide-y divide-[var(--line)]">
+          <ul className="mt-3 divide-y divide-[var(--line)]" data-align="start">
             {snap.recent.map((push, i) => (
               <li key={`${push.repo.name}-${push.at}-${i}`} className="flex items-start gap-3 py-3.5">
                 <span aria-hidden="true" className="mt-[7px] size-2 shrink-0 rounded-full" style={{ background: push.language?.color ?? OTHER_DOT }} />

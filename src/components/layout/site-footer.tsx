@@ -12,7 +12,7 @@ export function SiteFooter({ settings }: { settings: PublicSettings }) {
   const hasContact = settings.contact.email || settings.contact.phone || settings.contact.whatsappDigits;
 
   return (
-    <footer data-surface="deep" className="relative overflow-hidden">
+    <footer data-surface="deep" className="mobile-center relative overflow-hidden">
       <div className="flare-blue right-[-20%] top-[-30%]" aria-hidden="true" />
       <div className="flare bottom-[-30%] left-[-20%]" aria-hidden="true" />
       <div className="container-x relative py-14 sm:py-20">
@@ -68,7 +68,7 @@ export function SiteFooter({ settings }: { settings: PublicSettings }) {
             <div>
               <p className="text-micro mb-4 text-muted">Contact</p>
               {hasContact ? (
-                <ul className="flex flex-col gap-2.5 text-sm">
+                <ul data-center className="flex flex-col gap-2.5 text-sm">
                   {settings.contact.email && (
                     <li>
                       <a href={`mailto:${settings.contact.email}`} className="break-all text-on-dark/85 hover:text-accent">

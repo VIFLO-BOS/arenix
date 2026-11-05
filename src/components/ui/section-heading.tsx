@@ -40,7 +40,7 @@ export function SectionHeading({
   return (
     <div className={cn("flex flex-col gap-4 sm:gap-5", align === "center" && "items-center text-center", className)}>
       {eyebrow && (
-        <div className={cn("flex", align === "center" && "justify-center")}>
+        <div className={cn("flex max-sm:justify-center", align === "center" && "justify-center")}>
           <Eyebrow index={index}>{eyebrow}</Eyebrow>
         </div>
       )}
