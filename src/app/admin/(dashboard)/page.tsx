@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requirePermission } from "@/server/auth/session";
 import { getOverviewMetrics, getRecentActivity, type Range } from "@/server/services/metrics";
 import { integrations } from "@/lib/env";
+import { twoStepMode } from "@/server/auth/two-step";
 import { formatDateTime, formatMoney, timeAgo } from "@/lib/utils";
 import { PageHeader, Stat, Card, EmptyState, Notice } from "@/components/admin/ui";
 import { StatusBadge } from "@/components/ui/badge";
@@ -34,6 +35,14 @@ export default async function AdminOverviewPage({ searchParams }: { searchParams
           ) : undefined
         }
       />
+
+      {twoStepMode() === "off" && (
+        <div className="mb-4">
+          <Notice tone="danger">
+            <strong>Two step sign in is off.</strong> Sign in codes are emailed, so they switch on automatically once <code className="font-mono">RESEND_API_KEY</code> is set. Until then this dashboard is protected by passwords only.
+          </Notice>
+        </div>
+      )}
 
       {!integrations.email.configured && (
         <div className="mb-4">

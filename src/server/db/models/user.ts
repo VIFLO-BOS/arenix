@@ -49,6 +49,35 @@ export interface AuthTokenDoc {
   updatedAt: Date;
 }
 
+/**
+ * Second sign in step. Created after a correct password, it holds a hashed six digit code
+ * that was emailed to the user. The browser proves it started the sign in with a separate
+ * random token in a short lived cookie, so a code alone is useless on another device.
+ */
+export interface LoginChallengeDoc {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  tokenHash: string;
+  codeHash: string;
+  attempts: number;
+  sends: number;
+  lastSentAt: Date;
+  expiresAt: Date;
+  next?: string;
+  userAgent?: string;
+  ipHash?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/** Fixed window counter shared by every server instance (the in memory limiter is per instance). */
+export interface RateLimitDoc {
+  _id: Types.ObjectId;
+  key: string;
+  count: number;
+  resetAt: Date;
+}
+
 const UserSchema = new Schema<UserDoc>(
   {
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
@@ -90,6 +119,29 @@ const AuthTokenSchema = new Schema<AuthTokenDoc>(
   { timestamps: true },
 );
 
+const LoginChallengeSchema = new Schema<LoginChallengeDoc>(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    tokenHash: { type: String, required: true, unique: true },
+    codeHash: { type: String, required: true },
+    attempts: { type: Number, default: 0 },
+    sends: { type: Number, default: 1 },
+    lastSentAt: { type: Date, required: true },
+    // Removed by MongoDB shortly after it expires.
+    expiresAt: { type: Date, required: true, index: { expireAfterSeconds: 0 } },
+    next: { type: String },
+    userAgent: { type: String },
+    ipHash: { type: String },
+  },
+  { timestamps: true },
+);
+
+const RateLimitSchema = new Schema<RateLimitDoc>({
+  key: { type: String, required: true, unique: true },
+  count: { type: Number, default: 0 },
+  resetAt: { type: Date, required: true, index: { expireAfterSeconds: 0 } },
+});
+
 function model<T>(name: string, schema: Schema<T>): Model<T> {
   return (mongoose.models[name] as Model<T>) || mongoose.model<T>(name, schema);
 }
@@ -97,3 +149,5 @@ function model<T>(name: string, schema: Schema<T>): Model<T> {
 export const User = model<UserDoc>("User", UserSchema);
 export const Session = model<SessionDoc>("Session", SessionSchema);
 export const AuthToken = model<AuthTokenDoc>("AuthToken", AuthTokenSchema);
+export const LoginChallenge = model<LoginChallengeDoc>("LoginChallenge", LoginChallengeSchema);
+export const RateLimit = model<RateLimitDoc>("RateLimit", RateLimitSchema);

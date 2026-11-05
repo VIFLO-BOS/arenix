@@ -8,7 +8,7 @@ import { generateToken, hashIp, hashToken, verifyPassword } from "./crypto";
 import { roleHas, type Permission } from "./permissions";
 import { env } from "@/lib/env";
 import { recordAudit } from "@/server/services/audit";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitDb } from "./rate-limit-db";
 
 export const SESSION_COOKIE = "arenix_session";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
@@ -81,11 +81,16 @@ export function userCan(user: CurrentUser | null, permission: Permission) {
   return !!user && roleHas(user.role, permission);
 }
 
-export type LoginResult = { ok: true } | { ok: false; error: string };
+export type PasswordCheck = { ok: true; user: UserDoc; ip: string | null } | { ok: false; error: string };
 
-export async function loginWithPassword(email: string, password: string): Promise<LoginResult> {
+/**
+ * First sign in step. Checks the email and password without creating a session. The caller
+ * then sends a code (two step sign in) or calls completeLogin directly when two step is off.
+ * Attempts are limited per connection in the database, so the limit holds across instances.
+ */
+export async function verifyPasswordLogin(email: string, password: string): Promise<PasswordCheck> {
   const ip = await requestIp();
-  const limiter = rateLimit(`login:${ip ?? "unknown"}`, 10, 15 * 60 * 1000);
+  const limiter = await rateLimitDb(`login:${hashIp(ip) ?? "unknown"}`, 10, 15 * 60 * 1000);
   if (!limiter.ok) return { ok: false, error: "Too many attempts. Please wait a few minutes and try again." };
 
   await connectDb();
@@ -112,11 +117,16 @@ export async function loginWithPassword(email: string, password: string): Promis
 
   user.failedLoginCount = 0;
   user.lockedUntil = undefined;
-  user.lastLoginAt = new Date();
   await user.save();
-  await createSession(user as UserDoc, ip);
-  await recordAudit({ actor: toCurrentUser(user as UserDoc), action: "auth.login", entityType: "user", entityId: user._id.toString(), ipHash: hashIp(ip) });
-  return { ok: true };
+  return { ok: true, user: user as UserDoc, ip };
+}
+
+/** Final sign in step. Creates the session and records how the user proved who they are. */
+export async function completeLogin(user: UserDoc, ip: string | null, method: "password" | "password_and_email_code") {
+  await connectDb();
+  await User.updateOne({ _id: user._id }, { $set: { lastLoginAt: new Date(), failedLoginCount: 0 }, $unset: { lockedUntil: 1 } });
+  await createSession(user, ip);
+  await recordAudit({ actor: toCurrentUser(user), action: "auth.login", entityType: "user", entityId: user._id.toString(), ipHash: hashIp(ip), metadata: { method } });
 }
 
 export async function createSession(user: UserDoc, ip: string | null) {

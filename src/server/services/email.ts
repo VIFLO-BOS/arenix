@@ -4,6 +4,9 @@ import { connectDb } from "@/server/db/connect";
 import { EmailDispatch, type EmailDispatchDoc } from "@/server/db/models/system";
 import { env, integrations } from "@/lib/env";
 import { siteConfig } from "@/config/site";
+import { button, details, emailLayout, esc, paragraph, type EmailBrand } from "@/lib/email-design";
+
+export const emailBrand: EmailBrand = { siteUrl: siteConfig.url, legalName: siteConfig.legalName };
 
 /**
  * Outbox-style email dispatch. Every email is first persisted (PENDING) and then an
@@ -92,6 +95,51 @@ export async function attemptSend(id: string) {
   await doc.save();
 }
 
+/**
+ * For emails that carry a secret, such as a sign in code. It is sent once, straight away, and
+ * never retried because the secret expires quickly. The copy kept in the email log is the
+ * redacted version, so nobody reading the log can see a live code.
+ */
+export async function sendSensitiveEmail(input: EmailInput & { storedHtml: string; storedText?: string }): Promise<{ ok: boolean; status: EmailDispatchDoc["status"] }> {
+  await connectDb();
+  const to = (Array.isArray(input.to) ? input.to : [input.to]).map((t) => t.trim()).filter(Boolean);
+  const doc = await EmailDispatch.create({
+    to,
+    subject: input.subject,
+    template: input.template,
+    html: input.storedHtml,
+    text: input.storedText,
+    status: "PENDING",
+    provider: integrations.email.mode,
+    entityType: input.entityType,
+    entityId: input.entityId,
+    attempts: 1,
+  });
+
+  if (!integrations.email.configured) {
+    doc.status = "DEMO_LOGGED";
+    doc.provider = "demo-log";
+    doc.sentAt = new Date();
+    await doc.save();
+    return { ok: true, status: doc.status };
+  }
+
+  try {
+    const res = await new Resend(env.resendApiKey).emails.send({ from: env.emailFrom, to, subject: input.subject, html: input.html, text: input.text });
+    if (res.error) throw new Error(res.error.message);
+    doc.status = "SENT";
+    doc.provider = "resend";
+    doc.providerMessageId = res.data?.id;
+    doc.sentAt = new Date();
+  } catch (err) {
+    doc.status = "FAILED";
+    doc.lastError = err instanceof Error ? err.message : String(err);
+    console.error("[email] sensitive send failed", doc.lastError);
+  }
+  await doc.save();
+  return { ok: doc.status === "SENT", status: doc.status };
+}
+
 /** Retry anything PENDING whose backoff has elapsed. Called from the admin "retry" action. */
 export async function retryPendingEmails(limit = 20) {
   await connectDb();
@@ -104,28 +152,17 @@ export async function retryPendingEmails(limit = 20) {
 }
 
 /* ------------------------------------------------------------------------ */
-/* Templates. Plain, brand consistent, no external assets                   */
+/* Templates. All share the design in src/lib/email-design.ts               */
 /* ------------------------------------------------------------------------ */
 
-function esc(s: string) {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
+/** Wraps a template body in the shared branded layout. The title also serves as preview text. */
+function layout(title: string, bodyHtml: string, eyebrow?: string) {
+  return emailLayout(emailBrand, { preheader: title, eyebrow, title, body: bodyHtml });
 }
 
-function layout(title: string, bodyHtml: string) {
-  return `<!doctype html><html><body style="margin:0;background:#f5f4f0;font-family:Arial,Helvetica,sans-serif;color:#141821">
-  <div style="max-width:600px;margin:0 auto;padding:32px 20px">
-    <div style="font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:24px">areni<span style="color:#c98f1e">X</span></div>
-    <div style="background:#ffffff;border:1px solid #e3e1d9;border-radius:14px;padding:28px">
-      <h1 style="font-size:20px;margin:0 0 16px">${esc(title)}</h1>
-      ${bodyHtml}
-    </div>
-    <p style="font-size:12px;color:#5f6977;margin-top:20px">${esc(siteConfig.legalName)}. <a href="${siteConfig.url}" style="color:#5f6977">${esc(siteConfig.url)}</a></p>
-  </div></body></html>`;
-}
-
-function row(label: string, value?: string | null) {
-  if (!value) return "";
-  return `<tr><td style="padding:6px 10px 6px 0;color:#5f6977;font-size:13px;vertical-align:top;white-space:nowrap">${esc(label)}</td><td style="padding:6px 0;font-size:14px">${esc(value)}</td></tr>`;
+/** One summary table, built from label and value pairs. Empty values are skipped. */
+function rows(...pairs: [string, string | null | undefined][]) {
+  return details(pairs);
 }
 
 export const emailTemplates = {
@@ -135,8 +172,10 @@ export const emailTemplates = {
       subject: `We received your ${what}, reference ${p.reference}`,
       html: layout(
         `Thanks, ${p.name}.`,
-        `<p style="font-size:15px;line-height:1.6">Your ${what} has been saved with reference <strong>${esc(p.reference)}</strong>. A member of the areniX team will review it and reply using the contact method you chose.</p>
-         <p style="font-size:15px;line-height:1.6">If you would like to talk sooner, you can request a consultation at <a href="${siteConfig.url}/book-consultation">${siteConfig.url}/book-consultation</a>.</p>`,
+        paragraph(`Your ${what} has been saved with reference <strong>${esc(p.reference)}</strong>. A member of the areniX team will review it and reply using the contact method you chose.`) +
+          paragraph("If you would like to talk sooner, you can request a consultation.") +
+          button(`${siteConfig.url}/book-consultation`, "Request a consultation"),
+        "Message received",
       ),
       text: `Thanks ${p.name}. Your ${what} was saved with reference ${p.reference}. We will reply using your preferred contact method.`,
     };
@@ -146,9 +185,10 @@ export const emailTemplates = {
       subject: `New ${p.type === "PROJECT" ? "project request" : "inquiry"} ${p.reference} from ${p.name}`,
       html: layout(
         `New ${p.type === "PROJECT" ? "project request" : "inquiry"}`,
-        `<table style="border-collapse:collapse">${row("Reference", p.reference)}${row("Name", p.name)}${row("Email", p.email)}${row("Company", p.company)}${row("Service", p.service)}</table>
-         <p style="font-size:14px;line-height:1.6;white-space:pre-wrap;background:#f5f4f0;padding:12px;border-radius:8px">${esc(p.message)}</p>
-         <p><a href="${p.adminUrl}" style="display:inline-block;background:#141821;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Open in dashboard</a></p>`,
+        rows(["Reference", p.reference], ["Name", p.name], ["Email", p.email], ["Company", p.company], ["Service", p.service]) +
+          `<p style="margin:0 0 18px;font-family:'Roboto','Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.65;white-space:pre-wrap;background:#f3f5f9;padding:14px 16px;border-radius:10px;color:#0f172a">${esc(p.message)}</p>` +
+          button(p.adminUrl, "Open in dashboard", "dark"),
+        "New enquiry",
       ),
       text: `New ${p.type} ${p.reference} from ${p.name} <${p.email}>: ${p.message}\n${p.adminUrl}`,
     };
@@ -158,8 +198,9 @@ export const emailTemplates = {
       subject: `Consultation request received, reference ${p.reference}`,
       html: layout(
         `We have your consultation request, ${p.name}.`,
-        `<p style="font-size:15px;line-height:1.6">Reference <strong>${esc(p.reference)}</strong>, ${esc(p.consultationType)}.</p>
-         <p style="font-size:15px;line-height:1.6">This is a <strong>request</strong>, not a confirmed appointment yet. The team will propose a time by email and the booking will be confirmed once you accept it.</p>`,
+        rows(["Reference", p.reference], ["Consultation", p.consultationType]) +
+          paragraph("This is a <strong>request</strong>, not a confirmed appointment yet. The team will propose a time by email and the booking will be confirmed once you accept it.", { last: true }),
+        "Consultation request",
       ),
       text: `Consultation request ${p.reference} (${p.consultationType}) received. This is a request, not a confirmed appointment yet; we will propose a time by email.`,
     };
@@ -169,8 +210,12 @@ export const emailTemplates = {
       subject: `Consultation confirmed, reference ${p.reference}`,
       html: layout(
         `Your consultation is confirmed, ${p.name}.`,
-        `<table style="border-collapse:collapse">${row("Reference", p.reference)}${row("Type", p.consultationType)}${row("When", p.when)}${row("Meeting link", p.meetingUrl)}</table>
-         ${p.rescheduleUrl ? `<p><a href="${p.rescheduleUrl}">Reschedule</a>${p.cancelUrl ? ` or <a href="${p.cancelUrl}">Cancel</a>` : ""}</p>` : ""}`,
+        rows(["Reference", p.reference], ["Consultation", p.consultationType], ["When", p.when]) +
+          (p.meetingUrl ? button(p.meetingUrl, "Join the meeting") : "") +
+          (p.rescheduleUrl
+            ? paragraph(`Need another time? <a href="${esc(p.rescheduleUrl)}" style="color:#c2410c">Reschedule</a>${p.cancelUrl ? ` or <a href="${esc(p.cancelUrl)}" style="color:#c2410c">cancel</a>` : ""}.`, { muted: true, size: 14, last: true })
+            : ""),
+        "Consultation confirmed",
       ),
       text: `Consultation ${p.reference} confirmed: ${p.consultationType}, ${p.when}. ${p.meetingUrl ?? ""}`,
     };
@@ -180,8 +225,8 @@ export const emailTemplates = {
       subject: `Booking ${p.status.toLowerCase()}, ${p.reference} (${p.name})`,
       html: layout(
         `Booking ${p.status.toLowerCase()}`,
-        `<table style="border-collapse:collapse">${row("Reference", p.reference)}${row("Name", p.name)}${row("Email", p.email)}${row("Type", p.consultationType)}${row("Status", p.status)}</table>
-         <p><a href="${p.adminUrl}" style="display:inline-block;background:#141821;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Open in dashboard</a></p>`,
+        rows(["Reference", p.reference], ["Name", p.name], ["Email", p.email], ["Consultation", p.consultationType], ["Status", p.status]) + button(p.adminUrl, "Open in dashboard", "dark"),
+        "Booking update",
       ),
       text: `Booking ${p.reference} ${p.status}. ${p.name} <${p.email}> (${p.consultationType}). ${p.adminUrl}`,
     };
@@ -191,9 +236,10 @@ export const emailTemplates = {
       subject: `You have been invited to the areniX dashboard`,
       html: layout(
         `Hello ${p.name}`,
-        `<p style="font-size:15px;line-height:1.6">${esc(p.inviterName)} invited you to join the areniX business dashboard as <strong>${esc(p.role)}</strong>.</p>
-         <p><a href="${p.acceptUrl}" style="display:inline-block;background:#141821;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Accept invitation</a></p>
-         <p style="font-size:13px;color:#5f6977">This link expires in ${p.expiresHours} hours and can be used once.</p>`,
+        paragraph(`${esc(p.inviterName)} invited you to join the areniX business dashboard as <strong>${esc(p.role)}</strong>.`) +
+          button(p.acceptUrl, "Accept invitation") +
+          paragraph(`This link expires in ${p.expiresHours} hours and can be used once.`, { muted: true, size: 13, last: true }),
+        "Team invitation",
       ),
       text: `${p.inviterName} invited you to the areniX dashboard as ${p.role}. Accept: ${p.acceptUrl} (expires in ${p.expiresHours}h)`,
     };
@@ -202,10 +248,11 @@ export const emailTemplates = {
     return {
       subject: `Reset your areniX dashboard password`,
       html: layout(
-        `Password reset`,
-        `<p style="font-size:15px;line-height:1.6">Hello ${esc(p.name)}, a password reset was requested for your account. If this was not you, ignore this email.</p>
-         <p><a href="${p.resetUrl}" style="display:inline-block;background:#141821;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Choose a new password</a></p>
-         <p style="font-size:13px;color:#5f6977">This link expires in 1 hour.</p>`,
+        `Reset your password`,
+        paragraph(`Hello ${esc(p.name)}, a password reset was requested for your areniX dashboard account. If this was not you, you can ignore this email and your password stays the same.`) +
+          button(p.resetUrl, "Choose a new password") +
+          paragraph("This link expires in 1 hour and can be used once.", { muted: true, size: 13, last: true }),
+        "Account security",
       ),
       text: `Reset your areniX password: ${p.resetUrl} (expires in 1 hour)`,
     };
@@ -214,19 +261,20 @@ export const emailTemplates = {
     return {
       subject: `Proposal ${p.reference}, ${p.title}`,
       html: layout(
-        `Proposal: ${p.title}`,
-        `<p style="font-size:15px;line-height:1.6">Hello ${esc(p.clientName)}, please find the details of proposal <strong>${esc(p.reference)}</strong> (version ${p.version}).</p>
-         ${p.summary ? `<p style="font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(p.summary)}</p>` : ""}
-         ${p.validUntil ? `<p style="font-size:13px;color:#5f6977">Valid until ${esc(p.validUntil)}.</p>` : ""}
-         <p style="font-size:15px;line-height:1.6">Reply to this email to accept, decline or ask questions.</p>`,
+        p.title,
+        paragraph(`Hello ${esc(p.clientName)}, please find the details of proposal <strong>${esc(p.reference)}</strong> (version ${p.version}).`) +
+          (p.summary ? `<p style="margin:0 0 16px;font-family:'Roboto','Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.65;white-space:pre-wrap;color:#0f172a">${esc(p.summary)}</p>` : "") +
+          (p.validUntil ? paragraph(`Valid until ${esc(p.validUntil)}.`, { muted: true, size: 13 }) : "") +
+          paragraph("Reply to this email to accept, decline or ask questions.", { last: true }),
+        "Proposal",
       ),
       text: `Proposal ${p.reference} v${p.version}: ${p.title}. ${p.summary ?? ""}`,
     };
   },
   followUpDue(p: { assigneeName: string; leadTitle: string; adminUrl: string }) {
     return {
-      subject: `Follow-up due: ${p.leadTitle}`,
-      html: layout(`Follow-up due`, `<p style="font-size:15px">${esc(p.assigneeName)}, a follow-up is due for <strong>${esc(p.leadTitle)}</strong>.</p><p><a href="${p.adminUrl}">Open lead</a></p>`),
+      subject: `Follow up due for ${p.leadTitle}`,
+      html: layout(`Follow up due`, paragraph(`${esc(p.assigneeName)}, a follow up is due for <strong>${esc(p.leadTitle)}</strong>.`) + button(p.adminUrl, "Open lead", "dark"), "Reminder"),
       text: `Follow-up due for ${p.leadTitle}: ${p.adminUrl}`,
     };
   },

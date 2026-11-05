@@ -21,7 +21,7 @@ Status as of the initial build (2026-10-19). Nothing listed as pending is invent
 | Business email / phone / location | Settings → Contact | Hidden; contact page says "published once configured" |
 | Social profile URLs | Settings → Socials (https only) | Hidden |
 | Domain + hosting | `NEXT_PUBLIC_SITE_URL`, DNS | localhost / staging URL in metadata |
-| Resend account + verified sender domain | `RESEND_API_KEY`, `EMAIL_FROM` | Emails stored as `DEMO_LOGGED`, printed to server log; dashboard shows demo banner |
+| Resend account + verified sender domain | `RESEND_API_KEY`, `EMAIL_FROM` | Emails stored as `DEMO_LOGGED`, printed to server log; dashboard shows demo banner. **Two step sign in also stays off in production until this is set**, and the dashboard shows a red notice |
 | Scheduling provider (Cal.com) | `SCHEDULER_*` env + Settings → Booking | Honest "Request a consultation" flow (status REQUESTED); staff confirm manually |
 | GitHub token for live activity | Fine grained token (All repositories, read only Metadata, Contents and Administration) in `GITHUB_TOKEN`, locally in `.env.local` and on Vercel under Project Settings → Environment Variables. Private repositories are named only when mapped in `src/config/github.ts` | Section hidden in production; a setup note shows in development |
 | Paylio dashboard screenshots + client permission | Media → upload sanitised images → Portfolio → attach, tick Approved | Only the public sign in screen is shown |
@@ -44,6 +44,18 @@ Sibling folders of this project (e.g. `staff-management-platform`, `payliocommer
 - Official WhatsApp Business Platform two-way messaging (requires Meta configuration and a privacy review).
 - Payment collection or public fee display.
 - Client portal (`/portal`), role separation is in place; UI not built.
+
+## Sign in security
+
+Dashboard sign in has two steps. After a correct email and password, a six digit code is emailed to the account and must be entered in the same browser within 10 minutes.
+
+- Codes are random, stored only as a hash, single use, and tied to the browser that entered the password.
+- Five wrong codes cancel the sign in and email the account owner. New codes are limited to one a minute and four per sign in.
+- Six wrong passwords lock the account for 15 minutes. Attempt limits are stored in MongoDB so they hold on every Vercel instance.
+- Every successful sign in emails the account owner. The email log keeps sign in emails with the code hidden.
+- Email designs live in `src/lib/email-design.ts`. Exported copies for Resend are in `docs/email-templates/`.
+
+To switch it on in production, create a Resend account with the admin email address, then set `RESEND_API_KEY`, `EMAIL_FROM="areniX <onboarding@resend.dev>"` and `ADMIN_NOTIFICATION_EMAIL` on Vercel and redeploy. Without a verified domain Resend only delivers to the address the Resend account was created with.
 
 ## Signing in to the dashboard
 
