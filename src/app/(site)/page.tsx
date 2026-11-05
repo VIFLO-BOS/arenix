@@ -1,5 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Metadata } from "next";
+import { isGithubConfigured } from "@/server/integrations/github";
+import { GithubActivity } from "@/components/marketing/github-activity";
+import { GithubPulseSkeleton } from "@/components/marketing/github-pulse";
 import {
   getFaqs,
   getFeaturedProjects,
@@ -50,7 +54,14 @@ export const metadata: Metadata = pageMetadata({
   path: "/",
 });
 
+/** Rebuild the page every five minutes. The GitHub section also refreshes itself in the browser. */
+export const revalidate = 300;
+
 export default async function HomePage() {
+  // The live GitHub section shows when a token is set. In development it also shows a setup note.
+  const githubReady = isGithubConfigured();
+  const showGithub = githubReady || process.env.NODE_ENV === "development";
+  const idx = (n: number) => String(showGithub ? n : n - 1).padStart(2, "0");
   const [
     settings,
     projects,
@@ -186,12 +197,42 @@ export default async function HomePage() {
         <KineticMarquee items={services.map((s) => s.shortTitle ?? s.title)} />
       </div> */}
 
-      {/* 02 Showreel */}
+      {/* 02 Live GitHub activity */}
+      {showGithub && (
+        <Section surface="dark" sheet={false} className="pt-16" id="activity">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-[radial-gradient(60%_50%_at_70%_20%,rgba(252,143,45,0.10),transparent_70%)]"
+          />
+          <div className="container-x relative">
+            <SectionHeading
+              index="02"
+              eyebrow="Live from GitHub"
+              title="Every commit, counted in the open."
+              accent="counted in the open"
+              lead="Engineering activity read live from our GitHub account. Client code stays private, so only its totals are shown."
+              size="md"
+            />
+            {githubReady ? (
+              <Suspense fallback={<GithubPulseSkeleton />}>
+                <GithubActivity />
+              </Suspense>
+            ) : (
+              <p className="card card-dashed mt-10 p-6 text-sm text-[var(--fg-muted)]">
+                Set GITHUB_TOKEN in .env.local to show live GitHub activity here. This note only
+                appears in development. Without a token the section is hidden in production.
+              </p>
+            )}
+          </div>
+        </Section>
+      )}
+
+      {/* 03 Showreel */}
       <Section surface="dark" sheet={false} className="pt-16">
         <div className="container-x">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              index="02"
+              index={idx(3)}
               eyebrow="Showreel"
               title="Authentic interfaces, not stock imagery."
               accent="Authentic interfaces"
@@ -209,12 +250,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 03 Company preview */}
+      {/* 04 Company preview */}
       <Section surface="light">
         <div className="container-x grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-6">
             <SectionHeading
-              index="03"
+              index={idx(4)}
               eyebrow="About areniX"
               title="A small team that ships complete systems, not slide decks."
               accent="complete systems"
@@ -240,12 +281,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 04 Services */}
+      {/* 05 Services */}
       <Section surface="dark" id="services">
         <div className="container-x">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              index="04"
+              index={idx(5)}
               eyebrow="Services"
               title="Eight ways we help organisations build."
               accent="build"
@@ -259,12 +300,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 05 Selected work */}
+      {/* 06 Selected work */}
       <Section surface="light" id="work">
         <div className="container-x">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              index="05"
+              index={idx(6)}
               eyebrow="Selected work"
               title="See what we have built."
               accent="built"
@@ -298,12 +339,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 06 Software showcase */}
+      {/* 07 Software showcase */}
       <Section surface="deep" className="overflow-hidden">
         <Aurora tone="quiet" />
         <div className="container-x relative">
           <SectionHeading
-            index="06"
+            index={idx(7)}
             eyebrow="Software in use"
             title="Real product screens, framed honestly."
             accent="Real product screens"
@@ -322,11 +363,11 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 07 Industries */}
+      {/* 08 Industries */}
       <Section surface="light">
         <div className="container-x">
           <SectionHeading
-            index="07"
+            index={idx(8)}
             eyebrow="Industries"
             title="Sector knowledge, stated honestly."
             lead="Use cases describe what we build. Completed engagements link to real case studies."
@@ -340,10 +381,10 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 08 Technology */}
+      {/* 09 Technology */}
       <Section surface="dark" className="py-12 sm:py-16">
         <div className="container-x mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <Eyebrow index="08">Technology stack</Eyebrow>
+          <Eyebrow index={idx(9)}>Technology stack</Eyebrow>
           <Link
             href="/technologies"
             className="link-underline inline-flex items-center gap-1.5 text-sm"
@@ -375,11 +416,11 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 09 Process */}
+      {/* 10 Process */}
       <Section surface="light">
         <div className="container-x">
           <SectionHeading
-            index="09"
+            index={idx(10)}
             eyebrow="How we work"
             title="A process built for visibility."
             lead="Eight stages, each with named deliverables and clear expectations."
@@ -395,13 +436,13 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 10 Trust */}
+      {/* 11 Trust */}
       <Section surface="gold" className="overflow-hidden">
         <Aurora tone="gold" />
         <div className="container-x relative grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <SectionHeading
-              index="10"
+              index={idx(11)}
               eyebrow="Credibility"
               title="Proof, not promises."
               lead={
@@ -470,12 +511,12 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* 11 Insights */}
+      {/* 12 Insights */}
       <Section surface="light">
         <div className="container-x">
           <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              index="11"
+              index={idx(12)}
               eyebrow="Insights"
               title="Notes from the studio."
               size="md"
@@ -543,7 +584,7 @@ export default async function HomePage() {
         </Section>
       )}
 
-      {/* 12 CTA */}
+      {/* 13 CTA */}
       <CtaBand
         surface="gold"
         whatsappDigits={whatsapp}

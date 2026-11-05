@@ -5,6 +5,7 @@
  *
  *   npm run screenshots
  *   npm run screenshots -- --only clenest
+ *   npm run screenshots -- --only shopme,leadforge
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,7 +15,11 @@ import sharp from "sharp";
 type Target = {
   slug: string;
   base: string;
-  shots: { file: string; path: string; device: "desktop" | "mobile"; scrollToText?: string; fullPage?: boolean }[];
+  /**
+   * `allowSignInScreen` permits exactly one public sign in page (no credentials are entered and
+   * nothing behind it is visited). Every other blocked path stays blocked.
+   */
+  shots: { file: string; path: string; device: "desktop" | "mobile"; scrollToText?: string; fullPage?: boolean; allowSignInScreen?: boolean }[];
 };
 
 const TARGETS: Target[] = [
@@ -38,9 +43,80 @@ const TARGETS: Target[] = [
       { file: "home-mobile", path: "/", device: "mobile" },
     ],
   },
+  {
+    slug: "shopme",
+    base: "https://web-cyan-chi-9m3i15jvqi.vercel.app",
+    shots: [
+      { file: "home-desktop", path: "/", device: "desktop" },
+      { file: "marketplace-desktop", path: "/marketplace", device: "desktop" },
+      { file: "wholesale-desktop", path: "/wholesale", device: "desktop" },
+      { file: "home-mobile", path: "/", device: "mobile" },
+    ],
+  },
+  {
+    slug: "leadforge",
+    base: "https://leadforge-ashy.vercel.app",
+    shots: [
+      { file: "home-desktop", path: "/", device: "desktop" },
+      { file: "product-desktop", path: "/product", device: "desktop" },
+      { file: "about-desktop", path: "/about", device: "desktop" },
+      { file: "home-mobile", path: "/", device: "mobile" },
+    ],
+  },
+  {
+    slug: "khreeolife",
+    base: "https://khreoolife.vercel.app",
+    shots: [
+      { file: "home-desktop", path: "/", device: "desktop" },
+      { file: "projects-desktop", path: "/projects", device: "desktop" },
+      { file: "events-desktop", path: "/events", device: "desktop" },
+      { file: "home-mobile", path: "/", device: "mobile" },
+    ],
+  },
+  {
+    slug: "giles-financial-consulting",
+    base: "https://gilesfc-preview.vercel.app",
+    shots: [
+      { file: "home-desktop", path: "/", device: "desktop" },
+      { file: "services-desktop", path: "/services/", device: "desktop" },
+      { file: "about-desktop", path: "/about-us/", device: "desktop" },
+      { file: "home-mobile", path: "/", device: "mobile" },
+    ],
+  },
+  {
+    // The ArenoX homepage is deliberately not captured. Course, pricing and programs pages
+    // represent the product instead.
+    slug: "arenox-lms",
+    base: "https://areno-x-pmlx.vercel.app",
+    shots: [
+      { file: "courses-desktop", path: "/courses", device: "desktop" },
+      { file: "pricing-desktop", path: "/pricing", device: "desktop" },
+      { file: "program-desktop", path: "/program", device: "desktop" },
+      { file: "courses-mobile", path: "/courses", device: "mobile" },
+    ],
+  },
+  {
+    // Paylio is a private system. Only its public sign in screen is captured.
+    slug: "paylio-staff-management",
+    base: "https://data-base-frontend-psi.vercel.app",
+    shots: [{ file: "signin-desktop", path: "/login", device: "desktop", allowSignInScreen: true }],
+  },
+  {
+    // Annotrix holds candidate results. Only its public sign in screen is captured.
+    slug: "annotrix",
+    base: "https://annotrix.vercel.app",
+    shots: [{ file: "signin-desktop", path: "/login", device: "desktop", allowSignInScreen: true }],
+  },
 ];
 
 const BLOCKED = /\/(login|signin|sign-in|dashboard|admin|account|track|api)\b/i;
+const SIGN_IN_SCREEN = /^\/(login|signin|sign-in)\/?$/i;
+
+/** A path is blocked unless the shot explicitly allows a bare public sign in screen. */
+function isBlocked(pathname: string, allowSignInScreen?: boolean) {
+  if (allowSignInScreen && SIGN_IN_SCREEN.test(pathname)) return false;
+  return BLOCKED.test(pathname);
+}
 const VIEWPORTS = { desktop: { width: 1440, height: 900 }, mobile: { width: 390, height: 844 } };
 
 async function launch(): Promise<Browser> {
@@ -72,15 +148,15 @@ async function settle(page: Page) {
 
 async function main() {
   const onlyIdx = process.argv.indexOf("--only");
-  const only = onlyIdx >= 0 ? process.argv[onlyIdx + 1] : undefined;
+  const only = onlyIdx >= 0 ? process.argv[onlyIdx + 1]?.split(",").map((s) => s.trim()) : undefined;
   const browser = await launch();
   const results: string[] = [];
   try {
-    for (const target of TARGETS.filter((t) => !only || t.slug === only)) {
+    for (const target of TARGETS.filter((t) => !only || only.includes(t.slug))) {
       const dir = path.join(process.cwd(), "public", "screenshots", target.slug);
       await mkdir(dir, { recursive: true });
       for (const shot of target.shots) {
-        if (BLOCKED.test(shot.path)) {
+        if (isBlocked(shot.path, shot.allowSignInScreen)) {
           console.warn(`Skipping blocked path ${shot.path}`);
           continue;
         }
@@ -90,7 +166,7 @@ async function main() {
         try {
           const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45000 });
           if (!res || res.status() >= 400) throw new Error(`HTTP ${res?.status()}`);
-          if (BLOCKED.test(new URL(page.url()).pathname)) throw new Error(`Redirected to blocked path ${page.url()}`);
+          if (isBlocked(new URL(page.url()).pathname, shot.allowSignInScreen)) throw new Error(`Redirected to blocked path ${page.url()}`);
           await settle(page);
           if (shot.scrollToText) {
             const heading = page.getByRole("heading", { name: new RegExp(shot.scrollToText, "i") }).first();
@@ -122,7 +198,7 @@ async function main() {
   } finally {
     await browser.close();
   }
-  const manifest = `# Screenshot capture log\n\nCaptured ${new Date().toISOString()} with Playwright (reduced motion, cookie banners dismissed).\nBlocked paths: login, dashboard, admin, account, track, api.\n\n${results.map((r) => `- ${r}`).join("\n")}\n`;
+  const manifest = `# Screenshot capture log\n\nCaptured ${new Date().toISOString()} with Playwright (reduced motion, cookie banners dismissed).\nBlocked paths: login, dashboard, admin, account, track, api. A bare public sign in screen is captured only where a shot sets allowSignInScreen.\n\n${results.map((r) => `- ${r}`).join("\n")}\n`;
   await mkdir(path.join(process.cwd(), "docs"), { recursive: true });
   await writeFile(path.join(process.cwd(), "docs", "screenshot-log.md"), manifest);
   console.log(`\n${results.length} screenshots written. Log: docs/screenshot-log.md`);

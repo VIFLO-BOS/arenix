@@ -6,7 +6,9 @@ Status as of the initial build (2026-10-19). Nothing listed as pending is invent
 
 - Legal name **areniX Technologies Limited**, brand **areniX** (text wordmark with accent "X"; swappable for an official SVG in Settings → Brand).
 - Public projects with live links and authentic screenshots: **CleNest** (https://www.clenest.site) and **Passion Nutrition Clinic** (https://passion-nutrition-clinic.vercel.app/). Captured pages: homepage, services, pricing/appointment, mobile homepage. Login, dashboard, account and tracking routes were excluded by rule.
-- Six further projects recorded with honest status: Paylio Staff Management (private), Paylio Dashboard (private, same platform), ArenoX LMS (completed, URL pending), Annotrix (completed, URL pending), AreniX Branch Manager (completed, deployment unverified), netHuk (in development, no details published).
+- Live projects added 5 Nov 2026 from the owner's Vercel deployments, each with screenshots captured from the public pages: **ShopMe** (https://web-cyan-chi-9m3i15jvqi.vercel.app, demo store with checkout off), **LeadForge** (https://leadforge-ashy.vercel.app, marked In Development because its own README says Phase 1), **Khreeolife** (https://khreoolife.vercel.app), **Giles Financial Consulting** (https://gilesfc-preview.vercel.app, a static preview of the WordPress theme). **ArenoX LMS** (https://areno-x-pmlx.vercel.app), **Paylio Staff Management** (https://data-base-frontend-psi.vercel.app) and **Annotrix** (https://annotrix.vercel.app) moved to Live with their URLs. Paylio and Annotrix show only their public sign in screens.
+- Further projects recorded with honest status: Paylio Dashboard (private, same platform as Paylio Staff Management), AreniX Branch Manager (completed, deployment unverified), netHuk (in development, no details published).
+- Live GitHub activity section on the homepage (section 02) reading the VIFLO-BOS account through `GITHUB_TOKEN`. See the GitHub row below.
 - MongoDB Community (local service) as the database; Mongoose models, seed and bootstrap scripts.
 - Full public route set, dashboard, RBAC, CRM, proposals, projects, CMS, media, audit, notifications.
 
@@ -21,8 +23,9 @@ Status as of the initial build (2026-10-19). Nothing listed as pending is invent
 | Domain + hosting | `NEXT_PUBLIC_SITE_URL`, DNS | localhost / staging URL in metadata |
 | Resend account + verified sender domain | `RESEND_API_KEY`, `EMAIL_FROM` | Emails stored as `DEMO_LOGGED`, printed to server log; dashboard shows demo banner |
 | Scheduling provider (Cal.com) | `SCHEDULER_*` env + Settings → Booking | Honest "Request a consultation" flow (status REQUESTED); staff confirm manually |
-| Paylio screenshots + client permission | Media → upload sanitised images → Portfolio → attach, tick Approved | Labelled "Private system, screenshots pending approval" placeholder |
-| ArenoX LMS / Annotrix / Branch Manager URLs, status, screenshots | Portfolio editor | Case studies list confirmed capabilities only; no live link |
+| GitHub token for live activity | Fine grained token (All repositories, read only Metadata, Contents and Administration) in `GITHUB_TOKEN`, locally in `.env.local` and on Vercel under Project Settings → Environment Variables. Private repositories are named only when mapped in `src/config/github.ts` | Section hidden in production; a setup note shows in development |
+| Paylio dashboard screenshots + client permission | Media → upload sanitised images → Portfolio → attach, tick Approved | Only the public sign in screen is shown |
+| Branch Manager URL, status, screenshots | Portfolio editor | Case study lists confirmed capabilities only; no live link |
 | netHuk description / features / release | Portfolio editor + Lab page copy | "In development, no public preview yet" |
 | Team members, milestones, founding date | About page copy (code) or future CMS block | Dashed "published when verified" blocks |
 | Client testimonials (approved wording) | Content → Testimonials (approve + publish) | Verified-facts cards instead of quotes |

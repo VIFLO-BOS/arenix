@@ -5,6 +5,10 @@
  *
  *   npm run db:seed            # insert missing records only
  *   npm run db:seed -- --force # overwrite content fields from fixtures
+ *   npm run db:seed -- --force --only projects   # overwrite one collection, leave the rest alone
+ *
+ * --only accepts a comma separated list of projects, services, solutions, technologies,
+ * articles, faqs and settings.
  */
 import "dotenv/config";
 import { config as loadEnv } from "dotenv";
@@ -19,6 +23,9 @@ import { articlesFixture, faqsFixture, legalFixture } from "../src/content/misc"
 loadEnv({ path: ".env.local", override: false });
 
 const force = process.argv.includes("--force");
+const onlyIdx = process.argv.indexOf("--only");
+const only = onlyIdx >= 0 ? new Set((process.argv[onlyIdx + 1] ?? "").split(",").map((s) => s.trim()).filter(Boolean)) : null;
+const wants = (collection: string) => !only || only.has(collection);
 const uri = process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/arenix";
 
 async function upsertBySlug<T extends { slug: string }>(model: mongoose.Model<unknown>, items: T[], label: string) {
@@ -45,15 +52,15 @@ async function main() {
   console.log(`Connecting to ${uri.replace(/\/\/([^@]+)@/, "//***@")} …`);
   await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
 
-  await upsertBySlug(PortfolioProjectModel as unknown as mongoose.Model<unknown>, projectsFixture, "projects");
-  await upsertBySlug(ServiceModel as unknown as mongoose.Model<unknown>, servicesFixture, "services");
-  await upsertBySlug(SolutionModel as unknown as mongoose.Model<unknown>, solutionsFixture, "solutions");
-  await upsertBySlug(TechnologyModel as unknown as mongoose.Model<unknown>, technologiesFixture, "technologies");
-  await upsertBySlug(ArticleModel as unknown as mongoose.Model<unknown>, articlesFixture, "articles");
+  if (wants("projects")) await upsertBySlug(PortfolioProjectModel as unknown as mongoose.Model<unknown>, projectsFixture, "projects");
+  if (wants("services")) await upsertBySlug(ServiceModel as unknown as mongoose.Model<unknown>, servicesFixture, "services");
+  if (wants("solutions")) await upsertBySlug(SolutionModel as unknown as mongoose.Model<unknown>, solutionsFixture, "solutions");
+  if (wants("technologies")) await upsertBySlug(TechnologyModel as unknown as mongoose.Model<unknown>, technologiesFixture, "technologies");
+  if (wants("articles")) await upsertBySlug(ArticleModel as unknown as mongoose.Model<unknown>, articlesFixture, "articles");
 
   // FAQs have no slug; match on question text.
   let faqInserted = 0;
-  for (const f of faqsFixture) {
+  for (const f of wants("faqs") ? faqsFixture : []) {
     const { id, ...rest } = f;
     void id;
     const exists = await FaqModel.exists({ question: f.question });
@@ -64,13 +71,13 @@ async function main() {
       faqInserted++;
     }
   }
-  console.log(`${"faqs".padEnd(14)} inserted ${faqInserted}, kept ${faqsFixture.length - faqInserted}`);
+  if (wants("faqs")) console.log(`${"faqs".padEnd(14)} inserted ${faqInserted}, kept ${faqsFixture.length - faqInserted}`);
 
-  const settings = await SiteSetting.findOne({ key: "site" });
-  if (!settings) {
+  const settings = wants("settings") ? await SiteSetting.findOne({ key: "site" }) : undefined;
+  if (settings === null) {
     await SiteSetting.create({ key: "site", legal: { privacyMarkdown: legalFixture.privacyMarkdown, termsMarkdown: legalFixture.termsMarkdown } });
     console.log(`${"settings".padEnd(14)} created default site settings (legal drafts loaded)`);
-  } else {
+  } else if (settings) {
     console.log(`${"settings".padEnd(14)} kept existing site settings`);
   }
 

@@ -102,7 +102,9 @@ export const getPublishedProjects = cache(
             : undefined,
         }));
       },
-      projectsFixture.filter((p) => p.published && p.approvedForPublication),
+      projectsFixture
+        .filter((p) => p.published && p.approvedForPublication)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
     );
     return items;
   },
