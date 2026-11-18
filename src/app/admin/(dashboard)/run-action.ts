@@ -37,6 +37,17 @@ export async function run<T>(permission: Permission, schema: ZodType<T>, fd: For
     for (const p of revalidate) revalidatePath(p, "layout");
     return { ok: true, message: msg || "Saved." };
   } catch (err) {
-    return { ok: false, message: err instanceof Error ? err.message : "Something went wrong." };
+    return { ok: false, message: safeErrorMessage(err) };
   }
+}
+
+/**
+ * Only messages the app wrote on purpose (plain Error and AuthorizationError) are shown.
+ * Anything else, such as a database error, could reveal internal details, so it is logged
+ * on the server and the person sees a general message.
+ */
+export function safeErrorMessage(err: unknown): string {
+  if (err instanceof Error && (err.constructor === Error || err.name === "AuthorizationError")) return err.message;
+  console.error("[admin action] unexpected error", err);
+  return "Something went wrong. Please try again, and contact the site administrator if it keeps happening.";
 }

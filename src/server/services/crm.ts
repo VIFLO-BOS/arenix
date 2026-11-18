@@ -7,6 +7,7 @@ import { recordAudit } from "./audit";
 import { notifyUser } from "./notifications";
 import { emailTemplates, enqueueEmail } from "./email";
 import { env } from "@/lib/env";
+import { literalPattern } from "@/lib/utils";
 import type { CurrentUser } from "@/server/auth/session";
 
 const PAGE = 20;
@@ -23,7 +24,10 @@ export async function listInquiries(opts: { status?: string; type?: string; q?: 
   const filter: Record<string, unknown> = {};
   if (opts.status) filter.status = opts.status;
   if (opts.type) filter.type = opts.type;
-  if (opts.q) filter.$or = [{ name: new RegExp(opts.q, "i") }, { email: new RegExp(opts.q, "i") }, { reference: new RegExp(opts.q, "i") }, { company: new RegExp(opts.q, "i") }];
+  if (opts.q) {
+    const q = literalPattern(opts.q);
+    filter.$or = [{ name: q }, { email: q }, { reference: q }, { company: q }];
+  }
   const { skip, limit, page } = paged(opts.page ?? 1);
   const [items, total] = await Promise.all([Inquiry.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("assignedTo", "name").lean(), Inquiry.countDocuments(filter)]);
   return { items, total, page, pages: Math.max(1, Math.ceil(total / limit)) };
@@ -77,7 +81,7 @@ export async function listLeads(opts: { status?: string; q?: string; assignedTo?
   if (opts.status) filter.status = opts.status;
   else if (!opts.all) filter.status = { $ne: "ARCHIVED" };
   if (opts.assignedTo) filter.assignedTo = opts.assignedTo;
-  if (opts.q) filter.title = new RegExp(opts.q, "i");
+  if (opts.q) filter.title = literalPattern(opts.q);
   const { skip, limit, page } = paged(opts.page ?? 1);
   const [items, total] = await Promise.all([Lead.find(filter).sort({ updatedAt: -1 }).skip(skip).limit(limit).populate("clientId", "name email").populate("assignedTo", "name").lean(), Lead.countDocuments(filter)]);
   return { items, total, page, pages: Math.max(1, Math.ceil(total / limit)) };
@@ -181,7 +185,7 @@ export async function dispatchDueFollowUps(actor: CurrentUser) {
 export async function listClients(opts: { q?: string; page?: number }) {
   await connectDb();
   const filter: Record<string, unknown> = { archivedAt: { $exists: false } };
-  if (opts.q) filter.$or = [{ name: new RegExp(opts.q, "i") }, { email: new RegExp(opts.q, "i") }];
+  if (opts.q) filter.$or = [{ name: literalPattern(opts.q) }, { email: literalPattern(opts.q) }];
   const { skip, limit, page } = paged(opts.page ?? 1);
   const [items, total] = await Promise.all([Client.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).populate("organizationId", "name").lean(), Client.countDocuments(filter)]);
   return { items, total, page, pages: Math.max(1, Math.ceil(total / limit)) };

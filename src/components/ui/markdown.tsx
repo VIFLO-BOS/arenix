@@ -105,6 +105,18 @@ function parseBlocks(md: string): Block[] {
   return blocks;
 }
 
+/**
+ * Links may only go to web pages, email, phone, an anchor or a path on this site. Anything
+ * else (javascript:, data: and the like) becomes a dead link, so text edited in the admin can
+ * never run a script in a visitor's browser.
+ */
+export function safeHref(raw: string): string {
+  const href = raw.trim();
+  if (/^(https?:\/\/|mailto:|tel:)/i.test(href)) return href;
+  if (/^(#|\/(?!\/)|\.\/)/.test(href)) return href;
+  return "#";
+}
+
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   const out: ReactNode[] = [];
   const re = /(`[^`]+`)|(\*\*[^*]+\*\*)|(\*[^*]+\*)|(_[^_]+_)|(\[[^\]]+\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\))/g;
@@ -120,7 +132,7 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
     else if (token.startsWith("[")) {
       const lm = /\[([^\]]+)\]\(([^)]+)\)/.exec(token);
       if (lm) {
-        const href = lm[2] ?? "#";
+        const href = safeHref(lm[2] ?? "");
         const external = /^https?:\/\//.test(href);
         out.push(
           <a key={`${keyPrefix}-a${k++}`} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>

@@ -3,6 +3,8 @@ import { mkdir, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { env } from "@/lib/env";
+import { connectDb } from "@/server/db/connect";
+import { PrivateFile } from "@/server/db/models/files";
 
 /**
  * Media/attachment storage. Driver "local" writes under ./public/uploads (dev + simple
@@ -19,9 +21,35 @@ function safeFilename(original: string) {
   return `${base}-${randomBytes(6).toString("hex")}${ext}`;
 }
 
-export async function saveUploadedFile(file: File, folder: "attachments" | "media"): Promise<StoredFile> {
+/**
+ * Most space private attachments may take in the database. Leaves room on MongoDB Atlas's
+ * free 512 MB tier, so attachments can never push the database into a paid plan.
+ */
+export const ATTACHMENT_QUOTA_BYTES = 150 * 1024 * 1024;
+
+export class StorageFullError extends Error {
+  constructor() {
+    super("Attachments cannot be accepted right now. Please send your request without files and share them after we reply.");
+    this.name = "StorageFullError";
+  }
+}
+
+/** A client's attachment, stored privately in the database. Only signed in staff can open it. */
+async function savePrivateFile(file: File, buffer: Buffer): Promise<StoredFile> {
+  await connectDb();
+  const [used] = await PrivateFile.aggregate<{ total: number }>([{ $group: { _id: null, total: { $sum: "$size" } } }]);
+  if ((used?.total ?? 0) + buffer.length > ATTACHMENT_QUOTA_BYTES) throw new StorageFullError();
   const filename = safeFilename(file.name);
+  const doc = await PrivateFile.create({ filename, mime: file.type, size: buffer.length, data: buffer });
+  const id = doc._id.toString();
+  return { storageKey: `private:${id}`, url: `/admin/files/${id}`, filename, mime: file.type, size: buffer.length };
+}
+
+export async function saveUploadedFile(file: File, folder: "attachments" | "media"): Promise<StoredFile> {
   const buffer = Buffer.from(await file.arrayBuffer());
+  // Client attachments are confidential. They never go to a public folder.
+  if (folder === "attachments") return savePrivateFile(file, buffer);
+  const filename = safeFilename(file.name);
   const storageKey = `${folder}/${filename}`;
 
   if (env.mediaStorageDriver === "s3") {
@@ -37,6 +65,11 @@ export async function saveUploadedFile(file: File, folder: "attachments" | "medi
 }
 
 export async function deleteStoredFile(storageKey: string) {
+  if (storageKey.startsWith("private:")) {
+    await connectDb();
+    await PrivateFile.deleteOne({ _id: storageKey.slice("private:".length) });
+    return;
+  }
   if (env.mediaStorageDriver !== "local") return;
   const safe = storageKey.replace(/\.\./g, "");
   try {

@@ -22,7 +22,7 @@ import { findPrice, parsePriceLines } from "@/server/ai/pricing";
 import { getResearchSettings, updateResearchSettings } from "@/server/ai/settings";
 import { rateLimitDb } from "@/server/auth/rate-limit-db";
 import { recordAudit } from "@/server/services/audit";
-import { run } from "./run-action";
+import { run, safeErrorMessage } from "./run-action";
 
 /* ------------------------------------------------------------------ */
 /* Helpers (fdToObject and run live in run-action.ts)                 */
@@ -350,7 +350,7 @@ export async function mediaUploadAction(_p: FormState, fd: FormData): Promise<Fo
     revalidatePath("/admin/media");
     return { ok: true, message: `Uploaded ${file.name}.` };
   } catch (err) {
-    return { ok: false, message: err instanceof Error ? err.message : "Upload failed." };
+    return { ok: false, message: safeErrorMessage(err) };
   }
 }
 export async function mediaUpdateAction(_p: FormState, fd: FormData) {

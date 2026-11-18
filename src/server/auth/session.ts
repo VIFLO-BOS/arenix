@@ -10,10 +10,20 @@ import { env } from "@/lib/env";
 import { recordAudit } from "@/server/services/audit";
 import { rateLimitDb } from "./rate-limit-db";
 
-export const SESSION_COOKIE = "arenix_session";
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
+/**
+ * In production the cookie carries the __Host- prefix, so browsers only accept it over HTTPS,
+ * from this exact host, for the whole site, and never from a subdomain.
+ */
+export const SESSION_COOKIE = env.isProduction ? "__Host-arenix_session" : "arenix_session";
+const LEGACY_COOKIE = "arenix_session";
+/** A sign in lasts at most 12 hours, and ends sooner after 2 hours without activity. */
+const SESSION_TTL_MS = 1000 * 60 * 60 * 12;
+const IDLE_TIMEOUT_MS = 1000 * 60 * 60 * 2;
+const TOUCH_EVERY_MS = 1000 * 60 * 5;
 const LOCK_AFTER_FAILURES = 6;
 const LOCK_MINUTES = 15;
+// A real bcrypt hash of a random value, compared when the email is unknown so both cases take as long.
+const DUMMY_HASH = "$2b$12$9UG5ngooy7D0QS6BZf2fiOWbym/fpeadZRZ0vkrEPcT3uBWz3P9tm";
 
 export type CurrentUser = {
   id: string;
@@ -41,8 +51,15 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
     await connectDb();
     const session = await Session.findOne({ tokenHash: hashToken(token), revokedAt: { $exists: false } }).lean();
     if (!session || session.expiresAt.getTime() < Date.now()) return null;
+    const now = Date.now();
+    const lastSeen = new Date(session.lastSeenAt ?? session.createdAt).getTime();
+    if (now - lastSeen > IDLE_TIMEOUT_MS) {
+      await Session.updateOne({ _id: session._id }, { $set: { revokedAt: new Date() } });
+      return null;
+    }
     const user = await User.findById(session.userId).lean();
     if (!user || !user.isActive) return null;
+    if (now - lastSeen > TOUCH_EVERY_MS) await Session.updateOne({ _id: session._id }, { $set: { lastSeenAt: new Date() } });
     return toCurrentUser(user as UserDoc);
   } catch {
     return null;
@@ -97,6 +114,8 @@ export async function verifyPasswordLogin(email: string, password: string): Prom
   const user = await User.findOne({ email: email.toLowerCase().trim() });
   const generic = "Invalid email or password.";
   if (!user || !user.isActive) {
+    // Same work as a real check, so the response time does not reveal which emails have accounts.
+    await verifyPassword(password, DUMMY_HASH);
     await recordAudit({ action: "auth.login_failed", entityType: "user", entityId: email, severity: "SECURITY", ipHash: hashIp(ip) });
     return { ok: false, error: generic };
   }
@@ -142,11 +161,13 @@ export async function createSession(user: UserDoc, ip: string | null) {
   const store = await cookies();
   store.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    sameSite: "lax",
+    // Strict: other websites can never make the browser send this cookie, so no cross site request can act as staff.
+    sameSite: "strict",
     secure: env.isProduction,
     path: "/",
     maxAge: SESSION_TTL_MS / 1000,
   });
+  if (SESSION_COOKIE !== LEGACY_COOKIE) store.delete(LEGACY_COOKIE);
 }
 
 export async function logout() {
@@ -161,6 +182,7 @@ export async function logout() {
     }
   }
   store.delete(SESSION_COOKIE);
+  if (SESSION_COOKIE !== LEGACY_COOKIE) store.delete(LEGACY_COOKIE);
 }
 
 export async function revokeAllSessionsForUser(userId: string) {

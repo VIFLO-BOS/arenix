@@ -83,3 +83,11 @@ export function humanize(value: string) {
 export function toPlain<T>(doc: T): T {
   return JSON.parse(JSON.stringify(doc)) as T;
 }
+
+/**
+ * A case insensitive search pattern that matches the typed text literally. Special
+ * characters are escaped and the length is capped, so a crafted search cannot hang the database.
+ */
+export function literalPattern(text: string, maxLength = 100): RegExp {
+  return new RegExp(text.slice(0, maxLength).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+}

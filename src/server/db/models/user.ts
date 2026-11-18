@@ -31,6 +31,8 @@ export interface SessionDoc {
   userAgent?: string;
   ipHash?: string;
   revokedAt?: Date;
+  /** Last activity, for the idle timeout. Updated at most every few minutes. */
+  lastSeenAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -101,6 +103,7 @@ const SessionSchema = new Schema<SessionDoc>(
     userAgent: { type: String },
     ipHash: { type: String },
     revokedAt: { type: Date },
+    lastSeenAt: { type: Date },
   },
   { timestamps: true },
 );

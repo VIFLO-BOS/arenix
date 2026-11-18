@@ -107,6 +107,32 @@ Dashboard sign in has two steps. After a correct email and password, a six digit
 
 To switch it on in production, create a Resend account with the admin email address, then set `RESEND_API_KEY`, `EMAIL_FROM="areniX <onboarding@resend.dev>"` and `ADMIN_NOTIFICATION_EMAIL` on Vercel and redeploy. Without a verified domain Resend only delivers to the address the Resend account was created with.
 
+## Security hardening (18 November 2026)
+
+Added in code, at no cost and without slowing public pages.
+
+| Area | What is in place |
+|---|---|
+| Sessions | Sign ins last at most 12 hours and end after 2 hours without activity. In production the cookie is `__Host-arenix_session`: HTTPS only, this host only, unreadable by scripts, and SameSite Strict so no other website can make a browser act as staff. Everyone signs in again once after this release. |
+| Sign in | A wrong email takes as long to check as a wrong password, so response times do not reveal which accounts exist. |
+| Admin pages | A strict Content Security Policy with a fresh random nonce on every request, so an injected script cannot run. Admin pages are never cached. |
+| Public pages | Content Security Policy (scripts, styles, fonts and images from this site only, no framing, forms post only here), HSTS for two years, `X-Frame-Options: DENY`, `nosniff`, a tight `Permissions-Policy` and `Cross-Origin-Opener-Policy`. Pages stay prebuilt. |
+| Client attachments | Stored privately in MongoDB, never in a public folder, opened only by signed in staff who can read inquiries, always downloaded under a sandbox policy, and every download is audited. Capped at 150 MB in total so the free Atlas tier is never outgrown. Before this, uploads failed on Vercel because its disk is read only. |
+| Forms | Contact, project and consultation limits are stored in MongoDB, so they hold across every Vercel instance. |
+| Admin text | Links in admin written text (policies, articles) may only point to web pages, email, phone or this site, so no script link can be published. |
+| Searches | Admin searches treat typed text literally, so a crafted search cannot hang the database. |
+| Errors | Unexpected errors show a general message and are logged, so database details never reach the screen. |
+| Reporting | `/.well-known/security.txt` tells security researchers to report problems through the Contact page. |
+
+**Free steps only you can take** (most important first)
+
+1. Turn on two step verification (an authenticator app or passkey, not SMS) for the Gmail account that receives sign in codes, then GitHub, Vercel, MongoDB Atlas, Resend, the Claude Console and your domain registrar. Whoever controls that Gmail account can sign in to the dashboard.
+2. MongoDB Atlas. Use a long random password for the database user, give that user only "read and write" on the `arenix-website` database, and keep Network Access as it is. Vercel has no fixed addresses on the free plan, so the allow list has to stay open and the password is what protects the database.
+3. Vercel. Under Settings, Deployment Protection, keep Vercel Authentication on for preview deployments. If the site is ever attacked, turn on Attack Challenge Mode under Firewall. Both are free.
+4. GitHub. The repository is public. Under Settings, Code security, turn on secret scanning with push protection and Dependabot alerts. Both are free for public repositories.
+5. Domain. Turn on the registrar lock (transfer lock) for arenixtech.com.ng.
+6. Optional, later. Once every subdomain of arenixtech.com.ng only uses HTTPS, submit the domain at hstspreload.org so browsers never try plain HTTP. This is hard to undo, so only do it once sure.
+
 ## Signing in to the dashboard
 
 1. Make sure MongoDB is running and the site is up (`npm run dev`, or the production start command).

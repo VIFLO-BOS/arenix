@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { contactFormSchema, fieldErrors } from "@/lib/validation/forms";
 import { formValues, type FormState } from "@/lib/validation/form-state";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitDb } from "@/server/auth/rate-limit-db";
 import { hashIp } from "@/server/auth/crypto";
 import { createContactInquiry } from "@/server/services/inquiries";
 
@@ -23,7 +23,7 @@ export async function submitContact(_prev: FormState, fd: FormData): Promise<For
 
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
-  if (!rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000).ok) return { ok: false, message: "Too many submissions from this network. Please try again in a few minutes.", values };
+  if (!(await rateLimitDb(`contact:${hashIp(ip) ?? "unknown"}`, 5, 10 * 60 * 1000)).ok) return { ok: false, message: "Too many submissions from this network. Please try again in a few minutes.", values };
 
   try {
     const result = await createContactInquiry(parsed.data, { ipHash: hashIp(ip), userAgent: h.get("user-agent")?.slice(0, 300) ?? undefined });

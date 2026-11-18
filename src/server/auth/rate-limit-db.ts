@@ -12,7 +12,7 @@ export async function rateLimitDb(key: string, limit: number, windowMs: number):
   const now = new Date();
 
   // Count against the current window if it is still open.
-  const open = await RateLimit.findOneAndUpdate({ key, resetAt: { $gt: now } }, { $inc: { count: 1 } }, { new: true }).lean();
+  const open = await RateLimit.findOneAndUpdate({ key, resetAt: { $gt: now } }, { $inc: { count: 1 } }, { returnDocument: "after" }).lean();
   if (open) return { ok: open.count <= limit, retryAfterMs: open.resetAt.getTime() - now.getTime() };
 
   // Otherwise start a new window. A parallel request may have started it first, in which

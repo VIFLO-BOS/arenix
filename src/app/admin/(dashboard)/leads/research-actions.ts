@@ -13,7 +13,7 @@ import { askAssistant, draftOutreach } from "@/server/research/ai-research";
 import { runResearchWorker } from "@/server/research/pipeline";
 import * as research from "@/server/research/service";
 import { ASSISTANT_PRESETS } from "@/types/research";
-import { fdToObject, run } from "../run-action";
+import { fdToObject, run, safeErrorMessage } from "../run-action";
 
 /** Actions for Find leads: searches, the results table, the research profile and follow ups. */
 
@@ -32,7 +32,7 @@ function kickWorker() {
   });
 }
 
-const aiMessage = (err: unknown) => (err instanceof AiError ? err.message : err instanceof Error ? err.message : "Something went wrong.");
+const aiMessage = (err: unknown) => (err instanceof AiError ? err.message : safeErrorMessage(err));
 
 /* --------------------------------- Searches -------------------------------- */
 
@@ -109,7 +109,7 @@ export async function addToLeadsAction(_p: AddToLeadsState, fd: FormData): Promi
     if (r.status === "duplicate") return { ok: false, message: `Already in Leads as ${r.title}. ${r.reason}`, duplicate: { leadId: r.leadId, title: r.title, reason: r.reason } };
     return { ok: true, message: r.status === "created" ? "Added to Leads." : "The existing lead now links to this research.", leadId: r.leadId };
   } catch (err) {
-    return { ok: false, message: err instanceof Error ? err.message : "Something went wrong." };
+    return { ok: false, message: safeErrorMessage(err) };
   }
 }
 

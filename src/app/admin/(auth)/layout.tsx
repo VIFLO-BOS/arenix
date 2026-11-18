@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { connection } from "next/server";
 import { Wordmark } from "@/components/brand/wordmark";
 
 export const metadata: Metadata = { title: { default: "Sign in", template: "%s, areniX Admin" }, robots: { index: false, follow: false } };
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default async function AuthLayout({ children }: { children: React.ReactNode }) {
+  // Rendered per request so the admin Content Security Policy nonce reaches every script.
+  await connection();
   return (
     <main id="main" data-surface="light" className="admin-scope relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-[#f3f5f9] px-[var(--gutter)] py-12 text-slate-900">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[linear-gradient(180deg,rgba(11,31,63,0.08),transparent)]" aria-hidden="true" />

@@ -3,10 +3,10 @@
 import { headers } from "next/headers";
 import { ALLOWED_UPLOAD_MIME, MAX_UPLOAD_BYTES, MAX_UPLOAD_FILES, fieldErrors, projectRequestSchema } from "@/lib/validation/forms";
 import { formValues, type FormState } from "@/lib/validation/form-state";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitDb } from "@/server/auth/rate-limit-db";
 import { hashIp } from "@/server/auth/crypto";
 import { createProjectInquiry } from "@/server/services/inquiries";
-import { saveUploadedFile, sniffMime, type StoredFile } from "@/server/services/storage";
+import { StorageFullError, saveUploadedFile, sniffMime, type StoredFile } from "@/server/services/storage";
 
 const KEYS = ["name", "email", "company", "phone", "serviceCategory", "solutionContext", "projectContext", "goal", "message", "features", "budgetRange", "timeline", "preferredContact"];
 
@@ -34,7 +34,7 @@ export async function submitProjectRequest(_prev: FormState, fd: FormData): Prom
 
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
-  if (!rateLimit(`project:${ip}`, 4, 10 * 60 * 1000).ok) return { ok: false, message: "Too many submissions from this network. Please try again in a few minutes.", values };
+  if (!(await rateLimitDb(`project:${hashIp(ip) ?? "unknown"}`, 4, 10 * 60 * 1000)).ok) return { ok: false, message: "Too many submissions from this network. Please try again in a few minutes.", values };
 
   const stored: StoredFile[] = [];
   try {
@@ -45,7 +45,8 @@ export async function submitProjectRequest(_prev: FormState, fd: FormData): Prom
     }
   } catch (err) {
     console.error("[start-project] upload failed", err);
-    return { ok: false, errors: { attachments: "We could not store the attachment. Try again without it or use a smaller file." }, message: "Upload failed.", values };
+    const message = err instanceof StorageFullError ? err.message : "We could not store the attachment. Try again without it or use a smaller file.";
+    return { ok: false, errors: { attachments: message }, message: "Upload failed.", values };
   }
 
   try {

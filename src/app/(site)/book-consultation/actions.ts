@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { consultationRequestSchema, fieldErrors } from "@/lib/validation/forms";
 import { formValues, type FormState } from "@/lib/validation/form-state";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitDb } from "@/server/auth/rate-limit-db";
 import { hashIp } from "@/server/auth/crypto";
 import { createConsultationRequest } from "@/server/services/bookings";
 
@@ -23,7 +23,7 @@ export async function submitConsultationRequest(_prev: FormState, fd: FormData):
 
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
-  if (!rateLimit(`booking:${ip}`, 4, 10 * 60 * 1000).ok) return { ok: false, message: "Too many requests from this network. Please try again in a few minutes.", values };
+  if (!(await rateLimitDb(`booking:${hashIp(ip) ?? "unknown"}`, 4, 10 * 60 * 1000)).ok) return { ok: false, message: "Too many requests from this network. Please try again in a few minutes.", values };
 
   try {
     const result = await createConsultationRequest(parsed.data, { ipHash: hashIp(ip) });
