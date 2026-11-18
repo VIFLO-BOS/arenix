@@ -46,7 +46,14 @@ export interface OrganizationDoc {
   _id: Types.ObjectId;
   name: string;
   website?: string;
+  /** Bare website domain, for example example.com. Used to spot duplicates. */
+  domain?: string;
   industry?: string;
+  country?: string;
+  city?: string;
+  phone?: string;
+  /** Set when the organisation was added from lead research. */
+  prospectId?: Types.ObjectId;
   notes?: string;
   archivedAt?: Date;
   createdAt: Date;
@@ -136,6 +143,8 @@ export interface LeadDoc {
   clientId?: Types.ObjectId;
   organizationId?: Types.ObjectId;
   inquiryId?: Types.ObjectId;
+  /** Set when the lead was added from lead research. */
+  prospectId?: Types.ObjectId;
   bookingIds: Types.ObjectId[];
   proposalIds: Types.ObjectId[];
   assignedTo?: Types.ObjectId;
@@ -289,13 +298,19 @@ const OrganizationSchema = new Schema<OrganizationDoc>(
   {
     name: { type: String, required: true, trim: true },
     website: { type: String },
+    domain: { type: String, lowercase: true, trim: true },
     industry: { type: String },
+    country: { type: String },
+    city: { type: String },
+    phone: { type: String },
+    prospectId: { type: Schema.Types.ObjectId, ref: "Prospect" },
     notes: { type: String },
     archivedAt: { type: Date },
   },
   { timestamps: true },
 );
 OrganizationSchema.index({ name: "text" });
+OrganizationSchema.index({ domain: 1 }, { sparse: true });
 
 const ClientSchema = new Schema<ClientDoc>(
   {
@@ -379,6 +394,7 @@ const LeadSchema = new Schema<LeadDoc>(
     clientId: { type: Schema.Types.ObjectId, ref: "Client", index: true },
     organizationId: { type: Schema.Types.ObjectId, ref: "Organization" },
     inquiryId: { type: Schema.Types.ObjectId, ref: "Inquiry" },
+    prospectId: { type: Schema.Types.ObjectId, ref: "Prospect" },
     bookingIds: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
     proposalIds: [{ type: Schema.Types.ObjectId, ref: "Proposal" }],
     assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true },
@@ -397,6 +413,7 @@ const LeadSchema = new Schema<LeadDoc>(
 );
 LeadSchema.index({ createdAt: -1 });
 LeadSchema.index({ title: "text" });
+LeadSchema.index({ prospectId: 1 }, { sparse: true });
 
 const BookingEventSchema = new Schema<BookingEvent>(
   {

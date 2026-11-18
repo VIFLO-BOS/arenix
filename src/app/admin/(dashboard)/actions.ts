@@ -2,13 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { ZodType } from "zod";
 import type { FormState } from "@/lib/validation/form-state";
-import { fieldErrors } from "@/lib/validation/forms";
 import * as V from "@/lib/validation/admin";
 import { IMAGE_MIME, MAX_IMAGE_BYTES } from "@/lib/validation/forms";
 import { requirePermission, AuthorizationError, type CurrentUser } from "@/server/auth/session";
-import type { Permission } from "@/server/auth/permissions";
 import * as crm from "@/server/services/crm";
 import * as proposals from "@/server/services/proposals";
 import * as projects from "@/server/services/projects";
@@ -19,43 +16,17 @@ import { markAllRead } from "@/server/services/notifications";
 import { retryPendingEmails } from "@/server/services/email";
 import { saveUploadedFile, sniffMime } from "@/server/services/storage";
 import type { Role } from "@/server/db/models/user";
+import { AI_PROVIDERS, AI_PROVIDER_LABEL } from "@/types/research";
+import { testProviders } from "@/server/ai";
+import { findPrice, parsePriceLines } from "@/server/ai/pricing";
+import { getResearchSettings, updateResearchSettings } from "@/server/ai/settings";
+import { rateLimitDb } from "@/server/auth/rate-limit-db";
+import { recordAudit } from "@/server/services/audit";
+import { run } from "./run-action";
 
 /* ------------------------------------------------------------------ */
-/* Helpers                                                            */
+/* Helpers (fdToObject and run live in run-action.ts)                 */
 /* ------------------------------------------------------------------ */
-
-function fdToObject(fd: FormData): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
-  for (const [k, v] of fd.entries()) {
-    if (v instanceof File) continue;
-    if (k.endsWith("[]")) {
-      const key = k.slice(0, -2);
-      const existing = out[key] as string[] | undefined;
-      if (existing) existing.push(v);
-      else out[key] = [v];
-    } else out[k] = v;
-  }
-  return out;
-}
-
-async function run<T>(permission: Permission, schema: ZodType<T>, fd: FormData, fn: (user: CurrentUser, data: T) => Promise<string | void>, revalidate: string[] = ["/admin"]): Promise<FormState> {
-  let user: CurrentUser;
-  try {
-    user = await requirePermission(permission);
-  } catch (err) {
-    if (err instanceof AuthorizationError) return { ok: false, message: err.message };
-    throw err;
-  }
-  const parsed = schema.safeParse(fdToObject(fd));
-  if (!parsed.success) return { ok: false, errors: fieldErrors(parsed.error), message: "Please fix the highlighted fields." };
-  try {
-    const msg = await fn(user, parsed.data);
-    for (const p of revalidate) revalidatePath(p, "layout");
-    return { ok: true, message: msg || "Saved." };
-  } catch (err) {
-    return { ok: false, message: err instanceof Error ? err.message : "Something went wrong." };
-  }
-}
 
 const PUBLIC_PATHS = ["/", "/work", "/services", "/solutions", "/technologies", "/insights", "/careers", "/contact", "/about", "/privacy", "/terms", "/lab", "/process", "/book-consultation", "/start-project"];
 
@@ -474,4 +445,55 @@ export async function dispatchFollowUpsAction(_p: FormState, _fd: FormData): Pro
   const n = await crm.dispatchDueFollowUps(user);
   revalidatePath("/admin", "layout");
   return { ok: true, message: `Sent ${n} follow-up reminder${n === 1 ? "" : "s"}.` };
+}
+
+/* ------------------------------------------------------------------ */
+/* Lead research                                                      */
+/* ------------------------------------------------------------------ */
+
+const LEAD_RESEARCH_PATH = "/admin/settings/lead-research";
+
+export async function leadResearchSettingsAction(_p: FormState, fd: FormData) {
+  return run("settings:write", V.leadResearchSettingsSchema, fd, async (u, d) => {
+    if (d.section === "budget") {
+      const providerOrder = [d.order1, d.order2, d.order3];
+      if (new Set(providerOrder).size !== providerOrder.length) throw new Error("Choose each AI once in the order.");
+      await updateResearchSettings(u, { section: "budget", monthlyCapUsd: d.monthlyCapUsd, perSearchCapUsd: d.perSearchCapUsd, providerOrder });
+      return "Budget and order saved.";
+    }
+
+    const settings = await getResearchSettings();
+    if (d.section === "provider") {
+      const models = { research: d.modelResearch, extract: d.modelExtract, analyse: d.modelAnalyse, write: d.modelWrite };
+      // A model without a price cannot be budget checked, so it cannot be chosen.
+      const unpriced = [...new Set(Object.values(models))].filter((m) => !findPrice(settings.prices, d.provider, m));
+      if (unpriced.length) throw new Error(`Add a price for ${unpriced.join(", ")} first, so its cost can be capped.`);
+      await updateResearchSettings(u, { section: "provider", provider: d.provider, value: { enabled: d.enabled, allowFallback: d.allowFallback, monthlyCapUsd: d.providerCapUsd, models } });
+      return `${AI_PROVIDER_LABEL[d.provider]} settings saved.`;
+    }
+
+    const { prices, errors } = parsePriceLines(d.pricesText);
+    if (errors.length) throw new Error(errors.join(" "));
+    const stranded = AI_PROVIDERS.flatMap((p) => [...new Set(Object.values(settings.providers[p].models))].filter((m) => !findPrice(prices, p, m)));
+    if (stranded.length) throw new Error(`These models are selected for a task and need a price. ${stranded.join(", ")}.`);
+    await updateResearchSettings(u, { section: "prices", prices, searchPricePer1000: { anthropic: d.searchAnthropic, gemini: d.searchGemini, openai: d.searchOpenai } });
+    return "Prices saved.";
+  }, [LEAD_RESEARCH_PATH]);
+}
+
+export async function providerTestAction(_p: FormState, fd: FormData) {
+  return run("settings:write", V.providerTestSchema, fd, async (u, d) => {
+    // Each test makes real, paid requests.
+    const limit = await rateLimitDb(`provider-test:${u.id}`, 6, 10 * 60_000);
+    if (!limit.ok) throw new Error("Too many tests in a short time. Wait a few minutes and try again.");
+    const results = await testProviders({ userId: u.id, withWebSearch: d.withWebSearch });
+    await recordAudit({ actor: u, action: "lead_research.provider_test", entityType: "LeadResearchSettings", metadata: { withWebSearch: d.withWebSearch, results: results.map((r) => ({ provider: r.provider, status: r.status })) } });
+
+    const tested = results.filter((r) => r.status !== "not_configured");
+    if (!tested.length) throw new Error("No AI provider has an API key yet. Add ANTHROPIC_API_KEY, GEMINI_API_KEY or OPENAI_API_KEY to the environment.");
+    const cost = (n = 0) => (n > 0 && n < 0.01 ? `$${n.toFixed(4)}` : `$${n.toFixed(2)}`);
+    const lines = tested.map((r) => (r.status === "ok" ? `${r.label} works, using ${r.model}. ${r.message} Estimated cost ${cost(r.costUsd)}.` : `${r.label} failed. ${r.message}`));
+    if (tested.every((r) => r.status === "failed")) throw new Error(lines.join(" "));
+    return lines.join(" ");
+  }, [LEAD_RESEARCH_PATH]);
 }

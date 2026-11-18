@@ -16,6 +16,18 @@ export const env = {
   resendApiKey: read("RESEND_API_KEY"),
   emailFrom: read("EMAIL_FROM", "areniX <no-reply@example.com>"),
   adminNotificationEmail: read("ADMIN_NOTIFICATION_EMAIL"),
+  // Lead research AI providers. Keys stay in the environment and never reach the database or the browser.
+  anthropicApiKey: read("ANTHROPIC_API_KEY"),
+  geminiApiKey: read("GEMINI_API_KEY"),
+  openaiApiKey: read("OPENAI_API_KEY"),
+  // Lead research data sources. All optional. Each source is skipped while its key is missing.
+  googlePlacesApiKey: read("GOOGLE_PLACES_API_KEY"),
+  pagespeedApiKey: read("PAGESPEED_API_KEY"),
+  companiesHouseApiKey: read("COMPANIES_HOUSE_API_KEY"),
+  // Optional preferred Overpass server for OpenStreetMap searches. Public servers are tried after it.
+  overpassUrl: read("OVERPASS_URL"),
+  // Vercel cron sends this as a bearer token. The daily research run is refused without it.
+  cronSecret: read("CRON_SECRET"),
   schedulerProvider: (read("SCHEDULER_PROVIDER", "none").toLowerCase() as "none" | "calcom"),
   schedulerPublicEventLink: read("SCHEDULER_PUBLIC_EVENT_LINK"),
   schedulerWebhookSecret: read("SCHEDULER_WEBHOOK_SECRET"),
@@ -40,6 +52,19 @@ export const integrations = {
     configured: env.schedulerProvider === "calcom" && env.schedulerPublicEventLink.length > 0,
     provider: env.schedulerProvider,
     webhookVerifiable: env.schedulerWebhookSecret.length > 0,
+  },
+  ai: {
+    anthropic: { configured: env.anthropicApiKey.length > 0 },
+    gemini: { configured: env.geminiApiKey.length > 0 },
+    openai: { configured: env.openaiApiKey.length > 0 },
+  },
+  research: {
+    googlePlaces: { configured: env.googlePlacesApiKey.length > 0 },
+    // Optional. Google's keyless quota is shared and was found used up, so PageSpeed runs only with a key.
+    pagespeed: { configured: env.pagespeedApiKey.length > 0 },
+    companiesHouse: { configured: env.companiesHouseApiKey.length > 0 },
+    openStreetMap: { configured: true },
+    cron: { configured: env.cronSecret.length >= 16 },
   },
   media: {
     driver: env.mediaStorageDriver,

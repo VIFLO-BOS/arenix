@@ -36,6 +36,9 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
               <Link href={qs({ view: "board" })} className={cn("rounded-md px-2.5 py-1", view === "board" ? "bg-slate-900 text-white" : "text-slate-500")}>
                 Board
               </Link>
+              <Link href="/admin/leads/discover" className="rounded-md px-2.5 py-1 text-slate-500 hover:text-slate-900">
+                Find leads
+              </Link>
             </div>
             {userCan(user, "leads:write") && (
               <ActionButton action={dispatchFollowUpsAction} fields={{}} variant="secondary">

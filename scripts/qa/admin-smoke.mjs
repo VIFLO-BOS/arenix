@@ -20,7 +20,7 @@ const envLocal = (() => {
 const EMAIL = process.env.ADMIN_EMAIL ?? envLocal.BOOTSTRAP_ADMIN_EMAIL ?? "admin@arenix.local";
 const PASSWORD = process.env.ADMIN_PASSWORD ?? envLocal.BOOTSTRAP_ADMIN_PASSWORD;
 if (!PASSWORD) throw new Error("Set ADMIN_PASSWORD or BOOTSTRAP_ADMIN_PASSWORD in .env.local");
-const ROUTES = ["/admin", "/admin/inquiries", "/admin/leads", "/admin/leads?view=board", "/admin/clients", "/admin/clients/new", "/admin/bookings", "/admin/proposals", "/admin/proposals/new", "/admin/projects", "/admin/projects/new", "/admin/portfolio", "/admin/portfolio/clenest", "/admin/portfolio/new", "/admin/content", "/admin/content?tab=article", "/admin/content?tab=faq", "/admin/content/service/custom-software-web-applications", "/admin/content/article/new", "/admin/media", "/admin/notifications", "/admin/analytics", "/admin/team", "/admin/settings", "/admin/audit"];
+const ROUTES = ["/admin", "/admin/inquiries", "/admin/leads", "/admin/leads?view=board", "/admin/clients", "/admin/clients/new", "/admin/bookings", "/admin/proposals", "/admin/proposals/new", "/admin/projects", "/admin/projects/new", "/admin/portfolio", "/admin/portfolio/clenest", "/admin/portfolio/new", "/admin/content", "/admin/content?tab=article", "/admin/content?tab=faq", "/admin/content/service/custom-software-web-applications", "/admin/content/article/new", "/admin/media", "/admin/notifications", "/admin/analytics", "/admin/team", "/admin/settings", "/admin/settings/lead-research", "/admin/leads/discover", "/admin/leads/prospects", "/admin/leads/outreach", "/admin/leads/opt-outs", "/admin/audit"];
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });

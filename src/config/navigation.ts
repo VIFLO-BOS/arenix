@@ -56,6 +56,7 @@ export const adminNav: {
         permission: "inquiries:read",
       },
       { label: "Leads", href: "/admin/leads", permission: "leads:read" },
+      { label: "Find leads", href: "/admin/leads/discover", permission: "leads:read" },
       { label: "Clients", href: "/admin/clients", permission: "clients:read" },
       {
         label: "Bookings",

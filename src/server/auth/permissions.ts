@@ -7,6 +7,7 @@ export type Permission =
   | "inquiries:write"
   | "leads:read"
   | "leads:write"
+  | "prospecting:run"
   | "clients:read"
   | "clients:write"
   | "bookings:read"
@@ -32,6 +33,7 @@ const ALL: Permission[] = [
   "inquiries:write",
   "leads:read",
   "leads:write",
+  "prospecting:run",
   "clients:read",
   "clients:write",
   "bookings:read",
@@ -66,6 +68,8 @@ export const ROLE_PERMISSIONS: Record<Role, ReadonlySet<Permission>> = {
     "inquiries:write",
     "leads:read",
     "leads:write",
+    // Starting a business search spends API credit, so it has its own permission.
+    "prospecting:run",
     "clients:read",
     "clients:write",
     "bookings:read",

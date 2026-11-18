@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { requirePermission } from "@/server/auth/session";
 import { getSettingsDoc } from "@/server/services/cms";
 import { listPortfolioSlugs } from "@/server/services/pickers";
 import { integrations } from "@/lib/env";
 import { toPlain } from "@/lib/utils";
-import { PageHeader, Card, FieldLabel, FormRow, inputClass, selectClass, Notice } from "@/components/admin/ui";
+import { PageHeader, Card, FieldLabel, FormRow, inputClass, selectClass, Notice, btnSecondary } from "@/components/admin/ui";
+import { AI_PROVIDERS, AI_PROVIDER_LABEL } from "@/types/research";
 import { ActionForm, Submit } from "@/components/admin/action-form";
 import { settingsAction } from "../actions";
 
@@ -32,6 +34,20 @@ export default async function SettingsPage() {
         <Notice tone={integrations.email.configured ? "success" : "warning"}>Email {integrations.email.configured ? "Resend configured" : "demo log mode"}</Notice>
         <Notice tone={integrations.scheduler.configured ? "success" : "info"}>Scheduler {integrations.scheduler.configured ? "Cal.com configured" : "request-only"}</Notice>
         <Notice tone="info">Media storage {integrations.media.driver}</Notice>
+      </div>
+
+      <div className="mb-4">
+        <Card
+          title="Lead research"
+          description="AI providers, models, budgets and usage for finding and researching businesses."
+          actions={
+            <Link href="/admin/settings/lead-research" className={btnSecondary}>
+              Open lead research settings
+            </Link>
+          }
+        >
+          <p className="text-sm text-slate-600">{AI_PROVIDERS.map((p) => `${AI_PROVIDER_LABEL[p]} ${integrations.ai[p].configured ? "API key configured" : "has no API key"}`).join(". ")}.</p>
+        </Card>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

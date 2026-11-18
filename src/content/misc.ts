@@ -52,6 +52,23 @@ export const careersFixture: CareerOpening[] = [];
 
 export const testimonialsFixture: Testimonial[] = [];
 
+/**
+ * Privacy section for lead research. Part of the default policy, and repeated in
+ * docs/owner-handoff.md so it can be pasted into the live policy under Settings. Public copy,
+ * so no dashes, colons, semicolons or hyphenated words.
+ */
+export const BUSINESS_RESEARCH_PRIVACY = `## Business research
+
+We look for businesses that might benefit from our services. To do this we read public sources such as business directories, map listings, company registries and the businesses' own websites, and we use AI services from Anthropic, Google and OpenAI to search and summarise that public information.
+
+We keep the business name, its public contact details such as a general email address or phone number, its website and public facts about its online presence. Where a business's own website names its leaders, we may keep their names and job titles with a note of where we found them. We record the source and date of every detail.
+
+The legal basis is our legitimate interest in offering our services to businesses. We never buy contact lists, never use information that is not public, and never send automated messages to these contacts. Any message comes from a member of our team and offers an easy way to say no.
+
+Research about a business that does not become a client is deleted after twelve months. If you would like us to stop, tell us through the Contact page and include your website address. We will add it to our opt out list, delete what we hold, and not research or contact you again.
+
+Our research tool identifies itself as areniXResearchBot and follows robots.txt. You can read more about it on the [research bot page](/research-bot).`;
+
 export const legalFixture = {
   privacyMarkdown: `> **Draft. Review before launch.** This policy must be reviewed by the business owner and a legal professional against actual data flows and applicable law (including the Nigeria Data Protection Act where relevant) before publication.
 
@@ -84,6 +101,8 @@ You can ask us to access, correct or delete your data, or to withdraw consent, b
 ## WhatsApp
 
 The WhatsApp button opens a chat with our business number in your own WhatsApp application. Messages exchanged there are governed by WhatsApp's terms and are not automatically stored in our systems.
+
+${BUSINESS_RESEARCH_PRIVACY}
 `,
   termsMarkdown: `> **Draft. Review before launch.** These terms are a starting point and must be reviewed by the business owner and a legal professional before publication.
 

@@ -8,11 +8,13 @@ import { PageHeader, Card, KeyValue, inputClass, selectClass, FieldLabel, FormRo
 import { StatusBadge, Badge } from "@/components/ui/badge";
 import { ActionForm, Submit } from "@/components/admin/action-form";
 import { leadActivityAction, leadUpdateAction } from "../../actions";
+import { researchForLead } from "@/server/research/service";
+import { FoundBy, ScoreChip, WebsiteStatusChip } from "@/components/admin/research/labels";
 
 export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requirePermission("leads:read");
   const { id } = await params;
-  const [data, staff] = await Promise.all([getLead(id), listStaffOptions()]);
+  const [data, staff, research] = await Promise.all([getLead(id), listStaffOptions(), researchForLead(id)]);
   if (!data) notFound();
   const { lead, bookings, proposals } = data;
   const client = lead.clientId as unknown as { _id: { toString(): string }; name: string; email?: string; phone?: string; preferredContact?: string } | null;
@@ -63,6 +65,24 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
               <p className="text-sm text-slate-500">No client linked.</p>
             )}
           </Card>
+          {research && (
+            <Card title="Research" description="This lead came from lead research." actions={<Link href={`/admin/leads/prospects/${research.row.id}`} className="text-xs text-slate-500 hover:text-slate-900">Open research profile</Link>}>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <FoundBy sources={research.row.foundBy} />
+                <WebsiteStatusChip status={research.row.websiteStatus} />
+                {research.row.score && <ScoreChip value={research.row.score.value} band={research.row.score.band} />}
+              </div>
+              <KeyValue
+                items={[
+                  ["What it does", research.summary?.whatTheyDo],
+                  ["Opportunity", research.row.opportunity],
+                  ["Website", research.row.website],
+                  ["Decision maker", research.row.decisionMaker ? `${research.row.decisionMaker.value}${research.row.decisionMaker.title ? `, ${research.row.decisionMaker.title}` : ""}` : undefined],
+                  ["Drafts waiting", research.drafts ? String(research.drafts) : undefined],
+                ]}
+              />
+            </Card>
+          )}
           {inquiry && (
             <Card title="Originating inquiry" actions={<Link href={`/admin/inquiries/${inquiry._id.toString()}`} className="text-xs text-slate-500 hover:text-slate-900">Open {inquiry.reference}</Link>}>
               <KeyValue items={[["Type", inquiry.type], ["Service", inquiry.serviceCategory]]} className="mb-3" />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, type ReactNode } from "react";
 import { Dialog, DropdownMenu, Tooltip } from "radix-ui";
-import { BarChart3, Bell, CalendarCheck, ChevronLeft, ChevronRight, ExternalLink, FileText, FolderKanban, Image as ImageIcon, Images, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, ScrollText, Search, Settings, Target, UserCog, Users, X } from "lucide-react";
+import { BarChart3, Bell, CalendarCheck, ChevronLeft, ChevronRight, ExternalLink, FileText, FolderKanban, Image as ImageIcon, Images, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Radar, ScrollText, Search, Settings, Target, UserCog, Users, X } from "lucide-react";
 import { adminNav } from "@/config/navigation";
 import { roleHas, type Permission } from "@/server/auth/permissions";
 import { ROLE_LABEL } from "@/server/auth/permissions";
@@ -21,6 +21,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   "/admin/analytics": BarChart3,
   "/admin/inquiries": Inbox,
   "/admin/leads": Target,
+  "/admin/leads/discover": Radar,
   "/admin/clients": Users,
   "/admin/bookings": CalendarCheck,
   "/admin/proposals": FileText,
@@ -33,7 +34,7 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   "/admin/audit": ScrollText,
 };
 
-const SEGMENT_LABELS: Record<string, string> = { new: "New", content: "Content", service: "Service", solution: "Solution", technology: "Technology", article: "Article", career: "Career", testimonial: "Testimonial", faq: "FAQ" };
+const SEGMENT_LABELS: Record<string, string> = { new: "New", content: "Content", service: "Service", solution: "Solution", technology: "Technology", article: "Article", career: "Career", testimonial: "Testimonial", faq: "FAQ", "lead-research": "Lead research", discover: "Find leads", prospects: "Businesses", outreach: "Follow ups", "opt-outs": "Opt outs" };
 
 function initials(name: string) {
   return name
@@ -64,7 +65,10 @@ export function AdminShell({ user, unread, children, contentSource }: { user: Sh
     .map((g) => ({ ...g, links: g.links.filter((l) => roleHas(user.role, l.permission as Permission)) }))
     .filter((g) => g.links.length > 0);
   const allLinks = groups.flatMap((g) => g.links);
-  const isActive = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname.startsWith(href));
+  // The longest matching link wins, so Find leads does not also light up Leads.
+  const matches = (href: string) => (href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(`${href}/`));
+  const activeHref = allLinks.filter((l) => matches(l.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
+  const isActive = (href: string) => href === activeHref;
 
   // Breadcrumb from the path. Known sections use their nav label, ids become "Detail".
   const segments = pathname.replace(/^\/admin\/?/, "").split("/").filter(Boolean);

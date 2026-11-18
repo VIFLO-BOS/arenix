@@ -20,6 +20,13 @@ describe("role matrix (least privilege)", () => {
     expect(roleHas("BUSINESS_DEVELOPMENT", "team:manage")).toBe(false);
     expect(roleHas("BUSINESS_DEVELOPMENT", "cms:write")).toBe(false);
   });
+  it("only business roles can start a paid business search", () => {
+    expect(roleHas("SUPER_ADMIN", "prospecting:run")).toBe(true);
+    expect(roleHas("ADMIN", "prospecting:run")).toBe(true);
+    expect(roleHas("BUSINESS_DEVELOPMENT", "prospecting:run")).toBe(true);
+    expect(roleHas("CONTENT_MANAGER", "prospecting:run")).toBe(false);
+    expect(roleHas("PROJECT_MANAGER", "prospecting:run")).toBe(false);
+  });
   it("super admin and admin have every permission", () => {
     const all = ROLE_PERMISSIONS.SUPER_ADMIN;
     expect(all.size).toBeGreaterThan(15);

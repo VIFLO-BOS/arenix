@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PROJECT_STATUSES } from "@/types/content";
+import { AI_PROVIDERS } from "@/types/research";
 
 const objectId = z.string().regex(/^[a-f\d]{24}$/i, "Invalid id");
 const optStr = (max = 2000) =>
@@ -485,3 +486,143 @@ export function splitPair(line: string): { a: string; b: string } {
   const [a = "", ...rest] = line.split("::");
   return { a: a.trim(), b: rest.join("::").trim() };
 }
+
+/* Lead research settings (Settings, Lead research). API keys are never part of these forms. */
+const usdAmount = (max: number) =>
+  z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+    z.number({ error: "Enter an amount in US dollars" }).min(0).max(max),
+  );
+const aiModelId = z
+  .string()
+  .trim()
+  .regex(/^[A-Za-z0-9._:-]{2,80}$/, "Use the model id exactly as the provider writes it");
+const aiProvider = z.enum(AI_PROVIDERS);
+
+export const leadResearchSettingsSchema = z.discriminatedUnion("section", [
+  z.object({
+    section: z.literal("budget"),
+    monthlyCapUsd: usdAmount(10000),
+    perSearchCapUsd: usdAmount(100),
+    order1: aiProvider,
+    order2: aiProvider,
+    order3: aiProvider,
+  }),
+  z.object({
+    section: z.literal("provider"),
+    provider: aiProvider,
+    enabled: bool,
+    allowFallback: bool,
+    providerCapUsd: usdAmount(10000),
+    modelResearch: aiModelId,
+    modelExtract: aiModelId,
+    modelAnalyse: aiModelId,
+    modelWrite: aiModelId,
+  }),
+  z.object({
+    section: z.literal("prices"),
+    pricesText: z.string().max(8000),
+    searchAnthropic: usdAmount(1000),
+    searchGemini: usdAmount(1000),
+    searchOpenai: usdAmount(1000),
+  }),
+]);
+
+export const providerTestSchema = z.object({ withWebSearch: bool });
+
+const intIn = (min: number, max: number, label: string) =>
+  z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
+    z
+      .number({ error: (issue) => (issue.input === undefined ? `Enter ${label}` : `Use a number for ${label}`) })
+      .int(`Use a whole number for ${label}`)
+      .min(min, `Use at least ${min} for ${label}`)
+      .max(max, `Use at most ${max} for ${label}`),
+  );
+
+export const leadResearchCrawlSchema = z.object({
+  section: z.literal("crawl"),
+  depth: intIn(0, 4, "the depth"),
+  pagesPerSite: intIn(1, 30, "the pages per site"),
+  timeoutSeconds: intIn(3, 30, "the timeout"),
+  retries: intIn(0, 4, "the retries"),
+  delaySeconds: intIn(1, 30, "the delay"),
+  maxPageKb: intIn(100, 10240, "the page size"),
+  pagesPerDay: intIn(0, 20000, "the pages per day"),
+  placesMonthlyLimit: intIn(0, 100000, "the Google Places limit"),
+});
+
+export const leadResearchScoringSchema = z.object({
+  section: z.literal("scoring"),
+  websiteNeed: intIn(0, 100, "a weight"),
+  industryFit: intIn(0, 100, "a weight"),
+  size: intIn(0, 100, "a weight"),
+  reachability: intIn(0, 100, "a weight"),
+  decisionMaker: intIn(0, 100, "a weight"),
+  hiring: intIn(0, 100, "a weight"),
+  industries: z.string().max(4000),
+  countries: z.string().max(1000),
+  retentionMonths: intIn(1, 60, "the retention period"),
+});
+
+/* Lead research (Find leads) */
+const sourceId = z.string().regex(/^[a-z_]{3,30}$/, "Unknown source");
+
+export const prospectSearchSchema = z.object({
+  text: z.string().trim().min(3, "Describe the businesses you are looking for").max(500),
+  industry: optStr(80),
+  keywords: optStr(200),
+  country: optStr(80),
+  region: optStr(80),
+  city: optStr(80),
+  websiteFilter: z.enum(["any", "none", "has"]),
+  maxResults: intIn(5, 50, "the number of businesses"),
+  sources: z.array(sourceId).min(1, "Choose at least one AI or data source").max(8),
+  autoResearch: bool,
+  refresh: bool,
+});
+
+export const idOnlySchema = z.object({ id: objectId });
+
+export const prospectBulkSchema = z.object({
+  ids: z.array(objectId).min(1, "Select at least one business").max(100),
+  op: z.enum(["research", "analyse", "dismiss", "restore", "add"]),
+});
+
+export const addToLeadsSchema = z.object({ id: objectId, mode: z.enum(["create", "update"]) });
+
+export const registrationCheckSchema = z.object({
+  id: objectId,
+  status: z.enum(["VERIFIED", "NOT_CHECKED", "NOT_FOUND"]),
+  registry: z.string().trim().min(2).max(80),
+  number: optStr(40),
+  note: optStr(300),
+});
+
+export const optOutSchema = z.object({ id: objectId, reason: optStr(200) });
+
+export const suppressionSchema = z.object({
+  kind: z.enum(["DOMAIN", "EMAIL", "PHONE"]),
+  value: z.string().trim().min(3).max(200),
+  reason: optStr(200),
+});
+
+export const assistantSchema = z.object({
+  id: objectId,
+  preset: optStr(20),
+  question: optStr(500),
+});
+
+export const draftCreateSchema = z.object({ id: objectId, kind: z.enum(["intro", "email", "linkedin", "whatsapp"]) });
+
+export const draftEditSchema = z.object({
+  id: objectId,
+  subject: optStr(200),
+  body: z.string().trim().min(1, "The message is empty").max(5000),
+  to: optStr(200),
+});
+
+export const sequenceSchema = z.object({
+  sequenceId: z.string().uuid(),
+  op: z.enum(["schedule", "stop", "reply"]),
+});
