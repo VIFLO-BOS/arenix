@@ -79,21 +79,9 @@ All six phases of `docs/LEAD_GENERATION_ENHANCEMENT_PLAN.md` are built. The plan
 - The crawler identifies itself as `areniXResearchBot`, obeys robots.txt, reads at most 8 pages a site with a pause between them, and stops when refused. Its public page is `/research-bot`.
 - Businesses not added to Leads are deleted after 12 months (changeable in Lead research settings).
 
-**Privacy policy text to paste.** The live privacy policy is stored in the database, so it does not change with the code. Paste this section at the end of the policy under Settings, Legal, and update "twelve months" if you change the retention period. Have it reviewed with the rest of the policy.
+**Privacy policy, Terms of use and the privacy notice.** Full texts written on 18 November 2026 are in `src/content/legal.ts` (they include the Business research section). The live texts are stored in the database and stay editable under Settings, Legal. `npx tsx scripts/load-legal-texts.ts <backup folder> --apply` loads the texts from the code after backing up the current ones, using `MONGODB_URI` from `.env.local`, so check which database that points at first. Both are drafts until a lawyer reviews them, then tick the reviewed boxes in Settings to remove the "Pending legal review" label. Points to confirm with the lawyer: governing law (Nigeria is written in), the retention periods (24 months for enquiries, six years for client records, 12 months for security records), and the company details to show once you want them public.
 
-```markdown
-## Business research
-
-We look for businesses that might benefit from our services. To do this we read public sources such as business directories, map listings, company registries and the businesses' own websites, and we use AI services from Anthropic, Google and OpenAI to search and summarise that public information.
-
-We keep the business name, its public contact details such as a general email address or phone number, its website and public facts about its online presence. Where a business's own website names its leaders, we may keep their names and job titles with a note of where we found them. We record the source and date of every detail.
-
-The legal basis is our legitimate interest in offering our services to businesses. We never buy contact lists, never use information that is not public, and never send automated messages to these contacts. Any message comes from a member of our team and offers an easy way to say no.
-
-Research about a business that does not become a client is deleted after twelve months. If you would like us to stop, tell us through the Contact page and include your website address. We will add it to our opt out list, delete what we hold, and not research or contact you again.
-
-Our research tool identifies itself as areniXResearchBot and follows robots.txt. You can read more about it on the [research bot page](/research-bot).
-```
+The privacy notice appears at the bottom of every public page on a visitor's first visit and stays until they press Accept and continue. It returns a year later, or for everyone when `LEGAL_VERSION` in `src/content/legal-version.ts` is raised after a significant policy change. The site sets no tracking cookies, so the notice informs rather than asks for cookie choices. If analytics are ever added, the notice must ask first.
 
 **Settings and costs**
 

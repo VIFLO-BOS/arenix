@@ -1,4 +1,5 @@
 import type { Article, CareerOpening, Faq, Testimonial } from "@/types/content";
+import { PRIVACY_POLICY, TERMS_OF_USE } from "./legal";
 
 export const faqsFixture: Faq[] = [
   { id: "faq-1", scope: "general", sortOrder: 1, published: true, question: "What does areniX do?", answer: "areniX Technologies Limited designs and engineers digital products. Custom software, corporate websites, SaaS products, operations systems, mobile apps and the integrations and infrastructure around them." },
@@ -52,82 +53,5 @@ export const careersFixture: CareerOpening[] = [];
 
 export const testimonialsFixture: Testimonial[] = [];
 
-/**
- * Privacy section for lead research. Part of the default policy, and repeated in
- * docs/owner-handoff.md so it can be pasted into the live policy under Settings. Public copy,
- * so no dashes, colons, semicolons or hyphenated words.
- */
-export const BUSINESS_RESEARCH_PRIVACY = `## Business research
-
-We look for businesses that might benefit from our services. To do this we read public sources such as business directories, map listings, company registries and the businesses' own websites, and we use AI services from Anthropic, Google and OpenAI to search and summarise that public information.
-
-We keep the business name, its public contact details such as a general email address or phone number, its website and public facts about its online presence. Where a business's own website names its leaders, we may keep their names and job titles with a note of where we found them. We record the source and date of every detail.
-
-The legal basis is our legitimate interest in offering our services to businesses. We never buy contact lists, never use information that is not public, and never send automated messages to these contacts. Any message comes from a member of our team and offers an easy way to say no.
-
-Research about a business that does not become a client is deleted after twelve months. If you would like us to stop, tell us through the Contact page and include your website address. We will add it to our opt out list, delete what we hold, and not research or contact you again.
-
-Our research tool identifies itself as areniXResearchBot and follows robots.txt. You can read more about it on the [research bot page](/research-bot).`;
-
-export const legalFixture = {
-  privacyMarkdown: `> **Draft. Review before launch.** This policy must be reviewed by the business owner and a legal professional against actual data flows and applicable law (including the Nigeria Data Protection Act where relevant) before publication.
-
-## Who we are
-
-areniX Technologies Limited ("areniX", "we") operates this website.
-
-## What we collect
-
-- **Inquiry and project request forms.** Name, email, optional company and phone, the message you write, optional attachments, your preferred contact method and your consent choice.
-- **Consultation requests.** The same contact details plus the meeting type, your summary and preferred time windows.
-- **Technical data.** Server logs containing a hashed form of your IP address for security and rate limiting. We do not use advertising cookies.
-
-## Why we process it
-
-To respond to your request, to schedule and run consultations, to prepare proposals you asked for, and to keep the service secure. The legal basis is your consent and our legitimate interest in responding to business inquiries.
-
-## Sharing
-
-Data is stored in our database and, where configured, sent through our email provider to deliver confirmations and staff notifications. We do not sell personal data.
-
-## Retention
-
-Inquiries and bookings are retained while the business relationship is active and for a reasonable period afterwards for record keeping. You may request deletion at any time.
-
-## Your rights
-
-You can ask us to access, correct or delete your data, or to withdraw consent, by contacting us through the channels on the Contact page.
-
-## WhatsApp
-
-The WhatsApp button opens a chat with our business number in your own WhatsApp application. Messages exchanged there are governed by WhatsApp's terms and are not automatically stored in our systems.
-
-${BUSINESS_RESEARCH_PRIVACY}
-`,
-  termsMarkdown: `> **Draft. Review before launch.** These terms are a starting point and must be reviewed by the business owner and a legal professional before publication.
-
-## Use of this website
-
-This website is provided for information about areniX Technologies Limited and its services. Content may be updated at any time.
-
-## Inquiries and proposals
-
-Submitting a form does not create a contract. Any engagement is governed by a separately signed proposal or agreement that states scope, fees and terms.
-
-## Consultations
-
-Consultation requests are confirmed only when we send a confirmation. We may decline or reschedule requests.
-
-## Intellectual property
-
-Site content, design and code are owned by areniX or its licensors. Project names and marks shown in the portfolio belong to their respective owners and are shown with permission or as factual references to work delivered.
-
-## Liability
-
-Information on this site is provided in good faith without warranties of completeness. To the extent permitted by law, areniX is not liable for decisions made solely on the basis of website content.
-
-## Governing law
-
-To be confirmed by the business owner with legal counsel.
-`,
-};
+/** Default Privacy policy and Terms of use. The texts live in legal.ts. */
+export const legalFixture = { privacyMarkdown: PRIVACY_POLICY, termsMarkdown: TERMS_OF_USE };

@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { WhatsAppSticky } from "@/components/layout/whatsapp-button";
+import { PrivacyNotice } from "@/components/layout/privacy-notice";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { RouteCurtain } from "@/components/motion/route-curtain";
 import { Spotlight } from "@/components/motion/spotlight";
@@ -22,6 +23,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </main>
       <SiteFooter settings={settings} />
       <WhatsAppSticky digits={settings.contact.whatsappDigits} />
+      <PrivacyNotice />
     </>
   );
 }
